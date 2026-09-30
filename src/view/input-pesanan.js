@@ -1,7 +1,7 @@
 import {
   animationLoading,
-  animationSpin,
   backPages,
+  getCookie,
 } from "../controller/controller";
 import { showOrdersItem } from "./pesanan";
 
@@ -122,7 +122,6 @@ export const showItems = (data) => {
     if (!document.getElementById("box-searching")) {
       showSerchingBox();
     }
-    animationLoading("input-pesanan");
     const element = document.getElementById("input-pesanan");
     if (!element) {
       return;
@@ -131,7 +130,7 @@ export const showItems = (data) => {
     data.forEach((d) => {
       element.innerHTML += `
          <div
-          class="w-[300px] h-[150px] bg-gray-400 rounded flex justify-around items-center overflow-hidden shadow-md" 
+          class="w-[300px] h-[150px] rounded flex justify-around items-center overflow-hidden shadow-md" 
         >
           <div class="w-[60%] flex justify-center items-center">
             <img class="w-full" src="/image/soto.jpg" alt="" />
@@ -157,6 +156,10 @@ export const showItems = (data) => {
         </div>
         `;
     });
+    if (!getCookie().level == 1) {
+      animationLoading("input-pesanan");
+      backPages();
+    }
   } catch (error) {
     console.log(error);
   }
@@ -181,7 +184,7 @@ export const sendOrder = async () => {
           place: place_to_eat,
           status: "order",
           uu_id: uu_id,
-          items: [...data_list_order],
+          items: JSON.stringify([...data_list_order]),
         });
         const results = await fetch(
           `${import.meta.env.VITE_URL_SERVER_DEV}/users/orders`,
@@ -198,6 +201,9 @@ export const sendOrder = async () => {
         }
         if (results.success == 201) {
           data_send = [];
+          if (document.getElementById("cek-exist")) {
+            showOrdersItem(document.getElementById("pesanan"));
+          }
           const set_elements = [
             ...document
               .getElementById("item-order-list")
@@ -267,7 +273,7 @@ export const showSerchingBox = () => {
           type="search"
           onkeydown="filterItems(this.value)"
           placeholder="Cari"
-          class="border p-0.5 w-[50px] md:w-auto"
+          class="border p-0.5 w-[80px] md:w-auto"
         />
         <div
           class="absolute z-20 flex justify-center items-center right-0 top-10 hidden"
@@ -300,12 +306,6 @@ export const showSerchingBox = () => {
   );
 };
 
-// window.animationOn = () => {
-//   if (data.length !== 0) {
-//     animationSpin(element);
-//   }
-// };
-
 export const loopingSelect = (data) => {
   try {
     if (data.rooms) {
@@ -323,7 +323,6 @@ export const loopingSelect = (data) => {
   }
 };
 
-backPages();
 showItems(data_item);
 
 window.data_send = data_send;

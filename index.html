@@ -10,7 +10,9 @@
     <div
       class="w-full h-screen bg-gray-200/50 flex justify-center items-center"
     >
-      <div class="w-[400px] h-fit rounded-2xl overflow-hidden shadow-md">
+      <div
+        class="w-[300px] md:w-[50%] h-fit rounded-2xl overflow-hidden shadow-md"
+      >
         <div
           class="w-full h-fit py-3 bg-white flex flex-col justify-center items-center"
         >
@@ -27,8 +29,9 @@
             class="w-full h-full flex justify-center items-center gap-3 [&>*]:bg-white [&>*]:px-2 [&>*]:py-1 [&>*]:rounded [&>*]:cursor-pointer [&>*]:hover:scale-110 transition"
             id="link-pages"
           >
-            <li>Home</li>
-            <li>Profile</li>
+            <li onclick="window.location.href = '/pages/users/profile'">
+              Home
+            </li>
           </ul>
         </div>
       </div>

@@ -11,6 +11,8 @@ import {
   updateStocks,
   postReport,
   getReports,
+  getOrderTamu,
+  deleteEditReport,
 } from "./routers.js";
 import cors from "cors";
 
@@ -33,6 +35,8 @@ app.post("/users/orders", postOrders);
 app.post("/users/orders/update", updateOrders);
 app.post("/stocks", updateStocks);
 app.post("/report", postReport);
+app.post("/report/action", deleteEditReport);
+app.post("/order/tamu", getOrderTamu);
 
 app.listen(3000, () => {
   console.log("server berjalan");

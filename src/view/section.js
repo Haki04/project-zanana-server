@@ -6,7 +6,7 @@ if (!getCookie()) {
 
 const greating = (name) => {
   document.getElementById("greating").innerHTML =
-    `<span>Welcome <span class="font-bold">${name.toUpperCase()}</span></span>`;
+    `<span>Welcome <span class="font-bold">${name.toUpperCase()}</span> > ${getCookie().position}</span>`;
 };
 
 const showUserSection = (element) => {
@@ -17,11 +17,13 @@ const showUserSection = (element) => {
     ["inventory", "track.png"],
     ["pesanan", "order.png"],
     ["input-pesanan", "purchase_order.png"],
+    ["stocks", "product.png"],
+    ["broken", "mechanic.png"],
   ];
   section_list.map((item) => {
     element.innerHTML += `
      <div
-          class="w-[200px] md:w-[250px] md:h-[150px] shrink-0 h-[80px] bg-gray-200/50 rounded flex justify-center items-center cursor-pointer hover:scale-110 hover:my-2 transition gap-2 md:gap-4"
+          class="w-[200px] md:w-[250px] md:h-[150px] shrink-0 h-[80px] bg-gray-200/50 rounded flex justify-center items-center cursor-pointer hover:scale-110  transition gap-2 md:gap-4"
           onclick="clickPages(this)"
         >
           <img src="/icon/${item[1]}" alt="" class="w-[60px] md:w-[80px]" />
@@ -41,8 +43,12 @@ window.clickPages = (args) => {
     return (window.location.href = "/pages/report/");
   } else if (arg == "input-pesanan") {
     return (window.location.href = "/pages/users/input-pesanan");
-  } else {
+  } else if (arg == "stocks") {
+    return (window.location.href = "/pages/users/stocks");
+  } else if (arg == "inventory") {
     return (window.location.href = "/pages/inventory/");
+  } else {
+    return (window.location.href = "/pages/users/kerusakan");
   }
 };
 

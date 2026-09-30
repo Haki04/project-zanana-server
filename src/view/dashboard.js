@@ -1,11 +1,11 @@
 import * as pesanan from "../view/pesanan.js";
 import * as input_pesanan from "../view/input-pesanan.js";
-import { selectRender } from "./components/select-render.js";
 import { inventoryReport } from "./inventory.js";
 import {
   animationLoading,
   activeListHilight,
 } from "../controller/controller.js";
+import { getDataBrokeness, showFormEditKerusakan } from "./kerusakan.js";
 
 const dataSection = {
   dashboard: `
@@ -35,33 +35,6 @@ const dataSection = {
             <div class="w-full bg-slate-400 h-full p-1 overflow-y-scroll" id="kerusakan"></div>
           </div>
     `,
-};
-
-const getDataBrokeness = async (element, parent) => {
-  selectRender(document.getElementById(`select-dashboard-${parent}`), [
-    "all",
-    "fixed",
-    "not yet",
-    "terbaru",
-    "terlama",
-  ]);
-  const { data, status } = await fetch(
-    `${import.meta.env.VITE_URL_SERVER_DEV}/report`,
-  ).then((res) => res.json());
-  data.map((item) => {
-    document.getElementById(element).innerHTML += `
-   <div
-                class="w-full bg-white h-[50px] rounded flex flex-row justify-between items-center gap-1 p-1 [&>*]:rounded [&>*]:text-center mt-1"
-              >
-                <span class="p-1 bg-blue-200 flex-1">${item.posisi}</span>
-                <span class="p-1 bg-blue-200 flex-1">${item.reporter}</span>
-                <span class="p-1 bg-blue-200 flex-1">${item.status}</span>
-                <span class="p-1 bg-blue-200 flex-1">${item.date}</span>
-                <span class="p-1 bg-blue-200 flex-1 cursor-pointer">hapus | edit</span>
-              </div>
-  
-  `;
-  });
 };
 
 const showStaffBoxs = (element) => {
@@ -187,6 +160,7 @@ const section = (a, el_this) => {
     `;
     getDataBrokeness("kerusakan", "kerusakan");
     animationLoading("content-right");
+
     activeListHilight(
       document.getElementById("ul-dashboard"),
       el_this,

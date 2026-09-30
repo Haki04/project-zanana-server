@@ -1,4 +1,12 @@
-import { animationSpin, backPages } from "../controller/controller";
+import {
+  animationLoading,
+  backPages,
+  getCookie,
+} from "../controller/controller";
+
+if (!getCookie()) {
+  window.location.href = "/pages/login";
+}
 
 const content = document.getElementById("content");
 
@@ -57,38 +65,37 @@ const sendReport = async () => {
 };
 
 const showFormReport = () => {
-  animationSpin();
-  setTimeout(() => {
-    document.querySelector("body").querySelector("#animate-spin").remove();
-  }, 1000);
   content.innerHTML = `
-        <div
-        class="w-[300px] bg-gray-300/50 shadow-md p-2 rounded flex flex-col justify-start items-center [&>*]:w-full [&>*]:bg-white [&>*]:p-2 [&>*]:rounded gap-1" id="form-report"
-      >
-        <h1 class="font-bold text-2xl text-center">Report Kerusakan</h1>
-        <input
-          type="text"
-          name=""
-          value=""
-          id="reporter"
-          placeholder="Reporter"
-        />
-        <select name="" id="type">
-          <option value="">type</option>
-          <option value="ac">ac</option>
-        </select>
-        <input type="text" name="" id="posisi" value="" placeholder="posisi" />
-        <input type="date" name="" id="date" />
-        <textarea name="" id="description" placeholder="decsription"></textarea>
-        <button class="font-bold cursor-pointer my-3" onclick="sendReport()">
-          Kirim
-        </button>
-      </div>
+  <div
+  class="w-[300px] bg-gray-300/50 shadow-md p-2 rounded flex flex-col justify-start items-center [&>*]:w-full [&>*]:bg-white [&>*]:p-2 [&>*]:rounded gap-1" id="form-report"
+  >
+  <h1 class="font-bold text-2xl text-center">Report Kerusakan</h1>
+  <input
+  type="text"
+  name=""
+  value=""
+  id="reporter"
+  placeholder="Reporter"
+  />
+  <select name="" id="type">
+  <option value="">type</option>
+  <option value="ac">ac</option>
+  </select>
+  <input type="text" name="" id="posisi" value="" placeholder="posisi" />
+  <input type="date" name="" id="date" />
+  <textarea name="" id="description" placeholder="decsription"></textarea>
+  <button class="font-bold cursor-pointer my-3" onclick="sendReport()">
+  Kirim
+  </button>
+  </div>
   
   `;
 };
 
-backPages();
+if (!getCookie().level == 1) {
+  backPages();
+  animationLoading("content");
+}
 showFormReport();
 
 window.sendReport = sendReport;

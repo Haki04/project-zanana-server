@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/src/style.css" />
+    <title>Kerusakan</title>
+  </head>
+  <body>
+    <div class="w-full h-screen bg-white flex justify-center items-center">
+      <div
+        class="bg-gray-200/50 shadow h-[90%] w-[90%] lg:w-[80%] rounded p-2 overflow-hidden flex flex-col justify-start"
+      >
+        <div class="w-full bg-slate-300 h-[70px]">
+          <div class="w-full flex justify-between bg-white">
+            <h1 class="text-2xl pl-2">Kerusakan</h1>
+            <div class="w-[200px] bg-amber-100 flex items-center">
+              <select
+                name=""
+                id="select-dashboard-kerusakan"
+                onchange="filterKerusakan(this.value)"
+              >
+                <option value="all">semua</option>
+                <option value="new-est">terbaru</option>
+                <option value="old-est">terlama</option>
+                <option value="lapor">lapor</option>
+                <option value="proses">proses</option>
+                <option value="selesai">done</option>
+              </select>
+            </div>
+          </div>
+          <div class="w-full bg-white">
+            <ul class="flex flex-row justify-around items-center">
+              <li>posisi</li>
+              <li>repoter</li>
+              <li>status</li>
+              <li>date</li>
+              <li>action</li>
+            </ul>
+          </div>
+        </div>
+        <div
+          class="w-full bg-slate-200 h-full p-1 relative"
+          id="kerusakan"
+        ></div>
+      </div>
+    </div>
+    <script>
+      window.onload = () => getDataBrokeness("kerusakan", "kerusakan");
+    </script>
+    <script type="module" src="/src/view/kerusakan.js"></script>
+  </body>
+</html>

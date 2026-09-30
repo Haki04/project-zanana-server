@@ -1,12 +1,13 @@
 import {
   getCookie,
   backPages,
-  animationSpin,
+  animationLoading,
   activeListHilight,
 } from "../controller/controller";
 if (!getCookie()) {
   window.location.href = "/pages/login";
 }
+
 const data_forms = {
   form: `  <div
           class="w-[300px] bg-gray-200/70 p-1 [&>*]:mb-2 rounded shadow-sm [&_*]:focus:outline-gray-500"
@@ -95,12 +96,6 @@ window.inventoryForm = (element, section) => {
 export const inventoryReport = async (section, el_this) => {
   if (!section) {
     return;
-  }
-  if (!getCookie().level == 1) {
-    animationSpin();
-    setTimeout(() => {
-      document.querySelector("body").querySelector("#animate-spin").remove();
-    }, 1000);
   }
 
   activeListHilight(
@@ -194,6 +189,8 @@ window.sendForm = async () => {
   }
 };
 
+if (!getCookie().level == 1) {
+  animationLoading("content");
+}
 // auto runing funtion
-backPages();
 inventoryReport(getCookie().position, "");

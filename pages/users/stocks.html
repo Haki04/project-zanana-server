@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Stoks</title>
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <input class="hidden" type="checkbox" name="" id="toggle" />
+
+    <div
+      class="relative w-full h-screen bg-white overflow-hidden flex justify-center items-center"
+    >
+      <div
+        class="absolute md:fixed w-[70%] md:w-fit top-1 md:left-2 rounded z-10 bg-red-100/70 p-2"
+      >
+        <h1 class="text-[14px] font-bold">Stock barang HK</h1>
+      </div>
+      <div
+        class="w-[95%] lg:w-[80%] lg:border h-[95%] p-2 rounded flex-wrap flex md:grid grid-cols-5 justify-items-center justify-center content-start gap-1 pt-7 md:pt-0"
+        id="content"
+      ></div>
+    </div>
+    <script type="module" src="/src/view/stocks.js"></script>
+  </body>
+</html>

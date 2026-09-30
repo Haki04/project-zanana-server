@@ -66,6 +66,5 @@ window.logOutUser = () => {
 
   return (window.location.href = "/pages/login");
 };
-
-backPages();
+if (!getCookie().level == 1) backPages();
 getUser();

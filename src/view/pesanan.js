@@ -2,14 +2,16 @@ import {
   animationLoading,
   animationSpin,
   backPages,
+  getCookie,
 } from "../controller/controller";
 
+if (!getCookie()) window.location.href = "/pages/login";
+let count = 0;
 export const showOrdersItem = async (element) => {
   try {
     if (!element) {
       return;
     }
-    animationLoading("pesanan");
     const response = await fetch(
       `${import.meta.env.VITE_URL_SERVER_DEV}/users/orders`,
     );
@@ -51,6 +53,11 @@ export const showOrdersItem = async (element) => {
           </div>
         </div>
 `;
+      if (!getCookie().level == 1) {
+        if (count == 0) animationLoading("pesanan");
+        count++;
+        backPages();
+      }
     });
   } catch (error) {
     console.log(error);
@@ -91,7 +98,6 @@ export const sendUpdate = async (id, progres, el) => {
   }
 };
 
-backPages();
 showOrdersItem(document.getElementById("pesanan"));
 
 window.sendUpdate = sendUpdate;

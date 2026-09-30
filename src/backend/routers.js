@@ -47,13 +47,34 @@ export const loginUser = async (req, res) => {
 };
 
 // pesanan
+const randomCodeOrder = async () => {
+  const alfabets = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  const number = "0123456789";
+  while (true) {
+    let code = "";
+    for (let i = 0; i < 4; i++) {
+      code += alfabets[Math.floor(Math.random() * alfabets.length)];
+    }
+    for (let i = 0; i < 2; i++) {
+      code += number[Math.floor(Math.random() * number.length)];
+    }
+    const [data] = await db.query(
+      "SELECT order_code FROM orders WHERE order_code = ?",
+      [code],
+    );
+    if (data.length === 0) {
+      return code;
+    }
+  }
+};
 
 export const postOrders = async (req, res) => {
   try {
     const [{ room, items, status, uu_id, place }] = req.body;
+    const code = await randomCodeOrder();
     await db.query(
-      `INSERT INTO orders (uu_id, order_room, order_items, order_status, item_code, place_to_eat) VALUES (?,?,?,?,?,?)`,
-      [uu_id, room, JSON.stringify(items), status, "food", place],
+      `INSERT INTO orders (uu_id, order_room, order_items, order_status, item_code, place_to_eat, order_code) VALUES (?,?,?,?,?,?,?)`,
+      [uu_id, room, items, status, "food", place, code],
     );
     res.status(201).json({
       success: 201,
@@ -63,7 +84,7 @@ export const postOrders = async (req, res) => {
     console.error("ERROR MYSQL:", error);
 
     res.status(500).json({
-      message: "Gagal mengambil data",
+      message: "Gagal meningput orders",
       error: error.message,
     });
   }
@@ -190,10 +211,18 @@ export const postInventory = async (req, res) => {
 
 export const getStoks = async (req, res) => {
   try {
-    const [results] = await db.query(
-      "SELECT id,name,type,total,satuan FROM inventory WHERE section = ?",
-      [req.query.section],
-    );
+    let query_string = "";
+    let query_query = [];
+    if (req.query.id_stocks) {
+      query_string =
+        "SELECT id,name,type,total,satuan FROM inventory WHERE section = ? AND id = ?";
+      query_query = [req.query.section, req.query.id_stocks];
+    } else {
+      query_string =
+        "SELECT id,name,type,total,satuan FROM inventory WHERE section = ?";
+      query_query = [req.query.section];
+    }
+    const [results] = await db.query(query_string, query_query);
 
     res.json({
       data: results,
@@ -243,13 +272,95 @@ export const postReport = async (req, res) => {
 
 export const getReports = async (req, res) => {
   try {
-    const [results] = await db.query("SELECT * FROM reporting");
+    if (!req.query.args) {
+      let query_string = !req.query.id
+        ? "SELECT * FROM reporting"
+        : "SELECT * FROM reporting WHERE id = ?";
+      const [results] = await db.query(query_string, [req?.query.id]);
+      res.json({
+        status: 200,
+        data: results,
+      });
+    } else {
+      let query_string = "";
+      let query_params;
+      switch (req.query.args) {
+        case "all":
+          query_string = "SELECT * FROM reporting";
+          break;
+        case "new-est":
+          query_string = "SELECT * FROM reporting ORDER BY date ASC";
+          break;
+        case "old-est":
+          query_string = "SELECT * FROM reporting ORDER BY date DESC";
+          break;
+        case "lapor":
+          query_string = "SElECT * FROM reporting WHERE status = ?";
+          break;
+        case "proses":
+          query_string = "SElECT * FROM reporting WHERE status = ?";
+          break;
+        case "selesai":
+          query_string = "SElECT * FROM reporting WHERE status = ?";
+          break;
+      }
+      const [results] = await db.query(query_string, [req?.query.args]);
 
+      if (results.length > 0) {
+        res.json({
+          data: results,
+        });
+      }
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const deleteEditReport = async (req, res) => {
+  try {
+    const query_string =
+      Object.keys(req.body).length == 0
+        ? "DELETE FROM reporting WHERE id = ?"
+        : "UPDATE reporting SET posisi = ?, reporter = ?, status = ?, date = ? WHERE id = ?";
+    const params =
+      Object.keys(req.body).length == 0
+        ? [req.query.id]
+        : [
+            req.body[0].posisi,
+            req.body[0].reporter,
+            req.body[0].status,
+            req.body[0].date,
+            req.query.id,
+          ];
+
+    const [results] = await db.query(query_string, params);
+
+    if (results.affectedRows > 0) {
+      res.json({
+        status: 200,
+        message: "berhasil",
+      });
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+// tamu
+export const getOrderTamu = async (req, res) => {
+  const [results] = await db.query(
+    "SELECT order_items FROM orders WHERE order_code = ?",
+    [req.body.code],
+  );
+  if (results.length > 0) {
     res.json({
       status: 200,
       data: results,
     });
-  } catch (error) {
-    console.log(error);
+  } else {
+    res.json({
+      status: 404,
+    });
   }
 };
