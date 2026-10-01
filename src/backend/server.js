@@ -22,6 +22,8 @@ app.use(cors());
 app.use(express.json());
 
 // get
+// app.get("/user", user);
+
 app.get("/users/orders", getOrders);
 app.get("/users", getUser);
 app.get("/inventory", getDataSection);

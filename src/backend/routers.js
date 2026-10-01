@@ -1,6 +1,12 @@
 import db from "./database.js";
 import bcrypt from "bcrypt";
 
+// export async function user(req, res) {
+//   const user = await bcrypt.hash("kiki2", 10);
+//   console.log(user);
+// }
+// user();
+
 // users
 export const getUser = async (req, res) => {
   try {
@@ -32,7 +38,7 @@ export const loginUser = async (req, res) => {
   );
 
   if (await bcrypt.compare(password, results.user_password)) {
-    return res.json({
+    res.json({
       verify: true,
       data: {
         name: results.user_name,
@@ -42,7 +48,7 @@ export const loginUser = async (req, res) => {
     });
   } else {
     console.log("gagal login ");
-    return res.json({ verify: false });
+    res.json({ verify: false });
   }
 };
 
@@ -265,6 +271,12 @@ export const postReport = async (req, res) => {
     if (results) {
       res.json({
         status: 200,
+        message: "berhasil do reporting",
+      });
+    } else {
+      res.json({
+        status: 404,
+        message: "gagal do reporting",
       });
     }
   } catch (error) {

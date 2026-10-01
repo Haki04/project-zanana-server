@@ -26,7 +26,7 @@ export const showBoxStocks = async (section, el_this) => {
   let content_stocks = document.getElementById("content");
   window.data_edit_form = data;
   content_stocks.innerHTML = "";
-  if (getCookie().level != 1) {
+  if (getCookie().level == 1) {
     content_stocks.innerHTML += `
   <div class=" w-full h-full grid grid-cols-4 justify-items-center content-start gap-2 overflow-y-scroll" id="content-stocks-dashboard"></div>
   `;

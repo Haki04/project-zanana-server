@@ -1,7 +1,9 @@
 import { animationSpin, filterItem } from "../controller/controller.js";
 import { selectRender } from "./components/select-render.js";
+import { showFormReport } from "./report.js";
 
-const editDelete = async (id, arg, data = {}) => {
+const editDelete = async (id, args, data = {}) => {
+  if (args == 1 && confirm("ingin menghapus item ?")) return;
   const { message, status } = await fetch(
     `${import.meta.env.VITE_URL_SERVER_DEV}/report/action?id=${id}`,
     {
@@ -15,14 +17,14 @@ const editDelete = async (id, arg, data = {}) => {
 
   if (status == 200) {
     alert(message);
-    showItemBrokeness("kerusakan");
+    showItemBrokeness("kerusakan-item-list");
   } else {
     alert(message);
   }
 };
 
 let data_old = [];
-const validedKerusakanForm = async (parent, id, action) => {
+const validedKerusakanForm = async (parent, id) => {
   let verify = false;
   let data_update = [];
   parent.querySelectorAll("input").forEach((element) => {
@@ -54,7 +56,7 @@ const validedKerusakanForm = async (parent, id, action) => {
       data_update[0].status !== data_old[0].status ||
       data_update[0].date !== data_old[0].date
     ) {
-      await editDelete(id, action, data_update);
+      await editDelete(id, "0", data_update);
       animationSpin(document.getElementById("btn-form-edit-kerusakan"));
       data_update = [];
       data_old = [];
@@ -82,22 +84,24 @@ export const getDataBrokeness = async (element, parent) => {
     { proses: "proses" },
     { selesai: "selesai" },
   ]);
-  showItemBrokeness(element);
+  document.getElementById(element).innerHTML = `
+  <div class="w-full h-full" id="kerusakan-item-list"></div>
+  
+  `;
+  showItemBrokeness("kerusakan-item-list");
 };
 
-const toggleKerusakan = async (id, action, parent) => {
-  id && String(action) && parent
-    ? await showFormEditKerusakan(id, action, parent)
-    : "";
+const toggleKerusakan = async (id, parent) => {
+  id && parent ? await showFormEditKerusakan(id, parent) : "";
 
   const form_edit = document.getElementById("form-edit-kerusakan");
-  if (!id || (!String(action) && !parent)) {
+  if (!id && !parent) {
     form_edit.parentElement.remove();
   }
   form_edit.parentElement.classList.remove("hidden");
 };
 
-export const showFormEditKerusakan = async (id, action, parent) => {
+export const showFormEditKerusakan = async (id, parent) => {
   const { data } = await fetch(
     `${import.meta.env.VITE_URL_SERVER_DEV}/report?id=${id}`,
   ).then((item) => item.json());
@@ -106,7 +110,7 @@ export const showFormEditKerusakan = async (id, action, parent) => {
       "afterbegin",
       `
     <div
-            class="absolute w-full h-full bg-orange-200/50  flex justify-center items-center hidden left-0 top-0"
+            class="absolute w-full h-full bg-slate-200/50 flex justify-center items-center hidden left-0 top-0"
           >
             <div
               class="w-[50%] max-w-[300px] bg-white/60 rounded flex flex-col justify-between p-2 gap-2 items-center shadow-lg [&>input,select]:bg-white"
@@ -155,7 +159,7 @@ export const showFormEditKerusakan = async (id, action, parent) => {
                   onclick="
                     validedKerusakanForm(
                       document.getElementById('form-edit-kerusakan'),
-                    ${item.id}, ${action})
+                    ${item.id})
                   "
                 >
                   update
@@ -196,7 +200,7 @@ const getData = async () => {
   return data;
 };
 
-const showItemBrokeness = async (element, data_filter) => {
+export const showItemBrokeness = async (element, data_filter) => {
   const data = !data_filter ? await getData() : data_filter;
   document.getElementById(element).innerHTML = "";
   data.map((item) => {
@@ -209,7 +213,7 @@ const showItemBrokeness = async (element, data_filter) => {
                 <span class="p-1 bg-blue-200 flex-1">${item.status}</span>
                 <span class="p-1 bg-blue-200 flex-1">${item.date}</span>
                 <span class="p-1 bg-blue-200 flex-1 cursor-pointer [&>*]:cursor-pointer [&>*]:hover:shadow-sm [&>*]:inline-block [&>*]:w-[40%] [&>*]:rounded" >
-                <span onclick="toggleKerusakan(${item.id}, 0, 'kerusakan')" class="bg-yellow-100">edit</span> | 
+                <span onclick="toggleKerusakan(${item.id}, 'kerusakan-item-list')" class="bg-yellow-100">edit</span> | 
                 <span onclick="editDelete(${item.id}, 1)" class="bg-red-100">hapus</span>
                 </span>
               </div>
@@ -218,10 +222,24 @@ const showItemBrokeness = async (element, data_filter) => {
   });
 };
 
+let count = 0;
+export const toggle = (content, el_this) => {
+  if (count == 0) {
+    showFormReport(content);
+    el_this.querySelector("span").classList.add("rotate-45");
+    count++;
+  } else {
+    document.getElementById("form-show-edit-kerusakan").remove();
+    el_this.querySelector("span").classList.remove("rotate-45");
+    count--;
+  }
+};
+
 window.getDataBrokeness = getDataBrokeness;
 window.editDelete = editDelete;
 window.validedKerusakanForm = validedKerusakanForm;
 window.toggleKerusakan = toggleKerusakan;
 window.filterKerusakan = filterKerusakan;
+window.toggle = toggle;
 
 // getDataBrokeness("kerusakan", "kerusakan");

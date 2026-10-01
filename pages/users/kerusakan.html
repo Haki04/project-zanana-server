@@ -11,13 +11,22 @@
       <div
         class="bg-gray-200/50 shadow h-[90%] w-[90%] lg:w-[80%] rounded p-2 overflow-hidden flex flex-col justify-start"
       >
-        <div class="w-full bg-slate-300 h-[70px]">
+        <div class="w-full h-fit">
           <div class="w-full flex justify-between bg-white">
             <h1 class="text-2xl pl-2">Kerusakan</h1>
             <div class="w-[200px] bg-amber-100 flex items-center">
+              <!-- <div class="flex-1 p-1 flex justify-center items-center">
+                <button
+                  class="bg-red-200 w-full rounded cursor-pointer font-bold overflow-hidden"
+                  onclick="toggle('kerusakan', this)"
+                >
+                  <span class="inline-block">+</span>
+                </button>
+              </div> -->
               <select
                 name=""
                 id="select-dashboard-kerusakan"
+                class="flex-2"
                 onchange="filterKerusakan(this.value)"
               ></select>
             </div>
@@ -33,7 +42,7 @@
           </div>
         </div>
         <div
-          class="w-full bg-orange-200 h-full p-1 relative overflow-hidden"
+          class="w-full bg-slate-100 h-full p-1 relative overflow-hidden relative"
           id="kerusakan"
         ></div>
       </div>

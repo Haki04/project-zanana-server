@@ -4,9 +4,14 @@ import { inventoryReport } from "./inventory.js";
 import {
   animationLoading,
   activeListHilight,
+  getCookie,
 } from "../controller/controller.js";
 import { getDataBrokeness, showFormEditKerusakan } from "./kerusakan.js";
 import { showBoxStocks } from "./stocks.js";
+
+if (getCookie().level != 1 || !getCookie()) {
+  window.location.href = "/pages/login";
+}
 
 const dataSection = {
   dashboard: `
@@ -164,10 +169,21 @@ const section = (a, el_this) => {
               <div class="w-full flex justify-between">
                 <h1 class="text-2xl ml-2">Kerusakan</h1>
                 <div class="w-[200px] bg-amber-100 flex items-center">
-                  <select name="" id="select-dashboard-kerusakan" onchange="filterKerusakan(this.value)">
-                   
-                  </select>
-                </div>
+              <div class="flex-1 p-1 flex justify-center items-center">
+                <button
+                  class="bg-red-200 w-full rounded cursor-pointer font-bold overflow-hidden"
+                  onclick="toggle('kerusakan', this)"
+                >
+                  <span class="inline-block">+</span>
+                </button>
+              </div>
+              <select
+                name=""
+                id="select-dashboard-kerusakan"
+                class="flex-2"
+                onchange="filterKerusakan(this.value)"
+              ></select>
+            </div>
               </div>
               <div class="w-full bg-white">
               <div class="w-[100px] bg-red-300 ">
