@@ -6,6 +6,7 @@ import {
   activeListHilight,
 } from "../controller/controller.js";
 import { getDataBrokeness, showFormEditKerusakan } from "./kerusakan.js";
+import { showBoxStocks } from "./stocks.js";
 
 const dataSection = {
   dashboard: `
@@ -16,9 +17,9 @@ const dataSection = {
           <div class="bg-white h-[500px] w-full flex flex-col justify-start">
             <div class="w-full bg-slate-300 h-[70px]">
               <div class="w-full flex justify-between bg-white">
-                <h1 class="text-2xl">Kerusakan</h1>
+                <h1 class="text-2xl ml-2">Kerusakan</h1>
                 <div class="w-[200px] bg-amber-100 flex items-center">
-                  <select name="" id="select-dashboard-dashboard">
+                  <select name="" id="select-dashboard-dashboard" onchange="filterKerusakan(this.value)">
                   </select>
                 </div>
               </div>
@@ -32,7 +33,7 @@ const dataSection = {
                 </ul>
               </div>
             </div>
-            <div class="w-full bg-slate-400 h-full p-1 overflow-y-scroll" id="kerusakan"></div>
+            <div class="w-full bg-slate-400 h-full p-1 overflow-y-scroll " id="kerusakan"></div>
           </div>
     `,
 };
@@ -90,11 +91,34 @@ const section = (a, el_this) => {
       <li onclick="inventoryReport('hk', this)">HK</li>
       <li onclick="inventoryReport('ktn', this)">KTN</li>
       <li onclick="inventoryReport('fo', this)">FO</li>
-      <li onclick="inventoryReport('eng', this)">ENG</li>
+      <li onclick="inventoryReport('enge', this)">ENG</li>
       </ul>
     </div>
     `;
-    window.inventoryReport = inventoryReport;
+    animationLoading("content-right");
+    activeListHilight(
+      document.getElementById("ul-dashboard"),
+      el_this,
+      "bg-yellow-100",
+    );
+  } else if (a == "stocks") {
+    div.innerHTML = `
+     <input class="hidden" type="checkbox" name="" id="toggle" />
+     <div
+            class="w-full h-full flex flex-row justify-center gap-1 p-1 items-center relative"
+            id="content"
+          ></div>
+    `;
+    div.innerHTML += `
+    <div class="absolute z-[2] top-[50%] translate-y-[-50%] left-0 bg-transparent ">
+      <ul class="p-1 [&>*]:border [&>*]:mt-1 [&>*]:cursor-pointer [&>*]:px-2 [&>*]:hover:bg-gray-50 [&>*]:text-center" id="ul-stocks-dashboard">
+      <li onclick="showBoxStocks('hk', this)">HK</li>
+      <li onclick="showBoxStocks('ktn', this)">KTN</li>
+      <li onclick="showBoxStocks('fo', this)">FO</li>
+      <li onclick="showBoxStocks('enge', this)">ENG</li>
+      </ul>
+    </div>
+    `;
     animationLoading("content-right");
     activeListHilight(
       document.getElementById("ul-dashboard"),
@@ -136,16 +160,19 @@ const section = (a, el_this) => {
   } else if (a == "kerusakan") {
     div.innerHTML = `
      <div class="bg-white h-full w-full flex flex-col justify-start">
-            <div class="w-full bg-slate-300 h-[70px]">
-              <div class="w-full flex justify-between bg-white">
-                <h1 class="text-2xl">Kerusakan</h1>
+            <div class="w-full h-[70px]">
+              <div class="w-full flex justify-between">
+                <h1 class="text-2xl ml-2">Kerusakan</h1>
                 <div class="w-[200px] bg-amber-100 flex items-center">
-                  <select name="" id="select-dashboard-kerusakan">
+                  <select name="" id="select-dashboard-kerusakan" onchange="filterKerusakan(this.value)">
                    
                   </select>
                 </div>
               </div>
               <div class="w-full bg-white">
+              <div class="w-[100px] bg-red-300 ">
+              
+              </div>
                 <ul class="flex flex-row justify-around items-center">
                   <li>posisi</li>
                   <li>repoter</li>
@@ -155,7 +182,7 @@ const section = (a, el_this) => {
                 </ul>
               </div>
             </div>
-            <div class="w-full bg-slate-400 h-full p-1" id="kerusakan"></div>
+            <div class="w-full bg-slate-400 h-full p-1 relative" id="kerusakan"></div>
           </div>
     `;
     getDataBrokeness("kerusakan", "kerusakan");
@@ -169,8 +196,8 @@ const section = (a, el_this) => {
   }
 };
 
-section("dashboard", "");
 window.section = section;
+window.inventoryReport = inventoryReport;
 
 // section("dashboard");
 

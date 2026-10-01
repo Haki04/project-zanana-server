@@ -41,7 +41,7 @@ const data_forms = {
             placeholder="extra comment"
             class="w-full bg-white p-2 h-20 overflow-auto resize-none"
           ></textarea>
-          <button class="w-[70%] bg-white p-2 cursor-pointer" onclick="sendForm()">Report</button>
+          <button class="w-[70%] bg-white p-2 cursor-pointer" onclick="sendForm(this)" id="btn-inventory">Report</button>
         </div>`,
 };
 
@@ -72,22 +72,26 @@ window.inventoryForm = (element, section) => {
   const title = document
     .getElementById("form-inventory")
     .querySelector("#title");
-  const item_id = document
+  const btn_inventory = document
     .getElementById("form-inventory")
-    .querySelector("#item-id");
+    .querySelector("#btn-inventory");
 
   switch (section) {
     case "hk":
       title.textContent = `Inventory ${section.toUpperCase()}`;
+      btn_inventory.setAttribute("data-set", section);
       break;
     case "ktn":
       title.textContent = `Inventory ${section.toUpperCase()}`;
+      btn_inventory.setAttribute("data-set", section);
       break;
     case "fo":
       title.textContent = `Inventory ${section.toUpperCase()}`;
+      btn_inventory.setAttribute("data-set", section);
       break;
     case "eng":
       title.textContent = `Inventory ${section.toUpperCase()}`;
+      btn_inventory.setAttribute("data-set", section);
       break;
   }
 };
@@ -98,11 +102,7 @@ export const inventoryReport = async (section, el_this) => {
     return;
   }
 
-  activeListHilight(
-    document.getElementById("ul-inventory-dashboard"),
-    el_this,
-    "bg-white",
-  );
+  activeListHilight(document.getElementById("ul-inventory-dashboard"), el_this);
 
   const {
     data: [{ section_name, section_data }],
@@ -137,7 +137,7 @@ const renderList = (form, section) => {
 
 // sendForm
 
-window.sendForm = async () => {
+window.sendForm = async (el_this) => {
   const form = document.getElementById("form-inventory");
   if (form.querySelector("#item-name").value == "") {
     alert("name item gak boleh kosong");
@@ -162,13 +162,19 @@ window.sendForm = async () => {
               total_item: form.querySelector("#item-jumlah").value,
               satuan_item: form.querySelector("#item-satuan").value,
               extra_coment: form.querySelector("#item-extra-coment").value,
-              //owner : get(owner)
+              section:
+                getCookie().level == 1
+                  ? el_this.getAttribute("data-set")
+                  : getCookie().position,
             });
-            const result_post = await fetch(`http://localhost:3000/inventory`, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify(data_send_orders),
-            }).then((item) => item.json());
+            const result_post = await fetch(
+              `${import.meta.env.VITE_URL_SERVER_DEV}/inventory`,
+              {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data_send_orders),
+              },
+            ).then((item) => item.json());
             if (result_post.status !== 500) {
               data_send_orders = [];
             }

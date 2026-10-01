@@ -74,13 +74,14 @@ const filterKerusakan = async (select_value) => {
 };
 
 export const getDataBrokeness = async (element, parent) => {
-  // selectRender(document.getElementById(`select-dashboard-${parent}`), [
-  //   "all",
-  //   "fixed",
-  //   "not yet",
-  //   "terbaru",
-  //   "terlama",
-  // ]);
+  selectRender(document.getElementById(`select-dashboard-${parent}`), [
+    { all: "semua" },
+    { "new-est": "terbaru" },
+    { "old-est": "terlama" },
+    { lapor: "lapor" },
+    { proses: "proses" },
+    { selesai: "selesai" },
+  ]);
   showItemBrokeness(element);
 };
 
@@ -105,7 +106,7 @@ export const showFormEditKerusakan = async (id, action, parent) => {
       "afterbegin",
       `
     <div
-            class="absolute w-full h-full bg-white/40 flex justify-center items-center hidden"
+            class="absolute w-full h-full bg-orange-200/50  flex justify-center items-center hidden left-0 top-0"
           >
             <div
               class="w-[50%] max-w-[300px] bg-white/60 rounded flex flex-col justify-between p-2 gap-2 items-center shadow-lg [&>input,select]:bg-white"
@@ -201,15 +202,15 @@ const showItemBrokeness = async (element, data_filter) => {
   data.map((item) => {
     document.getElementById(element).innerHTML += `
    <div
-                class="w-full bg-white h-[50px] rounded flex flex-row justify-between items-center gap-1 p-1 [&>*]:rounded [&>*]:text-center mt-1"
+                class="w-full bg-white h-auto rounded flex flex-row justify-between items-center gap-1 p-1 [&>*]:rounded [&>*]:text-center mt-1"
               >
                 <span class="p-1 bg-blue-200 flex-1">${item.posisi}</span>
                 <span class="p-1 bg-blue-200 flex-1">${item.reporter}</span>
                 <span class="p-1 bg-blue-200 flex-1">${item.status}</span>
                 <span class="p-1 bg-blue-200 flex-1">${item.date}</span>
-                <span class="p-1 bg-blue-200 flex-1 cursor-pointer [&>*]:cursor-pointer [&>*]:hover:border-b">
-                <span onclick="toggleKerusakan(${item.id}, 0, 'kerusakan')">edit</span> | 
-                <span onclick="editDelete(${item.id}, 1)">hapus</span>
+                <span class="p-1 bg-blue-200 flex-1 cursor-pointer [&>*]:cursor-pointer [&>*]:hover:shadow-sm [&>*]:inline-block [&>*]:w-[40%] [&>*]:rounded" >
+                <span onclick="toggleKerusakan(${item.id}, 0, 'kerusakan')" class="bg-yellow-100">edit</span> | 
+                <span onclick="editDelete(${item.id}, 1)" class="bg-red-100">hapus</span>
                 </span>
               </div>
   

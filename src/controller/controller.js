@@ -54,16 +54,16 @@ export const pesanan_selesai = (e) => {
 };
 
 // stocks.js
-export const toggleFormEdit = (id) => {
+export const toggleFormEdit = (id, parent, section, el_this) => {
   const toggle = document.getElementById("toggle");
   if (id) {
     if (!toggle.checked) {
       const data = data_edit_form.find((item) => item.id == id);
-      document.querySelector("body").insertAdjacentHTML(
+      document.querySelector(parent).insertAdjacentHTML(
         "afterbegin",
         `
             <div
-            class="w-full h-screen fixed z-10 bg-w flex bg-white/50 justify-center items-center "
+            class="w-full h-screen ${getCookie().level == 1 ? `absolute` : `fixed`} z-10 bg-w flex bg-white/50 justify-center items-center "
             id="form-edit-stocks"
           >
             <div
@@ -114,7 +114,7 @@ export const toggleFormEdit = (id) => {
               <div class="flex justify-around gap-2 p-1">
                 <button
                   class="bg-green-200 w-[50%] p-2 rounded cursor-pointer hover:shadow"
-                  onclick="sendUpdate({id : ${data.id},total : document.getElementById('input-total').value})"
+                  onclick="sendUpdate({id : ${data.id},total : document.getElementById('input-total').value}, '${section}', '${el_this}')"
                 >
                   simpan
                 </button>

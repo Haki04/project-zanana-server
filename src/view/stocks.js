@@ -4,6 +4,7 @@ import {
   getCookie,
   plusMinus,
   toggleFormEdit,
+  activeListHilight,
 } from "../controller/controller";
 
 if (!getCookie()) {
@@ -14,43 +15,57 @@ if (!getCookie().level == 1) {
   animationLoading("content");
 }
 
-const showBoxStocks = (data) => {
-  const content_stocks = document.getElementById("content");
+export const showBoxStocks = async (section, el_this) => {
+  if (!section) return;
+  activeListHilight(
+    document.getElementById("ul-stocks-dashboard"),
+    el_this,
+    "bg-white",
+  );
+  const data = await getDataStocks(section);
+  let content_stocks = document.getElementById("content");
   window.data_edit_form = data;
   content_stocks.innerHTML = "";
+  if (getCookie().level != 1) {
+    content_stocks.innerHTML += `
+  <div class=" w-full h-full grid grid-cols-4 justify-items-center content-start gap-2 overflow-y-scroll" id="content-stocks-dashboard"></div>
+  `;
+    content_stocks = content_stocks.querySelector("#content-stocks-dashboard");
+  }
+
   data.map((item) => {
     content_stocks.innerHTML += `
-     <div
-          class="w-[150px] h-[100px] bg-gray-100 border rounded overflow-hidden relative shadow pt-1 hover:scale-120 hover:z-10 hover:shadow transition cursor-pointer"
-        >
-          <span
-            class="absolute top-0 right-2 cursor-pointer"
-            onclick="toggleFormEdit(${item.id})"
-            >edit</span
+       <div
+            class="w-[150px] h-[100px] bg-gray-100 border rounded overflow-hidden relative shadow pt-1 hover:scale-120 hover:z-[1] hover:shadow transition cursor-pointer"
           >
-          <div class="w-full bg-white h-[70%] flex justify-end items-center flex-col">
-            <h1 class="text-2xl font-bold">${item.name}</h1>
-           <span class="text-[14px] ">${item.type}</span>
-          </div>
-          <div class="w-full flex justify-center items-center">
-            <span class=""
-              >total : <span class="font-bold">${item.total} ${item.satuan}</span></span
+            <span
+              class="absolute top-0 right-2 cursor-pointer"
+              onclick="toggleFormEdit(${item.id}, '${getCookie().level != 1 ? `body` : `#content`}', '${section}', '${el_this}')"
+              >edit</span
             >
+            <div class="w-full bg-white h-[70%] flex justify-end items-center flex-col">
+              <h1 class="text-2xl font-bold">${item.name}</h1>
+             <span class="text-[14px] ">${item.type}</span>
+            </div>
+            <div class="w-full flex justify-center items-center">
+              <span class=""
+                >total : <span class="font-bold">${item.total} ${item.satuan}</span></span
+              >
+            </div>
           </div>
-        </div>
-       `;
+         `;
   });
 };
 
-const getDataStocks = async () => {
+const getDataStocks = async (section) => {
   const { data } = await fetch(
-    `${import.meta.env.VITE_URL_SERVER_DEV}/stocks?section=hk`,
+    `${import.meta.env.VITE_URL_SERVER_DEV}/stocks?section=${section}`,
   ).then((res) => res.json());
 
   return data;
 };
 
-const sendUpdate = async (form_data) => {
+const sendUpdate = async (form_data, section, el_this) => {
   try {
     const response = await fetch(
       `${import.meta.env.VITE_URL_SERVER_DEV}/stocks`,
@@ -66,7 +81,8 @@ const sendUpdate = async (form_data) => {
     if (response.status == 201) {
       alert(response.message);
       toggleFormEdit();
-      showBoxStocks(await getDataStocks());
+      if (getCookie().level == 1) showBoxStocks(section, el_this);
+      showBoxStocks(getCookie().position);
     } else {
       alert("Update gagal !");
     }
@@ -75,9 +91,8 @@ const sendUpdate = async (form_data) => {
   }
 };
 
-showBoxStocks(await getDataStocks());
-
+window.showBoxStocks = showBoxStocks;
 window.toggleFormEdit = toggleFormEdit;
 window.plusMinus = plusMinus;
 window.sendUpdate = sendUpdate;
-// window.showFormEdit = showFormEdit;
+window.getCookie = getCookie;

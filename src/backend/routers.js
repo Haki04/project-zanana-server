@@ -156,6 +156,7 @@ export const postInventory = async (req, res) => {
         total_item,
         satuan_item,
         extra_coment,
+        section,
       },
     ] = req.body;
 
@@ -165,7 +166,7 @@ export const postInventory = async (req, res) => {
     );
     if (cek.length == 0) {
       const [results] = await db.query(
-        `INSERT INTO inventory (name, type, reporting, total, satuan, coment) VALUES (?, ?, ?, ?, ?, ?)`,
+        `INSERT INTO inventory (name, type, reporting, total, satuan, coment,section) VALUES (?, ?, ?, ?, ?, ?, ?)`,
         [
           name_item,
           jenis_item,
@@ -173,6 +174,7 @@ export const postInventory = async (req, res) => {
           total_item,
           satuan_item,
           extra_coment,
+          section,
         ],
       );
 
@@ -217,7 +219,7 @@ export const getStoks = async (req, res) => {
       query_string =
         "SELECT id,name,type,total,satuan FROM inventory WHERE section = ? AND id = ?";
       query_query = [req.query.section, req.query.id_stocks];
-    } else {
+    } else if (req.query.section) {
       query_string =
         "SELECT id,name,type,total,satuan FROM inventory WHERE section = ?";
       query_query = [req.query.section];
@@ -289,10 +291,10 @@ export const getReports = async (req, res) => {
           query_string = "SELECT * FROM reporting";
           break;
         case "new-est":
-          query_string = "SELECT * FROM reporting ORDER BY date ASC";
+          query_string = "SELECT * FROM reporting ORDER BY date DESC";
           break;
         case "old-est":
-          query_string = "SELECT * FROM reporting ORDER BY date DESC";
+          query_string = "SELECT * FROM reporting ORDER BY date ASC";
           break;
         case "lapor":
           query_string = "SElECT * FROM reporting WHERE status = ?";

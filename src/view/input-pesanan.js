@@ -1,5 +1,6 @@
 import {
   animationLoading,
+  animationSpin,
   backPages,
   getCookie,
 } from "../controller/controller";
@@ -40,6 +41,8 @@ window.countOrderItem = (sign, e) => {
 
 window.removeItem = (items, index) => {
   data_list_order.splice(index, 1);
+  document.querySelector("span #count-order-item").textContent =
+    data_list_order.length;
 
   showItemOrder(items, data_list_order);
 };
@@ -67,6 +70,8 @@ window.addListItem = (items, e, evnt) => {
           });
           total.value = "0";
         }
+        document.querySelector("span #count-order-item").textContent =
+          data_list_order.length;
       }
     }
   } else {
@@ -95,12 +100,10 @@ window.btnToggle = (e) => {
 
   if (!toggle.checked) {
     div_lis_order.classList.remove("hidden");
-    e.classList.add("-rotate-90");
     toggle.checked = true;
   } else {
     toggle.checked = false;
     div_lis_order.classList.add("hidden");
-    e.classList.remove("-rotate-90");
   }
 };
 
@@ -165,7 +168,7 @@ export const showItems = (data) => {
   }
 };
 
-export const sendOrder = async () => {
+export const sendOrder = async (btn) => {
   const room_number = document.getElementById("room-number").value;
   const place_to_eat = document.getElementById("place-to-eat").value;
   if (data_list_order.length == 0) {
@@ -177,6 +180,7 @@ export const sendOrder = async () => {
       if (place_to_eat == "") {
         alert("tempat makan tidak boleh kosong");
       } else {
+        animationSpin(btn);
         const date = new Date();
         const uu_id = `${String(date.getHours()).padStart(2, `0`)}${String(date.getMinutes()).padStart(2, `0`)}${String(date.getSeconds()).padStart(2, `0`)}`;
         data_send.push({
@@ -216,6 +220,9 @@ export const sendOrder = async () => {
             document.getElementById("list-item-li"),
             (data_list_order = []),
           );
+
+          document.querySelector("span #count-order-item").textContent =
+            data_list_order.length;
 
           alert(results.message);
         } else {
@@ -258,9 +265,9 @@ export const showSerchingBox = () => {
         class="fixed top-2 right-2 bg-white/80 z-10 border flex flex-row gap-3 p-1" id="box-searching"
       >
         <span
-          class="absolute -left-6 font-bold cursor-pointer"
+          class="absolute -left-9 font-bold cursor-pointer w-[10%] flex justify-between"
           onclick="btnToggle(this)"
-          >&lt;</span
+          ><span id="count-order-item">0</span><img src="/icon/order.png"  class="w-[20px] inline-block"/></span
         >
         <ul
           class="flex flex-row items-center gap-3 [&>li]:cursor-pointer [&>li]:text-[14px]"
@@ -293,7 +300,7 @@ export const showSerchingBox = () => {
               id="list-item-li"
             ></ul>
             <button
-              onclick="sendOrder(); if (data_send.length !== 0) {animationSpin(this);}"
+              onclick="sendOrder(this)"
               class="p-1 mb-3 bg-green-300/50 border rounded cursor-pointer relative overflow-hidden"
             >
               kirim order

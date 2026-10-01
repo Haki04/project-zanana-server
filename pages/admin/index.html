@@ -13,7 +13,7 @@
       >
         <!-- kiri -->
         <div
-          class="w-[20%] h-full flex flex-col justify-start items-center bg-white"
+          class="w-[20%] h-full flex flex-col justify-start items-center bg-white rounded-l overflow-hidden"
         >
           <div
             class="h-[20%] bg-red-200 w-full flex justify-center items-center"
@@ -33,6 +33,7 @@
                 Dashboard
               </li>
               <li onclick="section('inventory', this)">Inventory</li>
+              <li onclick="section('stocks', this)">Stocks</li>
               <li onclick="section('staff', this)">Staff</li>
               <li onclick="section('pesanan', this)">Pesanan</li>
               <li onclick="section('kerusakan', this)">Kerusakan</li>
@@ -60,6 +61,9 @@
         ></div>
       </div>
     </div>
+    <script>
+      window.onload = () => section("kerusakan", "");
+    </script>
     <script type="module" src="/src/view/dashboard.js"></script>
   </body>
 </html>

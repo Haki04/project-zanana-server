@@ -22,6 +22,11 @@
         id="content"
       ></div>
     </div>
+    <script>
+      window.onload = () => {
+        showBoxStocks(getCookie().position);
+      };
+    </script>
     <script type="module" src="/src/view/stocks.js"></script>
   </body>
 </html>
