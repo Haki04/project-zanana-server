@@ -13,6 +13,7 @@ import {
   getReports,
   getOrderTamu,
   deleteEditReport,
+  getStaff,
 } from "./routers.js";
 import cors from "cors";
 
@@ -26,6 +27,7 @@ app.use(express.json());
 
 app.get("/users/orders", getOrders);
 app.get("/users", getUser);
+app.get("/staffs", getStaff);
 app.get("/inventory", getDataSection);
 app.get("/stocks", getStoks);
 app.get("/report", getReports);

@@ -207,3 +207,14 @@ export const activeListHilight = (parent, el, bg_hilight = "bg-white") => {
   }
   el?.classList?.add(bg_hilight);
 };
+
+// log out
+
+export const logOutUser = () => {
+  document.cookie.split(";").forEach((cookie) => {
+    const name = cookie.split("=")[0].trim();
+    document.cookie = `${name}=; max-age=0; path=/`;
+  });
+
+  return (window.location.href = "/pages/login");
+};

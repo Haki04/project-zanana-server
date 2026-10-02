@@ -2,6 +2,7 @@ import {
   animationLoading,
   backPages,
   getCookie,
+  logOutUser,
 } from "../controller/controller";
 
 if (!getCookie()) {
@@ -58,13 +59,6 @@ const getUser = async () => {
   }
 };
 
-window.logOutUser = () => {
-  document.cookie.split(";").forEach((cookie) => {
-    const name = cookie.split("=")[0].trim();
-    document.cookie = `${name}=; max-age=0; path=/`;
-  });
-
-  return (window.location.href = "/pages/login");
-};
-if (!getCookie().level == 1) backPages();
-getUser();
+if (getCookie().level != 1) backPages();
+window.getUser = getUser;
+window.logOutUser = logOutUser;

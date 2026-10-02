@@ -3,7 +3,7 @@ import { selectRender } from "./components/select-render.js";
 import { showFormReport } from "./report.js";
 
 const editDelete = async (id, args, data = {}) => {
-  if (args == 1 && confirm("ingin menghapus item ?")) return;
+  if (args == 1 && !confirm("ingin menghapus item ?")) return;
   const { message, status } = await fetch(
     `${import.meta.env.VITE_URL_SERVER_DEV}/report/action?id=${id}`,
     {
@@ -72,7 +72,7 @@ const validedKerusakanForm = async (parent, id) => {
 };
 
 const filterKerusakan = async (select_value) => {
-  showItemBrokeness("kerusakan", await filterItem(select_value));
+  showItemBrokeness("kerusakan-item-list", await filterItem(select_value));
 };
 
 export const getDataBrokeness = async (element, parent) => {

@@ -8,6 +8,8 @@ import {
 } from "../controller/controller.js";
 import { getDataBrokeness, showFormEditKerusakan } from "./kerusakan.js";
 import { showBoxStocks } from "./stocks.js";
+import { showStaffBoxs } from "./staff.js";
+import { logOutUser } from "../controller/controller.js";
 
 if (getCookie().level != 1 || !getCookie()) {
   window.location.href = "/pages/login";
@@ -43,24 +45,6 @@ const dataSection = {
     `,
 };
 
-const showStaffBoxs = (element) => {
-  const data = ["kiki", "yani", "dody"];
-  data.map((item) => {
-    document.getElementById(element).innerHTML += `
-             <div
-              class="w-[100px] h-[150px] bg-white rounded flex flex-col justify-start items-center p-1"
-            >
-              <div
-                class="bg-gray-400 w-[80px] h-[80px] rounded-full overflow-hidden flex"
-              ></div>
-              <span>${item}</span>
-              <span>shiff : <span class="font-bold ">ON</span></span>
-              
-            </div>
-    `;
-  });
-};
-
 const section = (a, el_this) => {
   if (!document.getElementById("cek-exist")) {
     document
@@ -74,7 +58,41 @@ const section = (a, el_this) => {
   document.querySelectorAll("#back-pages").forEach((item) => item.remove());
   const div = document.getElementById("content-right");
   if (a == "dashboard") {
-    div.innerHTML = dataSection.dashboard;
+    div.innerHTML = `
+    <div
+            class="w-full bg-slate-300 flex flex-row gap-1 p-1"
+            id="staff"
+          ></div>
+     <div class="bg-white h-full w-full flex flex-col justify-start">
+            <div class="w-full h-[70px]">
+              <div class="w-full flex justify-between">
+                <h1 class="text-2xl ml-2">Kerusakan</h1>
+                <div class="w-[200px] bg-amber-100 flex items-center">
+              
+              <select
+                name=""
+                id="select-dashboard-dashboard"
+                class="flex-2"
+                onchange="filterKerusakan(this.value)"
+              ></select>
+            </div>
+              </div>
+              <div class="w-full bg-white">
+              <div class="w-[100px] bg-red-300 ">
+              
+              </div>
+                <ul class="flex flex-row justify-around items-center">
+                  <li>posisi</li>
+                  <li>repoter</li>
+                  <li>status</li>
+                  <li>date</li>
+                  <li>action</li>
+                </ul>
+              </div>
+            </div>
+            <div class="w-full bg-slate-400 h-full p-1 relative" id="kerusakan"></div>
+          </div>
+    `;
     showStaffBoxs("staff");
     getDataBrokeness("kerusakan", "dashboard");
     animationLoading("content-right");
@@ -214,6 +232,7 @@ const section = (a, el_this) => {
 
 window.section = section;
 window.inventoryReport = inventoryReport;
+window.logOutUser = logOutUser;
 
 // section("dashboard");
 

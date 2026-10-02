@@ -378,3 +378,22 @@ export const getOrderTamu = async (req, res) => {
     });
   }
 };
+
+///
+
+export const getStaff = async (req, res) => {
+  try {
+    const [results] = await db.query(
+      "SELECT * FROM users WHERE user_level != ?",
+      ["1"],
+    );
+    if (results.length > 0) {
+      res.json({
+        status: 200,
+        data: results,
+      });
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};

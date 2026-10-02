@@ -48,7 +48,9 @@
               class="w-[50px] h-[50px]"
             />
             <span class="font-bold text-[10px]">KIKI</span>
-            <span class="font-bold text-[14px] p-1 bg-gray-50 rounded"
+            <span
+              class="font-bold text-[14px] p-1 bg-gray-50 rounded cursor-pointer"
+              onclick="confirm('ingin keluar ?') ? logOutUser() : ''"
               >Log Out</span
             >
           </div>
@@ -62,7 +64,7 @@
       </div>
     </div>
     <script>
-      window.onload = () => section("dashboard", "");
+      window.onload = () => section("staff", "");
     </script>
     <script type="module" src="/src/view/dashboard.js"></script>
   </body>
