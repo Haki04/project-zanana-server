@@ -4,22 +4,59 @@ import {
   animationLoading,
   activeListHilight,
 } from "../controller/controller";
+import { selectRender } from "./components/select-render";
+
 if (!getCookie()) {
   window.location.href = "/pages/login";
 }
 
-const data_forms = {
-  form: `  <div
-          class="w-[300px] bg-gray-200/70 p-1 [&>*]:mb-2 rounded shadow-sm [&_*]:focus:outline-gray-500"
+const data_section_form = {
+  hk: {
+    section_name: "ktn",
+    item_list_jenis: [
+      "sayuran",
+      "buah",
+      "frozen",
+      "cair",
+      "kering",
+      "bumbu-cair",
+      "bumbu-bubuk",
+      "bumbu-pasta",
+    ],
+    item_list_laporan: ["restock", "sold-out", "inventory"],
+    item_list_satuan: ["kg", "pcs", "pack", "trey", "duz", "satuan"],
+  },
+};
+
+let data_send_orders = [];
+const data_select_items = [
+  "pillow",
+  "pillow-case",
+  "sheet",
+  "selimut",
+  "gelas-coffee",
+  "handuk",
+];
+
+window.inventoryForm = (element, section) => {
+  if (!element) return;
+  element.innerHTML = "";
+  element.innerHTML = ` <div
+          class="w-[300px] bg-gray-200/70 p-1 [&>*]:mb-2 rounded shadow-sm [&>*]:focus:outline-gray-500"
           id="form-inventory"
         >
-          <h1 class="text-3xl text-center font-bold mb-3" id='title'></h1>
+        <h1 class="text-3xl text-center font-bold mb-3" id='title'></h1>
+          <div class="w-full relative">
           <input
             id="item-name"
             type="text"
+            oninput="randerSearching(document.getElementById('items-searching-suggestion'), this)"
             class="w-full p-2 bg-white"
             placeholder="Nama item"
           />
+           <div class="absolute top-full w-full bg-white max-h-[300px] pt-1 [&>*]:p-1 [&>*]:mb-1 overflow-y-scroll [&>*]:border " id="items-searching-suggestion">
+            </div>
+          </div>
           <select name="" id="item-jenis" class="w-full bg-white p-2">
             <option value="" disabled selected>Jenis</option>
           </select>
@@ -41,34 +78,19 @@ const data_forms = {
             placeholder="extra comment"
             class="w-full bg-white p-2 h-20 overflow-auto resize-none"
           ></textarea>
-          <button class="w-[70%] bg-white p-2 cursor-pointer" onclick="sendForm(this)" id="btn-inventory">Report</button>
-        </div>`,
-};
+          <button class="w-[70%] bg-white p-2 cursor-pointer" onclick="sendForm(this)" id="btn-inventory">Kirim</button>
+        </div>`;
 
-const data_section_form = {
-  hk: {
-    section_name: "ktn",
-    item_list_jenis: [
-      "sayuran",
-      "buah",
-      "frozen",
-      "cair",
-      "kering",
-      "bumbu-cair",
-      "bumbu-bubuk",
-      "bumbu-pasta",
-    ],
-    item_list_laporan: ["restock", "sold-out", "inventory"],
-    item_list_satuan: ["kg", "pcs", "pack", "trey", "duz", "satuan"],
-  },
-};
+  // if (getCookie().level != 1)
+  //   selectRender(
+  //     document.getElementById("select-form-inventory"),
+  //     // fetch(`${import.meta.env.VITE_URL_SERVER_DEV}/items`).then((res) =>
+  //     //   res.json(),
+  //     // ),
 
-let data_send_orders = [];
-
-window.inventoryForm = (element, section) => {
-  if (!element) return;
-  element.innerHTML = "";
-  element.innerHTML = data_forms.form;
+  //     ["pillow case", "selimut"],
+  //     "",
+  //   );
   const title = document
     .getElementById("form-inventory")
     .querySelector("#title");
@@ -96,7 +118,29 @@ window.inventoryForm = (element, section) => {
   }
 };
 
-// inventory(document.getElementById("content"), "fo");
+const randerSearching = (parent, el_this) => {
+  if (el_this.value == "") {
+    parent.innerHTML = "";
+    return;
+  }
+  parent.innerHTML = "";
+  data_select_items
+    ?.filter((item) =>
+      item.toLowerCase().startsWith(el_this.value.toLowerCase()),
+    )
+    .map(
+      (item) =>
+        (parent.innerHTML += `<span onclick="setValueInput('${el_this.getAttribute(`id`)}', '${item}')" class="w-full bg-white  inline-block cursor-pointer">${item}</span>`),
+    );
+};
+
+const setValueInput = (element, value) => {
+  const input = document.getElementById(element);
+  input.value = value;
+  input.parentElement.querySelector("#items-searching-suggestion").innerHTML =
+    "";
+};
+
 export const inventoryReport = async (section, el_this) => {
   if (!section) {
     return;
@@ -195,8 +239,12 @@ window.sendForm = async (el_this) => {
   }
 };
 
-if (!getCookie().level == 1) {
-  animationLoading("content");
+if (getCookie().level != 1) {
+  // animationLoading("content", "before");
+  backPages();
 }
-// auto runing funtion
-inventoryReport(getCookie().position, "");
+
+window.inventoryReport = inventoryReport;
+window.getCookie = getCookie;
+window.setValueInput = setValueInput;
+window.randerSearching = randerSearching;

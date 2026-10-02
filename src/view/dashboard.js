@@ -6,44 +6,14 @@ import {
   activeListHilight,
   getCookie,
 } from "../controller/controller.js";
-import { getDataBrokeness, showFormEditKerusakan } from "./kerusakan.js";
-import { showBoxStocks } from "./stocks.js";
+import { getDataBrokeness } from "./kerusakan.js";
 import { showStaffBoxs } from "./staff.js";
 import { logOutUser } from "../controller/controller.js";
+import { showBoxStocks } from "./stocks.js";
 
 if (getCookie().level != 1 || !getCookie()) {
   window.location.href = "/pages/login";
 }
-
-const dataSection = {
-  dashboard: `
-        <div
-            class="w-full bg-slate-300 flex flex-row gap-1 p-1"
-            id="staff"
-          ></div>
-          <div class="bg-white h-[500px] w-full flex flex-col justify-start">
-            <div class="w-full bg-slate-300 h-[70px]">
-              <div class="w-full flex justify-between bg-white">
-                <h1 class="text-2xl ml-2">Kerusakan</h1>
-                <div class="w-[200px] bg-amber-100 flex items-center">
-                  <select name="" id="select-dashboard-dashboard" onchange="filterKerusakan(this.value)">
-                  </select>
-                </div>
-              </div>
-              <div class="w-full bg-white">
-                <ul class="flex flex-row justify-around items-center">
-                  <li>posisi</li>
-                  <li>repoter</li>
-                  <li>status</li>
-                  <li>date</li>
-                  <li>action</li>
-                </ul>
-              </div>
-            </div>
-            <div class="w-full bg-slate-400 h-full p-1 overflow-y-scroll " id="kerusakan"></div>
-          </div>
-    `,
-};
 
 const section = (a, el_this) => {
   if (!document.getElementById("cek-exist")) {
@@ -90,7 +60,7 @@ const section = (a, el_this) => {
                 </ul>
               </div>
             </div>
-            <div class="w-full bg-slate-400 h-full p-1 relative" id="kerusakan"></div>
+            <div class="w-full bg-slate-400 max-h-[500px] px-1 pb-1 relative" id="kerusakan"></div>
           </div>
     `;
     showStaffBoxs("staff");
@@ -231,6 +201,7 @@ const section = (a, el_this) => {
 };
 
 window.section = section;
+window.showBoxStocks = window.showBoxStocks;
 window.inventoryReport = inventoryReport;
 window.logOutUser = logOutUser;
 

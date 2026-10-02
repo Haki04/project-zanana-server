@@ -1,6 +1,12 @@
-import { animationSpin, filterItem } from "../controller/controller.js";
+import {
+  animationLoading,
+  animationSpin,
+  filterItem,
+  getCookie,
+} from "../controller/controller.js";
 import { selectRender } from "./components/select-render.js";
 import { showFormReport } from "./report.js";
+import { backPages } from "../controller/controller.js";
 
 const editDelete = async (id, args, data = {}) => {
   if (args == 1 && !confirm("ingin menghapus item ?")) return;
@@ -235,6 +241,10 @@ export const toggle = (content, el_this) => {
   }
 };
 
+if (getCookie().level != 1) {
+  animationLoading("content");
+  backPages();
+}
 window.getDataBrokeness = getDataBrokeness;
 window.editDelete = editDelete;
 window.validedKerusakanForm = validedKerusakanForm;

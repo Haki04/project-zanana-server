@@ -13,7 +13,9 @@
         id="content"
       ></div>
     </div>
-    <script></script>
+    <script>
+      window.onload = () => inventoryReport(getCookie().position, "");
+    </script>
     <script type="module" src="/src/view/inventory.js"></script>
   </body>
 </html>

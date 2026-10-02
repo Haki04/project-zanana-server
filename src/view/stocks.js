@@ -10,10 +10,14 @@ import {
 if (!getCookie()) {
   window.location.href = "/pages/login";
 }
-if (!getCookie().level == 1) {
-  backPages();
-  animationLoading("content");
+if (getCookie().level != 1) {
+  animationLoading("content", "before");
 }
+
+const greatingUser = () => {
+  document.getElementById("greating-user").textContent =
+    `Welcome ${getCookie().name} > ${getCookie().position}`;
+};
 
 export const showBoxStocks = async (section, el_this) => {
   if (!section) return;
@@ -28,7 +32,7 @@ export const showBoxStocks = async (section, el_this) => {
   content_stocks.innerHTML = "";
   if (getCookie().level == 1) {
     content_stocks.innerHTML += `
-  <div class=" w-full h-full grid grid-cols-4 justify-items-center content-start gap-2 overflow-y-scroll" id="content-stocks-dashboard"></div>
+  <div class=" w-full h-full grid md:grid-cols-3 lg:grid-cols-4 justify-items-center content-start gap-2 overflow-y-scroll" id="content-stocks-dashboard"></div>
   `;
     content_stocks = content_stocks.querySelector("#content-stocks-dashboard");
   }
@@ -36,7 +40,7 @@ export const showBoxStocks = async (section, el_this) => {
   data.map((item) => {
     content_stocks.innerHTML += `
        <div
-            class="w-[150px] h-[100px] bg-gray-100 border rounded overflow-hidden relative shadow pt-1 hover:scale-120 hover:z-[1] hover:shadow transition cursor-pointer"
+            class="w-[150px] h-[100px] bg-gray-100 border rounded overflow-hidden relative shadow pt-1 hover:scale-110 hover:z-[1] hover:shadow transition cursor-pointer"
           >
             <span
               class="absolute top-0 right-2 cursor-pointer"
@@ -65,7 +69,7 @@ const getDataStocks = async (section) => {
   return data;
 };
 
-const sendUpdate = async (form_data, section, el_this) => {
+const sendUpdateStocks = async (form_data, section, el_this) => {
   try {
     const response = await fetch(
       `${import.meta.env.VITE_URL_SERVER_DEV}/stocks`,
@@ -94,5 +98,6 @@ const sendUpdate = async (form_data, section, el_this) => {
 window.showBoxStocks = showBoxStocks;
 window.toggleFormEdit = toggleFormEdit;
 window.plusMinus = plusMinus;
-window.sendUpdate = sendUpdate;
+window.sendUpdateStocks = sendUpdateStocks;
 window.getCookie = getCookie;
+window.greatingUser = greatingUser;

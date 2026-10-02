@@ -114,7 +114,7 @@ export const toggleFormEdit = (id, parent, section, el_this) => {
               <div class="flex justify-around gap-2 p-1">
                 <button
                   class="bg-green-200 w-[50%] p-2 rounded cursor-pointer hover:shadow"
-                  onclick="sendUpdate({id : ${data.id},total : document.getElementById('input-total').value}, '${section}', '${el_this}')"
+                  onclick="sendUpdateStocks({id : ${data.id},total : document.getElementById('input-total').value}, '${section}', '${el_this}')"
                 >
                   simpan
                 </button>
@@ -175,9 +175,9 @@ export const animationSpin = (element, progres) => {
   }, 1000);
 };
 
-export const animationLoading = (element) => {
+export const animationLoading = (element, layout = "after") => {
   document.querySelector(`#${element}`).insertAdjacentHTML(
-    "afterbegin",
+    `${layout}begin`,
     `
     <div class="absolute bg-gray-200 z-20 w-full h-screen flex justify-center md:items-center" id="animate-load">
       <span

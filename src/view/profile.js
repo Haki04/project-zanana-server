@@ -11,7 +11,6 @@ if (!getCookie()) {
 
 // show user
 const showProfile = (content, data_user) => {
-  animationLoading("content");
   content.innerHTML = `
     <div
         class="w-[250px] md:w-[300px] p-2 bg-white/85 rounded-2xl shadow-md flex flex-col justify-start items-center flex-wrap gap-5"
@@ -59,6 +58,9 @@ const getUser = async () => {
   }
 };
 
-if (getCookie().level != 1) backPages();
+if (getCookie().level != 1) {
+  animationLoading("content", "before");
+  backPages();
+}
 window.getUser = getUser;
 window.logOutUser = logOutUser;

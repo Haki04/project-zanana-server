@@ -109,13 +109,14 @@ window.btnToggle = (e) => {
 
 window.filterItems = (arg) => {
   setTimeout(
-    showItems(
-      data_item.filter((item) =>
-        ["name", "category"].some((key) =>
-          item[key]?.toLowerCase().startsWith(arg.toLowerCase()),
+    () =>
+      showItems(
+        data_item.filter((item) =>
+          ["name", "category"].some((key) =>
+            item[key]?.toLowerCase().startsWith(arg.toLowerCase()),
+          ),
         ),
       ),
-    ),
     500,
   );
 };
@@ -159,8 +160,8 @@ export const showItems = (data) => {
         </div>
         `;
     });
-    if (!getCookie().level == 1) {
-      animationLoading("input-pesanan");
+    if (getCookie().level != 1) {
+      animationLoading("content");
       backPages();
     }
   } catch (error) {

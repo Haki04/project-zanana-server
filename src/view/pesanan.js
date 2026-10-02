@@ -47,13 +47,13 @@ export const showOrdersItem = async (element) => {
               .join(``)}
               <li class="grid grid-cols-1 gap-1 mt-1 justify-items-center place-items-end h-full w-full">
                ${item.order_status == `order` || item.order_status == `in proses` ? ` <span class="bg-yellow-200 text-[14px] text-center p-1 rounded">${item.order_status}</span>` : ``}
-                <button id="btn-pesanan" data-action="${item.order_status}" class="${sign_orders} w-[90%] md:w-[70%] relative overflow-hidden cursor-pointer text-[14px] p-2 py-2 rounded" onclick="sendUpdate(${item.uu_id},'${sign_progres}', this); animationSpin(this, '${sign_progres}')">${sign_progres} ${sign_progres == `selesai` ? `😁` : ``}</button>
+                <button id="btn-pesanan" data-action="${item.order_status}" class="${sign_orders} w-[90%] md:w-[70%] relative overflow-hidden cursor-pointer text-[14px] p-2 py-2 rounded" onclick="sendUpdatePesanan(${item.uu_id},'${sign_progres}', this); animationSpin(this, '${sign_progres}')">${sign_progres} ${sign_progres == `selesai` ? `😁` : ``}</button>
               </li>
             </ul>
           </div>
         </div>
 `;
-      if (!getCookie().level == 1) {
+      if (getCookie().level != 1) {
         if (count == 0) animationLoading("pesanan");
         count++;
         backPages();
@@ -64,7 +64,7 @@ export const showOrdersItem = async (element) => {
   }
 };
 
-export const sendUpdate = async (id, progres, el) => {
+export const sendUpdatePesanan = async (id, progres, el) => {
   if (progres == "selesai") return;
   let status_new = "";
 
@@ -100,6 +100,6 @@ export const sendUpdate = async (id, progres, el) => {
 
 showOrdersItem(document.getElementById("pesanan"));
 
-window.sendUpdate = sendUpdate;
+window.sendUpdatePesanan = sendUpdatePesanan;
 window.animationLoading = animationLoading;
 window.animationSpin = animationSpin;
