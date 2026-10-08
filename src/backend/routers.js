@@ -76,11 +76,11 @@ const randomCodeOrder = async () => {
 
 export const postOrders = async (req, res) => {
   try {
-    const [{ room, items, status, uu_id, place }] = req.body;
+    const [{ room, items, status, uu_id, place, type }] = req.body;
     const code = await randomCodeOrder();
     await db.query(
-      `INSERT INTO orders (uu_id, order_room, order_items, order_status, item_code, place_to_eat, order_code) VALUES (?,?,?,?,?,?,?)`,
-      [uu_id, room, items, status, "food", place, code],
+      `INSERT INTO orders (uu_id, order_room, order_items, order_status, order_type, place_to_eat, order_code) VALUES (?,?,?,?,?,?,?)`,
+      [uu_id, room, items, status, type, place, code],
     );
     res.status(201).json({
       success: 201,
@@ -99,7 +99,7 @@ export const postOrders = async (req, res) => {
 export const getOrders = async (req, res) => {
   try {
     const [results] = await db.query(
-      `SELECT order_room, order_items, order_status, uu_id, place_to_eat FROM orders ORDER BY CASE
+      `SELECT order_room, order_items, order_status, uu_id, place_to_eat, order_type FROM orders ORDER BY CASE
       WHEN order_status = 'in proses' THEN 1
       WHEN order_status = 'order' THEN 2  
       WHEN order_status = 'selesai' THEN 3
@@ -141,8 +141,33 @@ export const updateOrders = async (req, res) => {
 };
 
 // inventory
+
+export const updateFormSectionItem = async (req, res) => {
+  try {
+    const [results] = await db.query(
+      `UPDATE section SET section_data = ? WHERE section_name = ?`,
+      [req.body.data_form, req.body.section],
+    );
+    results.affectedRows > 0
+      ? res.json({ status: 201, message: "berhasil" })
+      : res.json({ status: 404, message: "gagal" });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getDataItemSection = async (req, res) => {
+  const [results] = await db.query(
+    `SELECT name FROM inventory WHERE section = ?`,
+    [req.query.section],
+  );
+
+  res.json({
+    data: results,
+  });
+};
+
 export const getDataSection = async (req, res) => {
-  // console.log(req.query.section);
   const [results] = await db.query(
     `SELECT * FROM section WHERE section_name = ?`,
     [req.query.section],
@@ -161,6 +186,7 @@ export const postInventory = async (req, res) => {
         report_item,
         total_item,
         satuan_item,
+        code_item,
         extra_coment,
         section,
       },
@@ -172,7 +198,7 @@ export const postInventory = async (req, res) => {
     );
     if (cek.length == 0) {
       const [results] = await db.query(
-        `INSERT INTO inventory (name, type, reporting, total, satuan, coment,section) VALUES (?, ?, ?, ?, ?, ?, ?)`,
+        `INSERT INTO inventory (name, type, reporting, total, satuan, coment,section,code) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
         [
           name_item,
           jenis_item,
@@ -181,6 +207,7 @@ export const postInventory = async (req, res) => {
           satuan_item,
           extra_coment,
           section,
+          code_item,
         ],
       );
 
@@ -396,4 +423,32 @@ export const getStaff = async (req, res) => {
   } catch (error) {
     console.log(error);
   }
+};
+
+// information
+
+export const postInformation = async (req, res) => {
+  try {
+    const { name, reporter, data, status, data_action, section } = req.body;
+    const [results] = await db.query(
+      `INSERT INTO information (info_name, info_reporter, info_data, status, date_action, section)
+       VALUE (?, ?, ?, ?, ?, ?)`,
+      [name, reporter, data, status, data_action, section],
+    );
+    if (results.affectedRows > 0) {
+      res.json({
+        status: 201,
+        data: results,
+      });
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getInformation = async (req, res) => {
+  try {
+    const [results] = await db.query("SELECT * FROM information");
+    if (results) res.json({ status: 200, data: results });
+  } catch (error) {}
 };

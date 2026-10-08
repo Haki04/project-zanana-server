@@ -20,7 +20,6 @@ export const showOrdersItem = async (element) => {
     data.data.map((item) => {
       let sign_orders = "bg-gray-300";
       let sign_progres;
-
       switch (item.order_status) {
         case "order":
           sign_progres = "proses";
@@ -40,7 +39,7 @@ export const showOrdersItem = async (element) => {
           </div>
           <div class=" w-full h-full md:h-[60%]">
             <ul class="flex flex-col items-center bg-white p-1 h-full overflow-y-scroll">
-            <span class="sticky top-0 bg-white/70 text-center w-[50%] font-bold w-full md:w-fit">${item.place_to_eat}</span>
+            <span class="sticky top-0 ${item.order_type == `order` && sign_progres != `selesai` ? `bg-red-300/70` : `bg-white/20`} text-center w-[50%] font-bold w-full md:w-full">${item.place_to_eat} | ${item.order_type}</span>
               
             ${item.order_items
               .map((d) => `<li class="w-full">${d.name} ${d.total}x</li>`)

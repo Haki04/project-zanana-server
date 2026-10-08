@@ -10,12 +10,13 @@ import { getDataBrokeness } from "./kerusakan.js";
 import { showStaffBoxs } from "./staff.js";
 import { logOutUser } from "../controller/controller.js";
 import { showBoxStocks } from "./stocks.js";
+import { showInformation } from "./information.js";
 
 if (getCookie().level != 1 || !getCookie()) {
   window.location.href = "/pages/login";
 }
 
-const section = (a, el_this) => {
+const section = async (a, el_this) => {
   if (!document.getElementById("cek-exist")) {
     document
       .querySelector("body")
@@ -24,7 +25,6 @@ const section = (a, el_this) => {
         '<div id="cek-exist" class="hidden">test</div>',
       );
   }
-  activeListHilight();
   document.querySelectorAll("#back-pages").forEach((item) => item.remove());
   const div = document.getElementById("content-right");
   if (a == "dashboard") {
@@ -81,10 +81,11 @@ const section = (a, el_this) => {
     div.innerHTML += `
     <div class="absolute top-[50%] translate-y-[-50%] left-0 bg-transparent ">
       <ul class="p-1 [&>*]:border [&>*]:mt-1 [&>*]:cursor-pointer [&>*]:px-2 [&>*]:hover:bg-gray-50 [&>*]:text-center" id="ul-inventory-dashboard">
+
       <li onclick="inventoryReport('hk', this)">HK</li>
       <li onclick="inventoryReport('ktn', this)">KTN</li>
       <li onclick="inventoryReport('fo', this)">FO</li>
-      <li onclick="inventoryReport('enge', this)">ENG</li>
+      <li onclick="inventoryReport('eng', this)">ENG</li>
       </ul>
     </div>
     `;
@@ -108,7 +109,7 @@ const section = (a, el_this) => {
       <li onclick="showBoxStocks('hk', this)">HK</li>
       <li onclick="showBoxStocks('ktn', this)">KTN</li>
       <li onclick="showBoxStocks('fo', this)">FO</li>
-      <li onclick="showBoxStocks('enge', this)">ENG</li>
+      <li onclick="showBoxStocks('eng', this)">ENG</li>
       </ul>
     </div>
     `;
@@ -197,13 +198,70 @@ const section = (a, el_this) => {
       el_this,
       "bg-yellow-100",
     );
+  } else if (a == "information") {
+    div.innerHTML = `
+      <div
+        class="w-full h-full max-w-[1000px] bg-white rounded overflow-hidden shadow-sm"
+        id="content"
+      >
+        <!-- atas -->
+        <div class="w-full bg-white p-2 h-[10%] border-b-2 border-gray-100">
+          <ul
+            class="w-full h-full flex justify-around items-center [&>*]:p-2 [&>*]:flex-1 gap-2 [&>*]:rounded [&>*]:text-center [&>*]:cursor-pointer [&>*]:shadow"
+            id="ul-information"
+          >
+            <li onclick="filterInformation(this, 'all')" class="bg-green-200">
+              All
+            </li>
+            <li onclick="filterInformation(this, 'hk')">HK</li>
+            <li onclick="filterInformation(this, 'fo')">FO</li>
+            <li onclick="filterInformation(this, 'ktn')">KTN</li>
+            <li onclick="filterInformation(this, 'eng')">ENG</li>
+          </ul>
+        </div>
+        <!-- bawah -->
+        <div
+          class="w-full h-[90%] bg-white/50 p-2 flex flex-wrap gap-2 justify-center"
+          id="content-information"
+        ></div>
+      </div>
+    `;
+    showInformation("content-information", await getInformation());
   }
 };
 
+const editSectionDataInventory = (parent, section) => {
+  document.getElementById(parent).innerHTML = `
+  <div class="w-full h-full flex justify-center items-center" >
+          <div class="w-[300px] h-[350px] bg-white/80 p-2 rounded shadow" id="form-parent-iventory-edit-item">
+          <h1 class="w-full text-center text-2xl">Edit Item <span class="uppercase ">${section}</span></h1>
+            <div class="w-full p-1 flex gap-2 [&>*]:cursor-pointer">
+              <select
+                onchange="filterInventoryEditItemForm(this.value)"
+                id="select-inventory-edit"
+                class="w-[50%] bg-yellow-200/50 p-1 flex-2"
+              >
+                <option value="" selected disabled>choose</option>
+                <option value="item_list_jenis" onclick="filterInventoryEditItemForm(this.value)">jenis</option>
+                <option value="item_list_laporan" onclick="filterInventoryEditItemForm(this.value)">laporan</option>
+                <option value="item_list_satuan" onclick="filterInventoryEditItemForm(this.value)">satuan</option>
+              </select>
+              <button onclick="updateItemFormInventory(document.getElementById('select-inventory-edit'))" class="p-1 bg-green-300 flex-2">save</button>
+              <button onclick="addItemFormInventory()" class="p-1 bg-blue-300 flex-1">add</button>
+            </div>
+            <div class="h-[250px] w-full p-1 flex flex-col gap-1 [&>*]:shadow overflow-y-scroll" id="form-edit-inventory-data">
+              
+            </div>
+          </div>
+        </div>
+  `;
+};
+
 window.section = section;
-window.showBoxStocks = window.showBoxStocks;
+window.showBoxStocks = showBoxStocks;
 window.inventoryReport = inventoryReport;
 window.logOutUser = logOutUser;
+window.editSectionDataInventory = editSectionDataInventory;
 
 // section("dashboard");
 

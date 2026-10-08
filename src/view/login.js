@@ -31,7 +31,7 @@ window.login = async () => {
           window.location.href = "/pages/users/profile";
         }
       } else {
-        console.log("gagal login");
+        alert("username atau password salah");
       }
     }
   }
@@ -56,13 +56,14 @@ window.cekUser = (name) => {
   clearTimeout(timer);
   timer = setTimeout(async () => {
     if (name !== "") {
-      const sebagai = document.getElementById("sebagai");
-      const {
-        data: [{ position }],
-      } = await getAsUser(name);
-      sebagai.innerHTML = "Sebagai : ";
-      sebagai.innerHTML += `
+      try {
+        const sebagai = document.getElementById("sebagai");
+        const { data: [{ position = "-" } = {}] = [] } =
+          (await getAsUser(name)) || "-";
+        sebagai.innerHTML = "Sebagai : ";
+        sebagai.innerHTML += `
             <span class="font-bold bg-gray-100 px-5 rounded uppercase">${position}</span>`;
+      } catch (error) {}
     }
   }, 1000);
 };

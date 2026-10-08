@@ -24,7 +24,7 @@ export const data_item = [
   },
 ];
 
-export let data_list_order = [];
+let data_list_order = [];
 
 let data_send = [];
 
@@ -32,9 +32,9 @@ window.countOrderItem = (sign, e) => {
   const el = e.target.closest("#input_count");
   const element = el.querySelector("input");
 
-  if (sign === "+") {
+  if (sign == "+") {
     element.value++;
-  } else if (sign === "-" && element.value > 0) {
+  } else if (sign == "-" && element.value > 0) {
     element.value--;
   }
 };
@@ -90,7 +90,11 @@ window.btnToggle = (e) => {
     });
     loopingSelect({
       content: document.getElementById("place-to-eat"),
-      data: ["pool", "resto", "room"],
+      place: ["pool", "resto", "room"],
+    });
+    loopingSelect({
+      content: document.getElementById("type-order"),
+      type: ["order", "breakfast"],
     });
   }
 
@@ -172,6 +176,7 @@ export const showItems = (data) => {
 export const sendOrder = async (btn) => {
   const room_number = document.getElementById("room-number").value;
   const place_to_eat = document.getElementById("place-to-eat").value;
+  const order_type = document.getElementById("type-order").value;
   if (data_list_order.length == 0) {
     alert("list orderan tidak boleh kosong");
   } else {
@@ -180,6 +185,8 @@ export const sendOrder = async (btn) => {
     } else {
       if (place_to_eat == "") {
         alert("tempat makan tidak boleh kosong");
+      } else if (order_type == "") {
+        alert("type order tidak boleh kosong");
       } else {
         animationSpin(btn);
         const date = new Date();
@@ -189,6 +196,7 @@ export const sendOrder = async (btn) => {
           place: place_to_eat,
           status: "order",
           uu_id: uu_id,
+          type: order_type,
           items: JSON.stringify([...data_list_order]),
         });
         const results = await fetch(
@@ -296,6 +304,9 @@ export const showSerchingBox = () => {
             <select name="" value="" id="place-to-eat">
               <option value="" disabled selected>Place</option>
             </select>
+            <select name="" value="" id="type-order">
+              <option value="" disabled selected>Type</option>
+            </select>
             <ul
               class="border h-[150px] bg-white p-1 overflow-auto"
               id="list-item-li"
@@ -320,10 +331,15 @@ export const loopingSelect = (data) => {
       for (let i = data.rooms; i <= 120; i++) {
         data.content.innerHTML += `<option value="${i}">${i}</option>`;
       }
-    } else {
-      data.data.map(
+    } else if (data.place) {
+      data.place.map(
         (place) =>
           (data.content.innerHTML += `<option value="${place}">${place}</option>`),
+      );
+    } else {
+      data.type.map(
+        (type) =>
+          (data.content.innerHTML += `<option value="${type}">${type}</option>`),
       );
     }
   } catch (error) {
@@ -331,9 +347,9 @@ export const loopingSelect = (data) => {
   }
 };
 
-showItems(data_item);
-
 window.data_send = data_send;
+window.data_list_order = data_list_order;
+window.data_item = data_item;
 window.sendOrder = sendOrder;
 window.showItems = showItems;
 window.animationLoading = animationLoading;

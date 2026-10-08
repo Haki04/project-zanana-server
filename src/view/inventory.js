@@ -10,36 +10,28 @@ if (!getCookie()) {
   window.location.href = "/pages/login";
 }
 
-const data_section_form = {
-  hk: {
-    section_name: "ktn",
-    item_list_jenis: [
-      "sayuran",
-      "buah",
-      "frozen",
-      "cair",
-      "kering",
-      "bumbu-cair",
-      "bumbu-bubuk",
-      "bumbu-pasta",
-    ],
-    item_list_laporan: ["restock", "sold-out", "inventory"],
-    item_list_satuan: ["kg", "pcs", "pack", "trey", "duz", "satuan"],
-  },
-};
+// const data_section_form = {
+//   fo: {
+//     section_name: "eng",
+//     item_list_jenis: ["tools", "maintain-items"],
+//     item_list_laporan: ["information", "inventory", "broken"],
+//     item_list_satuan: ["item", "kg"],
+//   },
+// };
 
 let data_send_orders = [];
-const data_select_items = [
-  "pillow",
-  "pillow-case",
-  "sheet",
-  "selimut",
-  "gelas-coffee",
-  "handuk",
-];
+let data_section_for_admin = [];
+let data_select_items;
+let data_form_item_new = data_section_for_admin;
 
-window.inventoryForm = (element, section) => {
+window.inventoryForm = async (element, section) => {
   if (!element) return;
+
+  const { data } = await fetch(
+    `${import.meta.env.VITE_URL_SERVER_DEV}/inventory/item?section=${section}`,
+  ).then((res) => res.json());
+  data_select_items = await data;
+
   element.innerHTML = "";
   element.innerHTML = ` <div
           class="w-[300px] bg-gray-200/70 p-1 [&>*]:mb-2 rounded shadow-sm [&>*]:focus:outline-gray-500"
@@ -72,6 +64,9 @@ window.inventoryForm = (element, section) => {
           <select name="" id="item-satuan" class="w-full bg-white p-2">
             <option value="" disabled selected>Satuan</option>
           </select>
+          <select name="" id="item-code" class="w-full bg-white p-2">
+            <option value="" disabled selected>Satuan</option>
+          </select>
           <textarea
             name=""
             id="item-extra-coment"
@@ -81,16 +76,6 @@ window.inventoryForm = (element, section) => {
           <button class="w-[70%] bg-white p-2 cursor-pointer" onclick="sendForm(this)" id="btn-inventory">Kirim</button>
         </div>`;
 
-  // if (getCookie().level != 1)
-  //   selectRender(
-  //     document.getElementById("select-form-inventory"),
-  //     // fetch(`${import.meta.env.VITE_URL_SERVER_DEV}/items`).then((res) =>
-  //     //   res.json(),
-  //     // ),
-
-  //     ["pillow case", "selimut"],
-  //     "",
-  //   );
   const title = document
     .getElementById("form-inventory")
     .querySelector("#title");
@@ -126,11 +111,11 @@ const randerSearching = (parent, el_this) => {
   parent.innerHTML = "";
   data_select_items
     ?.filter((item) =>
-      item.toLowerCase().startsWith(el_this.value.toLowerCase()),
+      item.name.toLowerCase().startsWith(el_this.value.toLowerCase()),
     )
     .map(
       (item) =>
-        (parent.innerHTML += `<span onclick="setValueInput('${el_this.getAttribute(`id`)}', '${item}')" class="w-full bg-white  inline-block cursor-pointer">${item}</span>`),
+        (parent.innerHTML += `<span onclick="setValueInput('${el_this.getAttribute(`id`)}', '${item.name}')" class="w-full bg-white  inline-block cursor-pointer">${item.name}</span>`),
     );
 };
 
@@ -145,6 +130,26 @@ export const inventoryReport = async (section, el_this) => {
   if (!section) {
     return;
   }
+  if (getCookie().level == 1) {
+    if (!el_this.parentElement.querySelector("#first-li")) {
+      el_this.parentElement.insertAdjacentHTML(
+        "afterbegin",
+        `
+            <li onclick="editSectionDataInventory('content', '${section}')" class="bg-yellow-200 hidden" id="first-li">EDIT</li>
+      
+      `,
+      );
+    } else {
+      el_this.parentElement
+        .querySelector("#first-li")
+        .setAttribute(
+          "onclick",
+          `editSectionDataInventory('content', '${section}')`,
+        );
+    }
+
+    el_this.parentElement.querySelector("li").classList.remove("hidden");
+  }
 
   activeListHilight(document.getElementById("ul-inventory-dashboard"), el_this);
 
@@ -154,8 +159,9 @@ export const inventoryReport = async (section, el_this) => {
     `${import.meta.env.VITE_URL_SERVER_DEV}/inventory?section=${section}`,
   ).then((res) => res.json());
 
-  inventoryForm(document.getElementById("content"), section_name);
+  await inventoryForm(document.getElementById("content"), section_name);
   renderList(document.getElementById("form-inventory"), section_data);
+  data_section_for_admin = section_data;
 };
 
 // render component item/list
@@ -164,6 +170,7 @@ const renderList = (form, section) => {
   const jenis_item = section.item_list_jenis;
   const jenis_laporan = section.item_list_laporan;
   const jenis_satuan = section.item_list_satuan;
+  // const code_item = section.item_code;
 
   jenis_item.forEach((item) => {
     form.querySelector("select#item-jenis").innerHTML +=
@@ -177,6 +184,10 @@ const renderList = (form, section) => {
     form.querySelector("select#item-satuan").innerHTML +=
       `<option value="${item}">${item}</option>`;
   });
+  // code_item.forEach((item) => {
+  //   form.querySelector("select#item-code").innerHTML +=
+  //     `<option value="${item}">${item}</option>`;
+  // });
 };
 
 // sendForm
@@ -198,6 +209,8 @@ window.sendForm = async (el_this) => {
         } else {
           if (form.querySelector("#item-satuan").value == "") {
             alert("satuan item gak boleh kosong");
+          } else if (form.querySelector("#item-code").value == "") {
+            alert("code item gak boleh kosong");
           } else {
             data_send_orders.push({
               name_item: form.querySelector("#item-name").value,
@@ -205,6 +218,7 @@ window.sendForm = async (el_this) => {
               report_item: form.querySelector("#item-report").value,
               total_item: form.querySelector("#item-jumlah").value,
               satuan_item: form.querySelector("#item-satuan").value,
+              code_item: form.querySelector("#item-code").value,
               extra_coment: form.querySelector("#item-extra-coment").value,
               section:
                 getCookie().level == 1
@@ -239,6 +253,119 @@ window.sendForm = async (el_this) => {
   }
 };
 
+const addItemFormInventory = () => {
+  document.getElementById("form-edit-inventory-data").innerHTML += `
+          <span
+                class="w-full bg-white p-2 rounded flex justify-between items-center gap-1"
+                ><input
+                  value="new.."
+                  disabled
+                  class="border border-transparent w-[100%] p-1"
+                />
+                <span class="bg-sky-100 flex gap-1 items-center">
+                  <span
+                    class="w-fit cursor-pointer rounded h-full bg-green-300 p-1 inline-block"
+                    onclick="editSaveFormEditItemForm(this)"
+                    data-count-cek="0">edit</span
+                  >
+                  <span
+                    class="w-fit cursor-pointer rounded h-full bg-red-300 p-1 inline-block"
+                    onclick="this.parentElement.parentElement.remove()"
+                    >delete</span
+                  >
+                </span>
+              </span>`;
+};
+
+const filterInventoryEditItemForm = (el_value) => {
+  document.getElementById("form-edit-inventory-data").innerHTML = "";
+  data_section_for_admin[el_value].map((item) => {
+    document.getElementById("form-edit-inventory-data").innerHTML += `
+          <span
+                class="w-full bg-white p-2 rounded flex justify-between items-center gap-1"
+                ><input
+                  value="${item}"
+                  disabled
+                  class="border border-transparent w-[100%] p-1"
+                />
+                <span class="bg-sky-100 flex gap-1 items-center">
+                  <span
+                    class="w-fit cursor-pointer rounded h-full bg-green-300 p-1 inline-block"
+                    onclick="editSaveFormEditItemForm(this)"
+                    data-count-cek="0">edit</span
+                  >
+                  <span
+                    class="w-fit cursor-pointer rounded h-full bg-red-300 p-1 inline-block"
+                    onclick="this.parentElement.parentElement.remove()"
+                    >delete</span
+                  >
+                </span>
+              </span>
+          `;
+  });
+};
+
+const updateItemFormInventory = (parent) => {
+  const form_inventory_edit = data_section_for_admin;
+  const item_input_new = [];
+  const form_parent = document.getElementById("form-parent-iventory-edit-item");
+  const form = document.getElementById("form-edit-inventory-data");
+  [...form.querySelectorAll("span input")].map((item) => {
+    if (item.value != "") {
+      item_input_new.push(item.value);
+    } else {
+      alert("data tidak boleh kosong");
+    }
+  });
+  form_inventory_edit[parent.value] = item_input_new;
+  sendNewItemFormInventory(form_inventory_edit, form_parent);
+};
+
+const sendNewItemFormInventory = async (data, form_parent) => {
+  const response = await fetch(
+    `${import.meta.env.VITE_URL_SERVER_DEV}/section/update`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        section: getCookie().position,
+        data_form: JSON.stringify(data),
+      }),
+    },
+  ).then((item) => item.json());
+
+  if (response.status == 201) {
+    form_parent.innerHTML = `
+  <div class="w-full h-full flex justify-center items-center">
+    <span class="w-[80%] p-2 text-center bg-green-300">Berhasil</span>
+  </div>
+  
+  `;
+    setTimeout(() => form_parent.remove(), 1000);
+  } else {
+    alert(response.message);
+  }
+};
+
+const editSaveFormEditItemForm = (el_this) => {
+  if (el_this.getAttribute("data-count-cek") == 0) {
+    el_this.textContent = "save";
+    el_this.parentElement.parentElement
+      .querySelector("input")
+      .removeAttribute("disabled");
+    el_this.parentElement.parentElement.querySelector("input").focus();
+    el_this.setAttribute("data-count-cek", "1");
+  } else {
+    el_this.textContent = "edit";
+    el_this.parentElement.parentElement
+      .querySelector("input")
+      .setAttribute("disabled", "");
+    el_this.setAttribute("data-count-cek", "0");
+  }
+};
+
+//
+
 if (getCookie().level != 1) {
   // animationLoading("content", "before");
   backPages();
@@ -248,3 +375,7 @@ window.inventoryReport = inventoryReport;
 window.getCookie = getCookie;
 window.setValueInput = setValueInput;
 window.randerSearching = randerSearching;
+window.filterInventoryEditItemForm = filterInventoryEditItemForm;
+window.editSaveFormEditItemForm = editSaveFormEditItemForm;
+window.updateItemFormInventory = updateItemFormInventory;
+window.addItemFormInventory = addItemFormInventory;

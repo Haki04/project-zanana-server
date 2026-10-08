@@ -195,10 +195,15 @@ export const animationLoading = (element, layout = "after") => {
 };
 
 let count = 0;
-export const activeListHilight = (parent, el, bg_hilight = "bg-white") => {
+export const activeListHilight = (
+  parent,
+  el,
+  bg_hilight = "bg-white",
+  pages_where = "dash-board",
+) => {
   if (!parent) return;
-  if (count == 0) {
-    document.getElementById("dash-board").classList.add(bg_hilight);
+  if (count == 0 && pages_where == "dash-board") {
+    document.getElementById(pages_where).classList.add(bg_hilight);
     count++;
   } else {
     parent
