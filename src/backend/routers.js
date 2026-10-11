@@ -98,14 +98,20 @@ export const postOrders = async (req, res) => {
 
 export const getOrders = async (req, res) => {
   try {
-    const [results] = await db.query(
-      `SELECT order_room, order_items, order_status, uu_id, place_to_eat, order_type FROM orders ORDER BY CASE
+    let results;
+    let query_string = !req.query.uu_id
+      ? `SELECT order_room, order_items, order_status, uu_id, place_to_eat, order_type FROM orders ORDER BY CASE
       WHEN order_status = 'in proses' THEN 1
-      WHEN order_status = 'order' THEN 2  
+      WHEN order_status = 'order' THEN 2
       WHEN order_status = 'selesai' THEN 3
       ELSE 4
-      END`,
-    );
+      END`
+      : "SELECT * FROM orders WHERE uu_id = ?";
+    if (!req.query.uu_id) {
+      [results] = await db.query(query_string);
+    } else {
+      [results] = await db.query(query_string, [req.query.uu_id]);
+    }
 
     res.status(200).json({
       message: "menambahkan data orders berhasil",

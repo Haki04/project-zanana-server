@@ -125,6 +125,7 @@ window.filterItems = (arg) => {
   );
 };
 
+let count_input_pesanan_show = 0;
 export const showItems = (data) => {
   try {
     if (!document.getElementById("box-searching")) {
@@ -165,7 +166,10 @@ export const showItems = (data) => {
         `;
     });
     if (getCookie().level != 1) {
-      animationLoading("content");
+      if (count_input_pesanan_show == 0) {
+        animationLoading("content");
+        count_input_pesanan_show++;
+      }
       backPages();
     }
   } catch (error) {
@@ -177,6 +181,7 @@ export const sendOrder = async (btn) => {
   const room_number = document.getElementById("room-number").value;
   const place_to_eat = document.getElementById("place-to-eat").value;
   const order_type = document.getElementById("type-order").value;
+  const order_coment = document.getElementById("coment-order").value;
   if (data_list_order.length == 0) {
     alert("list orderan tidak boleh kosong");
   } else {
@@ -197,6 +202,7 @@ export const sendOrder = async (btn) => {
           status: "order",
           uu_id: uu_id,
           type: order_type,
+          coment: order_coment ?? "",
           items: JSON.stringify([...data_list_order]),
         });
         const results = await fetch(
@@ -311,6 +317,7 @@ export const showSerchingBox = () => {
               class="border h-[150px] bg-white p-1 overflow-auto"
               id="list-item-li"
             ></ul>
+            <textarea placeholder="extra coment" class="max-h-[150px] overflow-y-scroll p-1 border" id="coment-order"></textarea>
             <button
               onclick="sendOrder(this)"
               class="p-1 mb-3 bg-green-300/50 border rounded cursor-pointer relative overflow-hidden"
