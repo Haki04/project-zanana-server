@@ -11,9 +11,8 @@ if (!getCookie()) {
 
 const cekValidForm = (content) => {
   const reporter = content.querySelector("#reporter").value;
-  const type = content.querySelector("#type").value;
+  const type = content.querySelector("#type-report").value;
   const posisi = content.querySelector("#posisi").value;
-  const date = content.querySelector("#date").value;
   const description = content.querySelector("#description").value;
 
   if (reporter == "") {
@@ -25,24 +24,22 @@ const cekValidForm = (content) => {
       if (posisi == "") {
         alert("posisi tidak boleh kosong");
       } else {
-        if (date == "") {
-          alert("tanggal tidak boleh kosong");
+        if (description == "") {
+          alert("decription tidak boleh kosong");
         } else {
-          if (description == "") {
-            alert("decription tidak boleh kosong");
-          } else {
-            document
-              .getElementById("form-report")
-              .querySelectorAll("input, textarea, select")
-              .forEach((element) => (element.value = ""));
-            return {
-              reporter: reporter,
-              type: type,
-              posisi: posisi,
-              date: date,
-              description: description,
-            };
-          }
+          document
+            .getElementById("form-report")
+            .querySelectorAll("input, textarea, select")
+            .forEach((element) => (element.value = ""));
+
+          content.remove();
+          return {
+            reporter: reporter,
+            type: type,
+            posisi: posisi,
+            date: `${new Date().getDate()}-${new Date().getMonth()}-${new Date().getFullYear()}`,
+            description: description,
+          };
         }
       }
     }
@@ -84,27 +81,28 @@ export const showFormReport = (content) => {
   <div
     class="w-[300px] bg-gray-300/50 shadow-md p-2 rounded flex flex-col justify-start items-center [&>*]:w-full [&>*]:bg-white [&>*]:p-2 [&>*]:rounded gap-1" id="form-report"
     >
-    <h1 class="font-bold text-2xl text-center">Report Kerusakan</h1>
-    <input
-    type="text"
-    name=""
-    value="${getCookie().name}"
-    id="reporter"
-    disabled
-    />
-    <select name="" id="type">
-    <option value="">type</option>
-    <option value="ac">ac</option>
-    </select>
-    <input type="text" name="" id="posisi" value="" placeholder="posisi" />
-    <input type="date" name="" id="date" />
-    <textarea name="" id="description" placeholder="decsription"></textarea>
-    <button class="font-bold cursor-pointer my-3" onclick="sendReport(document.getElementById('${content}'))">
-    Kirim
-    </button>
+      <h1 class="font-bold text-2xl text-center">Report Kerusakan</h1>
+      <input type="text" name="" value="${getCookie().name}" id="reporter" disabled />
+      <select name="" id="type-report">
+        <option disabled selected>type</option>
+      </select>
+      <input type="text" name="" id="posisi" value="" placeholder="posisi" />
+      <textarea name="" id="description" placeholder="decsription"></textarea>
+      <button class="font-bold cursor-pointer my-3" onclick="sendReport(document.getElementById('${content}'))">
+      Kirim
+      </button>
   </div>
   
   `;
+  renderSelectItems(["ac", "electrical", "leak", "sound-loud", "wall", "air"]);
+};
+
+const renderSelectItems = (items) => {
+  items.map(
+    (item) =>
+      (document.getElementById("type-report").innerHTML +=
+        `<option value="${item}">${item}</option>`),
+  );
 };
 
 if (!getCookie().level == 1) {

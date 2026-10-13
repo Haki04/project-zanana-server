@@ -11,22 +11,50 @@ if (!getCookie()) {
   window.location.href = "/pages/login";
 }
 if (getCookie().level != 1) {
-  animationLoading("content", "before");
+  //animationLoading("content", "before");
 }
 
-const greatingUser = () => {
+const greatingUser = async () => {
   document.getElementById("greating-user").textContent =
     `Welcome ${getCookie().name} > ${getCookie().position}`;
+
+  // fillter
+  document.getElementById("greating-user").parentElement.insertAdjacentHTML(
+    "beforeend",
+    `
+      
+      <div class="w-full absolute top-full left-0 h-fit ">
+        <select class="w-full md:w-fit outline-0 md:bg-gray-200/50 cursor-pointer" onchange="fillterStocks(this.value)" id='list-item-filter-stocks'>
+        <option class="p-1" value="all" selected>all</option>
+        </select>
+      </div>
+      `,
+  );
+
+  loopingListFillter(
+    await fetch(
+      `${import.meta.env.VITE_URL_SERVER_DEV}/inventory?section=${getCookie().position}`,
+    ).then((res) => res.json()),
+  );
 };
 
-export const showBoxStocks = async (section, el_this) => {
+const loopingListFillter = ({ data }) => {
+  data[0].section_data.item_list_jenis.map(
+    (item) =>
+      (document.getElementById("list-item-filter-stocks").innerHTML +=
+        `<option class="p-1" value='${item}'>${item}</option>`),
+  );
+};
+
+export const showBoxStocks = async (section, el_this, filter_keyword) => {
   if (!section) return;
   activeListHilight(
     document.getElementById("ul-stocks-dashboard"),
     el_this,
     "bg-white",
   );
-  const data = await getDataStocks(section);
+  const data = await getDataStocks(section, filter_keyword);
+
   let content_stocks = document.getElementById("content");
   window.data_edit_form = data;
   content_stocks.innerHTML = "";
@@ -36,7 +64,6 @@ export const showBoxStocks = async (section, el_this) => {
   `;
     content_stocks = content_stocks.querySelector("#content-stocks-dashboard");
   }
-
   data.map((item) => {
     content_stocks.innerHTML += `
        <div
@@ -61,9 +88,13 @@ export const showBoxStocks = async (section, el_this) => {
   });
 };
 
-const getDataStocks = async (section) => {
+const fillterStocks = async (kategory) => {
+  showBoxStocks(getCookie().position, "", kategory);
+};
+
+const getDataStocks = async (section, filter_keyword) => {
   const { data } = await fetch(
-    `${import.meta.env.VITE_URL_SERVER_DEV}/stocks?section=${section}`,
+    `${import.meta.env.VITE_URL_SERVER_DEV}/stocks?section=${section}&filter=${filter_keyword}`,
   ).then((res) => res.json());
 
   return data;
@@ -101,3 +132,4 @@ window.plusMinus = plusMinus;
 window.sendUpdateStocks = sendUpdateStocks;
 window.getCookie = getCookie;
 window.greatingUser = greatingUser;
+window.fillterStocks = fillterStocks;

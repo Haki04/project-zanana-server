@@ -10,7 +10,7 @@ import { getDataBrokeness } from "./kerusakan.js";
 import { showStaffBoxs } from "./staff.js";
 import { logOutUser } from "../controller/controller.js";
 import { showBoxStocks } from "./stocks.js";
-import { showInformation } from "./information.js";
+import { addInformation, showInformation } from "./information.js";
 
 if (getCookie().level != 1 || !getCookie()) {
   window.location.href = "/pages/login";
@@ -217,6 +217,7 @@ const section = async (a, el_this) => {
             <li onclick="filterInformation(this, 'fo')">FO</li>
             <li onclick="filterInformation(this, 'ktn')">KTN</li>
             <li onclick="filterInformation(this, 'eng')">ENG</li>
+            <li class="bg-blue-300" onclick="addInformation()">add</li>
           </ul>
         </div>
         <!-- bawah -->
@@ -226,6 +227,11 @@ const section = async (a, el_this) => {
         ></div>
       </div>
     `;
+    activeListHilight(
+      document.getElementById("ul-dashboard"),
+      el_this,
+      "bg-yellow-100",
+    );
     showInformation("content-information", await getInformation());
   }
 };

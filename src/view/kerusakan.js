@@ -8,6 +8,9 @@ import { selectRender } from "./components/select-render.js";
 import { showFormReport } from "./report.js";
 import { backPages } from "../controller/controller.js";
 
+if (window.innerWidth < 600)
+  document.getElementById("top-bar-ul")?.classList.add("hidden");
+
 const editDelete = async (id, args, data = {}) => {
   if (args == 1 && !confirm("ingin menghapus item ?")) return;
   const { message, status } = await fetch(
@@ -91,7 +94,7 @@ export const getDataBrokeness = async (element, parent) => {
     { selesai: "selesai" },
   ]);
   document.getElementById(element).innerHTML = `
-  <div class="w-full h-full" id="kerusakan-item-list"></div>
+  <div class="w-full h-full flex flex-wrap justify-center gap-2 md:block" id="kerusakan-item-list"></div>
   
   `;
   showItemBrokeness("kerusakan-item-list");
@@ -119,7 +122,7 @@ export const showFormEditKerusakan = async (id, parent) => {
             class="absolute w-full h-full bg-slate-200/50 flex justify-center items-center hidden left-0 top-0"
           >
             <div
-              class="w-[50%] max-w-[300px] bg-white/60 rounded flex flex-col justify-between p-2 gap-2 items-center shadow-lg [&>input,select]:bg-white"
+              class="w-[80%] md:w-[50%] max-w-[300px] bg-white/60 rounded flex flex-col justify-between p-2 gap-2 items-center shadow-lg [&>input,select]:bg-white"
               id="form-edit-kerusakan"
             >
               <h1
@@ -212,21 +215,61 @@ export const showItemBrokeness = async (element, data_filter) => {
   data.map((item) => {
     document.getElementById(element).innerHTML += `
    <div
-                class="w-full bg-white h-auto rounded flex flex-row justify-between items-center gap-1 p-1 [&>*]:rounded [&>*]:text-center mt-1"
+                class="w-[200px] md:w-full bg-white h-fit rounded flex flex-col md:flex-row justify-between items-center gap-1 p-1 [&>*]:rounded [&>*]:text-center mt-1"
               >
-                <span class="p-1 bg-blue-200 flex-1">${item.posisi}</span>
-                <span class="p-1 bg-blue-200 flex-1">${item.reporter}</span>
-                <span class="p-1 bg-blue-200 flex-1">${item.status}</span>
-                <span class="p-1 bg-blue-200 flex-1">${item.date}</span>
-                <span class="p-1 bg-blue-200 flex-1 cursor-pointer [&>*]:cursor-pointer [&>*]:hover:shadow-sm [&>*]:inline-block [&>*]:w-[40%] [&>*]:rounded" >
+                <span class="p-2 md:p-1 bg-blue-200 w-full md:flex-1 relative"><img onclick="detailKerusakan(${item.id})" src="/icon/info.png" class="w-[20px] absolute cursor-pointer"/>${window.innerWidth < 600 ? `<span>posisi</span>: ` : ``}${item.posisi}</span>
+                <span class="p-2 md:p-1 bg-blue-200 w-full md:flex-1">${window.innerWidth < 600 ? `<span>reporter</span>: ` : ``}${item.reporter}</span>
+                <span class="p-2 md:p-1 bg-blue-200 w-full md:flex-1">${window.innerWidth < 600 ? `<span>status</span>: ` : ``}${item.status}</span>
+                <span class="p-2 md:p-1 bg-blue-200 w-full md:flex-1">${window.innerWidth < 600 ? `<span>creat_at</span>: ` : ``}${item.date}</span>
+                <span class="p-2 md:p-1 bg-blue-200 w-full md:flex-1 cursor-pointer [&>*]:cursor-pointer [&>*]:hover:shadow-sm [&>*]:inline-block [&>*]:w-[40%] [&>*]:rounded" >
                 <span onclick="toggleKerusakan(${item.id}, 'kerusakan-item-list')" class="bg-yellow-100">edit</span> | 
-                <span onclick="editDelete(${item.id}, 1)" class="bg-red-100">hapus</span>
+              <span onclick="editDelete(${item.id}, 1)" class="bg-red-100">hapus</span>
                 </span>
               </div>
   
   `;
   });
 };
+
+export const detailKerusakan = (id) => {
+  document.getElementById("kerusakan").innerHTML += `
+  <div class="${getCookie().level == 1 ? `absolute` : `fixed`}  w-full h-full bg-white/50 left-0 top-0 z-10 flex justify-center items-center">
+    <div class="w-[300px] h-fit p-2 bg-white rounded shadow overflow-hidden">
+        <h1 class="text-2xl w-full text-center capitalize">detail</h1>
+        <div class="w-full h-fit p-1 [&>span]:shadow [&>span]:rounded">
+          <span class="w-full bg-white my-1 p-2 inline-block">posisi : <span class="font-bold">pool</span></span>
+          <span class="w-full bg-white my-1 p-2 inline-block">reporter : <span class="font-bold">kiki</span></span>
+          <span class="w-full bg-white my-1 p-2 inline-block">status : <span class="font-bold">lapor</span></span>
+          <span class="w-full bg-white my-1 p-2 inline-block">tanggal : <span class="font-bold">13/10/2026</span></span>
+          <div class="w-full bg-white p-2">
+            <ul class="w-full min-w-0 p-2 flex flex-row gap-2 overflow-x-scroll" id="ul-images-kerusakan">
+              <li class="shrink-0"><img src="/icon/info.png" class="w-[200px] border h-[100px]"/></li>
+              <li class="shrink-0"><img src="/icon/info.png" class="w-[200px] border h-[100px]"/></li>
+              <li class="shrink-0"><img src="/icon/info.png" class="w-[200px] border h-[100px]"/></li>
+              <li class="shrink-0"><img src="/icon/info.png" class="w-[200px] border h-[100px]"/></li>
+              <li class="shrink-0"><img src="/icon/info.png" class="w-[200px] border h-[100px]"/></li>
+            </ul>
+            <div class="w-full p-1 flex justify-center gap-3 [&>*]:cursor-pointer items-center">
+              <img onclick="scrollInfo(-1)" src="/icon/arrow.png" class="w-[20px] -rotate-180"/>
+              <img onclick="scrollInfo(1)" src="/icon/arrow.png" class="w-[20px] "/>
+            </div>
+          </div>
+          <span onclick="this.parentElement.parentElement.parentElement.remove()" class="bg-yellow-100 cursor-pointer p-2 inline-block">tutup</span>
+        </div>
+    </div>
+  </div>
+  
+  `;
+};
+
+function scrollInfo(direction) {
+  const list = document.getElementById("ul-images-kerusakan");
+
+  list.scrollBy({
+    left: direction * 200,
+    behavior: "smooth",
+  });
+}
 
 let count = 0;
 export const toggle = (content, el_this) => {
@@ -242,7 +285,7 @@ export const toggle = (content, el_this) => {
 };
 
 if (getCookie().level != 1) {
-  animationLoading("content");
+  // animationLoading("content");
   backPages();
 }
 window.getDataBrokeness = getDataBrokeness;
@@ -251,5 +294,7 @@ window.validedKerusakanForm = validedKerusakanForm;
 window.toggleKerusakan = toggleKerusakan;
 window.filterKerusakan = filterKerusakan;
 window.toggle = toggle;
+window.detailKerusakan = detailKerusakan;
+window.scrollInfo = scrollInfo;
 
 // getDataBrokeness("kerusakan", "kerusakan");

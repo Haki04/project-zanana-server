@@ -1,7 +1,7 @@
 export const backPages = () => {
   document.querySelector("body").insertAdjacentHTML(
     "afterbegin",
-    `<div class="fixed z-1 top-7 left-2 md:left-5 md:top-5 p-1" id="back-pages">
+    `<div class="fixed z-1 top-3 left-2 md:left-5 md:top-5 p-1" id="back-pages">
       <span class="cursor-pointer select-none" onclick="window.location.href='/pages/users/'"><img class="w-[20px]" src="/icon/home.png"></span>
     </div>`,
   );

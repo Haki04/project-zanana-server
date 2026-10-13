@@ -21,7 +21,11 @@
         showFillerFormFirst(document.getElementById("content-tamu"));
 
       function changeImage(param, input_el) {
-        if (input_el.value.toLowerCase() == "nothing") input_el.value = "";
+        if (
+          input_el.value.toLowerCase() == "nothing" ||
+          input_el.value.toLowerCase() == "just finish"
+        )
+          input_el.value = "";
         const src_url = [
           "https://media.tenor.com/F5-hhiVwsZMAAAAi/smile-evil-smile.gif",
           "https://media.tenor.com/OU7qmzXIFBcAAAAi/bubu-dudu.gif",

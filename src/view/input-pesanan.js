@@ -202,7 +202,7 @@ export const sendOrder = async (btn) => {
           status: "order",
           uu_id: uu_id,
           type: order_type,
-          coment: order_coment ?? "",
+          coment: order_coment ?? "-",
           items: JSON.stringify([...data_list_order]),
         });
         const results = await fetch(

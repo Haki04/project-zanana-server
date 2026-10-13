@@ -12,29 +12,23 @@
       id="content"
     >
       <div
-        class="bg-gray-200/50 shadow h-[90%] w-[90%] lg:w-[80%] rounded p-2 overflow-hidden flex flex-col justify-start"
+        class="bg-gray-200/50 shadow h-[90%] w-full lg:w-[80%] rounded p-2 overflow-hidden flex flex-col justify-start"
       >
         <div class="w-full h-fit">
           <div class="w-full flex justify-between bg-white">
-            <h1 class="text-2xl pl-2">Kerusakan</h1>
-            <div class="w-[200px] bg-amber-100 flex items-center">
-              <!-- <div class="flex-1 p-1 flex justify-center items-center">
-                <button
-                  class="bg-red-200 w-full rounded cursor-pointer font-bold overflow-hidden"
-                  onclick="toggle('kerusakan', this)"
-                >
-                  <span class="inline-block">+</span>
-                </button>
-              </div> -->
+            <h1 class="text-2xl pl-2 flex-1">Kerusakan</h1>
+            <div
+              class="flex-1 md:w-[200px] md:flex-none bg-amber-100 flex items-center"
+            >
               <select
                 name=""
                 id="select-dashboard-kerusakan"
-                class="flex-2"
+                class="flex-2 pl-1 outline-0"
                 onchange="filterKerusakan(this.value)"
               ></select>
             </div>
           </div>
-          <div class="w-full bg-white">
+          <div class="w-full bg-white" id="top-bar-ul">
             <ul class="flex flex-row justify-around items-center">
               <li>posisi</li>
               <li>repoter</li>
@@ -45,7 +39,7 @@
           </div>
         </div>
         <div
-          class="w-full bg-slate-100 h-full p-1 relative overflow-hidden relative"
+          class="w-full bg-slate-100 h-full p-1 overflow-y-scroll relative"
           id="kerusakan"
         ></div>
       </div>

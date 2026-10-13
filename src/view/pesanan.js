@@ -41,12 +41,12 @@ export const showOrdersItem = async (element) => {
           </div>
           <div class=" w-full h-full md:h-[60%]">
             <ul class="flex flex-col items-center bg-white p-1 h-full overflow-y-scroll">
-            <span class="sticky top-0 ${item.order_type == `order` && sign_progres != `selesai` ? `bg-red-300/70` : `bg-white/20`} text-center w-[50%] font-bold w-full md:w-full">${item.place_to_eat} | ${item.order_type}</span>
+            <span class="sticky top-0 ${item.order_type == `order` && sign_progres != `selesai` ? `bg-red-300/50` : `bg-white/20`} text-center w-[50%] font-bold w-full md:w-full">${item.place_to_eat} | ${item.order_type}</span>
               
             ${item.order_items
               .map((d) => `<li class="w-full">${d.name} ${d.total}x</li>`)
               .join(``)}
-              <li class="grid grid-cols-1 mt-1 justify-items-center place-items-end h-fit w-full">
+              <li class="grid grid-cols-1 mt-1 justify-items-center place-items-end h-fit w-full gap-2">
                ${item.order_status == `order` || item.order_status == `in proses` ? ` <span class="bg-yellow-200 text-[14px] text-center p-1 rounded">${item.order_status}</span>` : ``}
                 <button id="btn-pesanan" data-action="${item.order_status}" class="${sign_orders} w-[90%] md:w-[70%] relative overflow-hidden cursor-pointer text-[14px] p-2 rounded" onclick="sendUpdatePesanan(${item.uu_id},'${sign_progres}', this); animationSpin(this, '${sign_progres}')">${sign_progres} ${sign_progres == `selesai` ? `😁` : ``}</button>
               </li>
@@ -99,6 +99,16 @@ export const sendUpdatePesanan = async (id, progres, el) => {
   }
 };
 
+const copyClipboard = async (el_this) => {
+  try {
+    await navigator.clipboard.writeText(
+      el_this.querySelector("span").textContent,
+    );
+    el_this.querySelector("#visit-link-tamu").classList.remove("hidden");
+    alert("berhasil di salin");
+  } catch (error) {}
+};
+
 const showMoresComentDetail = async (uu_id) => {
   if (!uu_id) return;
   const { data } = await fetch(
@@ -106,10 +116,10 @@ const showMoresComentDetail = async (uu_id) => {
   ).then((res) => res.json());
   document.querySelector("#pesanan").innerHTML += `
   <div
-          class="w-full h-full fixed bg-white/50 flex justify-center items-center"
+          class="w-full h-full ${getCookie().level != 1 ? `fixed` : `absolute top-0 left-0`} bg-white/50 flex justify-center items-center"
         id="box-detail-pesanan">
           <div
-            class="w-[90%] md:w-[300px] bg-white flex flex-col justify-around shadow rounded p-4"
+            class="w-[70%] md:w-[300px] bg-white flex flex-col justify-around shadow rounded p-4"
           >
             <h1 class="text-2xl capitalize border-b-2 py-2">detail</h1>
             <div class="w-full flex flex-col">
@@ -119,6 +129,7 @@ const showMoresComentDetail = async (uu_id) => {
                   >${data[0].order_room}</span
                 ></span
               >
+              <span class="p-1 border-b relative" >code : <span class="font-bold">${data[0].order_code}</span><span class="absolute right-0 top-0 cursor-pointer w-fit h-full flex justify-center items-center gap-2" ><img onclick="copyClipboard(this.parentElement.parentElement)" class="w-4" src="/icon/copy.png"/><img id="visit-link-tamu" onclick="window.location.href='/pages/tamu/'" class="w-4 hidden" src="/icon/link.png"/></span></span>
               <span class="p-1 border-b"
                 >type : <span class="font-bold capitalize">${data[0].order_type}</span></span
               >
@@ -128,7 +139,7 @@ const showMoresComentDetail = async (uu_id) => {
               </ul>
               <span class="p-1 mt-1 border-b"
                 >coment :
-                <textarea class="max-h-[150px] pl-1 px-0.5 w-full" value="${data[0].coment}"></textarea>
+                <textarea class="max-h-[150px] pl-1 px-0.5 w-full text-red-500" disabled>${data[0].coment}</textarea>
               </span>
               <span class="p-1 border-b"
                 >status :
@@ -153,4 +164,5 @@ window.sendUpdatePesanan = sendUpdatePesanan;
 window.animationLoading = animationLoading;
 window.animationSpin = animationSpin;
 window.showOrdersItem = showOrdersItem;
+window.copyClipboard = copyClipboard;
 window.showMoresComentDetail = showMoresComentDetail;

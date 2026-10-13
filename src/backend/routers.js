@@ -1,13 +1,6 @@
 import db from "./database.js";
 import bcrypt from "bcrypt";
 
-// export async function user(req, res) {
-//   const user = await bcrypt.hash("kiki2", 10);
-//   console.log(user);
-// }
-// user();
-
-// users
 export const getUser = async (req, res) => {
   try {
     const name = req.body?.name ?? req.query?.name;
@@ -76,11 +69,11 @@ const randomCodeOrder = async () => {
 
 export const postOrders = async (req, res) => {
   try {
-    const [{ room, items, status, uu_id, place, type }] = req.body;
+    const [{ room, items, status, uu_id, place, type, coment }] = req.body;
     const code = await randomCodeOrder();
     await db.query(
-      `INSERT INTO orders (uu_id, order_room, order_items, order_status, order_type, place_to_eat, order_code) VALUES (?,?,?,?,?,?,?)`,
-      [uu_id, room, items, status, type, place, code],
+      `INSERT INTO orders (uu_id, order_room, order_items, order_status, order_type, place_to_eat, order_code, coment) VALUES (?,?,?,?,?,?,?,?)`,
+      [uu_id, room, items, status, type, place, code, coment],
     );
     res.status(201).json({
       success: 201,
@@ -258,7 +251,11 @@ export const getStoks = async (req, res) => {
       query_string =
         "SELECT id,name,type,total,satuan FROM inventory WHERE section = ? AND id = ?";
       query_query = [req.query.section, req.query.id_stocks];
-    } else if (req.query.section) {
+    } else if (req.query.filter != "undefined" && req.query.filter != "all") {
+      query_string =
+        "SELECT id,name,type,total,satuan,type FROM inventory WHERE section = ? AND type= ?";
+      query_query = [req.query.section, req.query.filter];
+    } else {
       query_string =
         "SELECT id,name,type,total,satuan FROM inventory WHERE section = ?";
       query_query = [req.query.section];
@@ -397,7 +394,7 @@ export const deleteEditReport = async (req, res) => {
 // tamu
 export const getOrderTamu = async (req, res) => {
   const [results] = await db.query(
-    "SELECT order_items FROM orders WHERE order_code = ?",
+    "SELECT order_items, order_status FROM orders WHERE order_code = ?",
     [req.body.code],
   );
   if (results.length > 0) {
@@ -435,16 +432,16 @@ export const getStaff = async (req, res) => {
 
 export const postInformation = async (req, res) => {
   try {
-    const { name, reporter, data, status, data_action, section } = req.body;
+    const { information, to_section, creat_at, type } = req.body;
     const [results] = await db.query(
-      `INSERT INTO information (info_name, info_reporter, info_data, status, date_action, section)
-       VALUE (?, ?, ?, ?, ?, ?)`,
-      [name, reporter, data, status, data_action, section],
+      `INSERT INTO information (information, section, status, creat_at, type)
+       VALUE (?, ?, ?, ?, ?)`,
+      [information, to_section, "info", creat_at, type],
     );
     if (results.affectedRows > 0) {
       res.json({
         status: 201,
-        data: results,
+        message: "tambah information berhasil",
       });
     }
   } catch (error) {
@@ -454,7 +451,67 @@ export const postInformation = async (req, res) => {
 
 export const getInformation = async (req, res) => {
   try {
-    const [results] = await db.query("SELECT * FROM information");
+    let results;
+    if (req.query.id) {
+      [results] = await db.query(`SELECT * FROM information WHERE id = ?`, [
+        req.query.id,
+      ]);
+    } else {
+      [results] = await db.query(`SELECT * FROM information`);
+    }
     if (results) res.json({ status: 200, data: results });
   } catch (error) {}
+};
+
+export const updateInformation = async (req, res) => {
+  try {
+    let results;
+    if (req.query.id && req.query.info) {
+      [results] = await db.query(
+        "UPDATE information set status = ? WHERE id = ?",
+        ["done", req.query.id],
+      );
+    } else {
+      const { information, to_section, type } = req.body;
+      [results] = await db.query(
+        "UPDATE information set information = ?, section = ?, type = ? WHERE id = ?",
+        [information, to_section, type, req.query.id],
+      );
+    }
+
+    if (results.affectedRows > 0) {
+      res.json({
+        status: 201,
+        message: "berhasil edit infomation",
+      });
+    } else {
+      res.json({
+        status: 404,
+        message: "gagal edit information",
+      });
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const deleteInformation = async (req, res) => {
+  try {
+    const [results] = await db.query("DELETE FROM information WHERE id = ?", [
+      req.query.id,
+    ]);
+    if (results.affectedRows > 0) {
+      res.json({
+        status: 201,
+        message: "berhasil hapus information",
+      });
+    } else {
+      res.json({
+        status: 404,
+        message: "gagal hapus information",
+      });
+    }
+  } catch (error) {
+    console.log(error);
+  }
 };

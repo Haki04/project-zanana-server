@@ -18,6 +18,8 @@ import {
   updateFormSectionItem,
   postInformation,
   getInformation,
+  updateInformation,
+  deleteInformation,
 } from "./routers.js";
 import cors from "cors";
 
@@ -37,6 +39,8 @@ app.get("/inventory/item", getDataItemSection);
 app.get("/stocks", getStoks);
 app.get("/report", getReports);
 app.get("/information", getInformation);
+app.get("/information/delete", deleteInformation);
+app.get("/information/update", updateInformation);
 
 //post
 app.post("/users", getUser);
@@ -50,6 +54,7 @@ app.post("/report", postReport);
 app.post("/report/action", deleteEditReport);
 app.post("/order/tamu", getOrderTamu);
 app.post("/information", postInformation);
+app.post("/information/update", updateInformation);
 
 app.listen(3000, () => {
   console.log("server berjalan");

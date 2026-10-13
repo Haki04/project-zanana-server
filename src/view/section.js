@@ -14,6 +14,7 @@ const showUserSection = (element) => {
   const section_list = [
     ["profile", "user_2.png"],
     ["report", "report.png"],
+    ["information", "information.png"],
     ["inventory", "track.png"],
     ["pesanan", "order.png"],
     ["input-pesanan", "purchase_order.png"],
@@ -47,6 +48,8 @@ window.clickPages = (args) => {
     return (window.location.href = "/pages/users/stocks");
   } else if (arg == "inventory") {
     return (window.location.href = "/pages/inventory/");
+  } else if (arg == "information") {
+    return (window.location.href = "/pages/users/information");
   } else {
     return (window.location.href = "/pages/users/kerusakan");
   }

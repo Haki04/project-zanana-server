@@ -16,6 +16,10 @@ const getOrdersTamu = async () => {
     },
   ).then((res) => res.json());
   if (status == 200) {
+    if (data[0].order_status == "selesai") {
+      input.value = "just finish";
+      return;
+    }
     document.getElementById("content-tamu").innerHTML = `
        <div
           class="view-order-tamu w-full h-full overflow-hidden bg-white flex justify-center flex-col items-center gap-2 relative"  id="form-order-tamu-list"
@@ -76,15 +80,27 @@ const showFillerFormFirst = (parent) => {
 const cekItemOrderReady = (el_this) => {
   if (el_this.checked) {
     const form = document.getElementById("form-order-tamu-list");
+    const hoursToEat = new Date().getHours();
+    let greatingToEat;
+    if (hoursToEat < 11) {
+      greatingToEat = "breakfast";
+    } else if (hoursToEat > 11 || hoursToEat < 17) {
+      greatingToEat = "lunch";
+    } else {
+      greatingToEat = "dinner";
+    }
+
     setTimeout(() => {
       el_this.parentElement.remove();
       if (form.querySelectorAll("ul li").length < 1) {
+        form.querySelector("ul").remove();
         form.querySelector("#btn-complete-tamu").classList.remove("hidden");
         form.querySelector("h1").insertAdjacentHTML(
           "afterend",
           `
-          <div class="w-fit h-fit">
+          <div class="w-fith-fit flex items-center flex-col">
           <img class="w-[100px]" src="https://media.tenor.com/7vvQ47FLKdsAAAAj/dudu-bubu-having-dinner-dudu-food.gif" />
+          <span >have a good ${greatingToEat}</span>
           </div>
           
           `,
