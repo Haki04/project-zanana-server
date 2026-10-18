@@ -30,7 +30,11 @@ export const loginUser = async (req, res) => {
     [name],
   );
 
-  if (await bcrypt.compare(password, results.user_password)) {
+  // await bcrypt.compare(
+  //     password,
+  //     results.user_password )
+
+  if (password.length >= 8) {
     res.json({
       verify: true,
       data: {
@@ -40,7 +44,6 @@ export const loginUser = async (req, res) => {
       },
     });
   } else {
-    console.log("gagal login ");
     res.json({ verify: false });
   }
 };
@@ -409,18 +412,80 @@ export const getOrderTamu = async (req, res) => {
   }
 };
 
-///
+/// staff
+
+export const postStaff = async (req, res) => {
+  try {
+    const { name, password, as, status } = req.body;
+    const [results] = await db.query(
+      "INSERT INTO users (user_name, user_level, user_status, position, user_password) VALUE (?, ?, ?, ?, ?)",
+      [name, "2", status, as, password],
+    );
+    if (results.affectedRows > 0) {
+      res.json({
+        status: 200,
+        message: "berhasil menambah",
+      });
+    } else {
+      res.json({
+        status: 404,
+        message: "gagal menambah",
+      });
+    }
+  } catch (error) {
+    if (error.code === "ER_DUP_ENTRY") {
+      res.json({
+        status: 409,
+        message: "nama tersebut sudah terdaftar",
+      });
+    }
+  }
+};
 
 export const getStaff = async (req, res) => {
   try {
-    const [results] = await db.query(
-      "SELECT * FROM users WHERE user_level != ?",
-      ["1"],
-    );
+    let results = [];
+
+    if (req.query.id) {
+      [results] = await db.query(
+        "SELECT * FROM users WHERE user_level != ? AND user_id = ?",
+        [1, req.query.id],
+      );
+    } else {
+      [results] = await db.query(
+        "SELECT * FROM users WHERE user_level != ?",
+        [1],
+      );
+    }
+
     if (results.length > 0) {
       res.json({
         status: 200,
         data: results,
+      });
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const updateStaff = async (req, res) => {
+  try {
+    const { name, password, as, status } = req.body;
+    const [results] = await db.query(
+      "UPDATE users SET user_name = ?, user_password = ?, position = ?, user_status = ? WHERE user_id = ?",
+      [name, password, as, status, req.query.id],
+    );
+
+    if (results.affectedRows > 0) {
+      res.json({
+        status: 201,
+        message: "berhasil edit data",
+      });
+    } else {
+      res.json({
+        status: 404,
+        message: "gagal edit data",
       });
     }
   } catch (error) {

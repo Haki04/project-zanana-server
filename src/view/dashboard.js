@@ -30,7 +30,7 @@ const section = async (a, el_this) => {
   if (a == "dashboard") {
     div.innerHTML = `
     <div
-            class="w-full bg-slate-300 flex flex-row gap-1 p-1"
+            class="w-full bg-slate-300 flex flex-row gap-1 p-1 overflow-x-scroll"
             id="staff"
           ></div>
      <div class="bg-white h-full w-full flex flex-col justify-start">
@@ -122,7 +122,7 @@ const section = async (a, el_this) => {
   } else if (a == "staff") {
     div.innerHTML = `
      <div
-            class="w-full h-full bg-slate-300 flex flex-row justify-center gap-1 p-1"
+            class="w-full h-full bg-slate-300 flex flex-wrap justify-center gap-1 p-1 relative overflow-y-scroll content-start"
             id="staff"
           ></div>
     `;

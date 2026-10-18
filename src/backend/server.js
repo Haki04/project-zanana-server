@@ -20,6 +20,8 @@ import {
   getInformation,
   updateInformation,
   deleteInformation,
+  postStaff,
+  updateStaff,
 } from "./routers.js";
 import cors from "cors";
 
@@ -44,6 +46,8 @@ app.get("/information/update", updateInformation);
 
 //post
 app.post("/users", getUser);
+app.post("/staff/add", postStaff);
+app.post("/staff/update", updateStaff);
 app.post("/inventory", postInventory);
 app.post("/section/update", updateFormSectionItem);
 app.post("/users/login", loginUser);

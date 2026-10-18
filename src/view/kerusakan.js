@@ -111,9 +111,7 @@ const toggleKerusakan = async (id, parent) => {
 };
 
 export const showFormEditKerusakan = async (id, parent) => {
-  const { data } = await fetch(
-    `${import.meta.env.VITE_URL_SERVER_DEV}/report?id=${id}`,
-  ).then((item) => item.json());
+  const data = await getData(id);
   data.map((item) =>
     document.getElementById(parent).insertAdjacentHTML(
       "afterbegin",
@@ -201,9 +199,9 @@ export const showFormEditKerusakan = async (id, parent) => {
   }
 };
 
-const getData = async () => {
+const getData = async (id) => {
   const { data, status } = await fetch(
-    `${import.meta.env.VITE_URL_SERVER_DEV}/report`,
+    `${import.meta.env.VITE_URL_SERVER_DEV}/report${id ? `?id=${id}` : ``}`,
   ).then((res) => res.json());
 
   return data;
@@ -231,16 +229,22 @@ export const showItemBrokeness = async (element, data_filter) => {
   });
 };
 
-export const detailKerusakan = (id) => {
-  document.getElementById("kerusakan").innerHTML += `
+export const detailKerusakan = async (id) => {
+  const data = await getData(id);
+  data.map(
+    (item) =>
+      (document.getElementById("kerusakan").innerHTML += `
   <div class="${getCookie().level == 1 ? `absolute` : `fixed`}  w-full h-full bg-white/50 left-0 top-0 z-10 flex justify-center items-center">
     <div class="w-[300px] h-fit p-2 bg-white rounded shadow overflow-hidden">
         <h1 class="text-2xl w-full text-center capitalize">detail</h1>
         <div class="w-full h-fit p-1 [&>span]:shadow [&>span]:rounded">
-          <span class="w-full bg-white my-1 p-2 inline-block">posisi : <span class="font-bold">pool</span></span>
-          <span class="w-full bg-white my-1 p-2 inline-block">reporter : <span class="font-bold">kiki</span></span>
-          <span class="w-full bg-white my-1 p-2 inline-block">status : <span class="font-bold">lapor</span></span>
-          <span class="w-full bg-white my-1 p-2 inline-block">tanggal : <span class="font-bold">13/10/2026</span></span>
+          <span class="w-full bg-white my-1 p-2 inline-block">posisi : <span class="font-bold">${item.posisi}</span></span>
+          <span class="w-full bg-white my-1 p-2 inline-block">reporter : <span class="font-bold">${item.reporter}</span></span>
+          <span class="w-full bg-white my-1 p-2 inline-block">status : <span class="font-bold">${item.status}</span></span>
+          <span class="w-full bg-white my-1 p-2 inline-block">tanggal : <span class="font-bold">${item.date}</span></span>
+          <span class="w-full">
+            <textarea class="w-full min-h-[100px] resize-none" disabled>${item.description}</textarea>
+          </span>
           <div class="w-full bg-white p-2">
             <ul class="w-full min-w-0 p-2 flex flex-row gap-2 overflow-x-scroll" id="ul-images-kerusakan">
               <li class="shrink-0"><img src="/icon/info.png" class="w-[200px] border h-[100px]"/></li>
@@ -259,7 +263,8 @@ export const detailKerusakan = (id) => {
     </div>
   </div>
   
-  `;
+  `),
+  );
 };
 
 function scrollInfo(direction) {
