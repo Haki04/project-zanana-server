@@ -6,26 +6,8 @@ import {
 } from "../controller/controller";
 import { showOrdersItem } from "./pesanan";
 
-export const data_item = [
-  {
-    name: "nasi goreng",
-    category: "lokal",
-    img: "input.png",
-  },
-  {
-    name: "gado gado",
-    category: "lokal",
-    img: "logout.png",
-  },
-  {
-    name: "spageti",
-    category: "eropa",
-    img: "order.png",
-  },
-];
-
 let data_list_order = [];
-
+let data_item = [];
 let data_send = [];
 
 window.countOrderItem = (sign, e) => {
@@ -115,8 +97,8 @@ window.filterItems = (arg) => {
   setTimeout(
     () =>
       showItems(
-        data_item.filter((item) =>
-          ["name", "category"].some((key) =>
+        data_item.data.filter((item) =>
+          ["name"].some((key) =>
             item[key]?.toLowerCase().startsWith(arg.toLowerCase()),
           ),
         ),
@@ -125,19 +107,28 @@ window.filterItems = (arg) => {
   );
 };
 
+const getItems = async () => {
+  const responses = await fetch(
+    `${import.meta.env.VITE_URL_SERVER_DEV}/items-sell`,
+  ).then((res) => res.json());
+  return responses;
+};
+
 let count_input_pesanan_show = 0;
-export const showItems = (data) => {
-  try {
-    if (!document.getElementById("box-searching")) {
-      showSerchingBox();
-    }
-    const element = document.getElementById("input-pesanan");
-    if (!element) {
-      return;
-    }
-    element.innerHTML = "";
-    data.forEach((d) => {
-      element.innerHTML += `
+export const showItems = async (d) => {
+  if (count_input_pesanan_show == 0) data_item = await getItems();
+  let data = d ?? (await getItems());
+  data.data ? (data = data.data) : "";
+  if (!document.getElementById("box-searching")) {
+    showSerchingBox();
+  }
+  const element = document.getElementById("input-pesanan");
+  if (!element) {
+    return;
+  }
+  element.innerHTML = "";
+  data.forEach((d) => {
+    element.innerHTML += `
          <div
           class="w-[300px] h-[150px] rounded flex justify-around items-center overflow-hidden shadow-md" 
         >
@@ -164,16 +155,13 @@ export const showItems = (data) => {
           </div>
         </div>
         `;
-    });
-    if (getCookie().level != 1) {
-      if (count_input_pesanan_show == 0) {
-        animationLoading("content");
-        count_input_pesanan_show++;
-      }
-      backPages();
+  });
+  if (getCookie().level != 1) {
+    if (count_input_pesanan_show == 0) {
+      animationLoading("content");
+      count_input_pesanan_show++;
     }
-  } catch (error) {
-    console.log(error);
+    backPages();
   }
 };
 
@@ -293,7 +281,7 @@ export const showSerchingBox = () => {
         </ul>
         <input
           type="search"
-          onkeydown="filterItems(this.value)"
+          oninput="filterItems(this.value)"
           placeholder="Cari"
           class="border p-0.5 w-[80px] md:w-auto"
         />
@@ -353,6 +341,8 @@ export const loopingSelect = (data) => {
     console.log(error);
   }
 };
+
+data_item = getItems();
 
 window.data_send = data_send;
 window.data_list_order = data_list_order;

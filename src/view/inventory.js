@@ -10,15 +10,6 @@ if (!getCookie()) {
   window.location.href = "/pages/login";
 }
 
-// const data_section_form = {
-//   fo: {
-//     section_name: "eng",
-//     item_list_jenis: ["tools", "maintain-items"],
-//     item_list_laporan: ["information", "inventory", "broken"],
-//     item_list_satuan: ["item", "kg"],
-//   },
-// };
-
 let data_send_orders = [];
 let data_section_for_admin = [];
 let data_select_items;
@@ -34,7 +25,7 @@ window.inventoryForm = async (element, section) => {
 
   element.innerHTML = "";
   element.innerHTML = ` <div
-          class="w-[300px] bg-gray-200/70 p-1 [&>*]:mb-2 rounded shadow-sm [&>*]:focus:outline-gray-500"
+          class="w-[300px] bg-white [&>*:not(h1)]:shadow p-2 [&>*]:mb-2 rounded shadow-sm [&>*]:focus:outline-gray-500"
           id="form-inventory"
         >
         <h1 class="text-3xl text-center font-bold mb-3" id='title'></h1>
@@ -46,7 +37,7 @@ window.inventoryForm = async (element, section) => {
             class="w-full p-2 bg-white"
             placeholder="Nama item"
           />
-           <div class="absolute top-full w-full bg-white max-h-[300px] pt-1 [&>*]:p-1 [&>*]:mb-1 overflow-y-scroll [&>*]:border " id="items-searching-suggestion">
+           <div class="absolute top-full w-full  max-h-[300px] pt-1 [&>*]:p-1 [&>*]:mb-1 overflow-y-scroll [&>*]:border " id="items-searching-suggestion">
             </div>
           </div>
           <select name="" id="item-jenis" class="w-full bg-white p-2">
@@ -64,16 +55,14 @@ window.inventoryForm = async (element, section) => {
           <select name="" id="item-satuan" class="w-full bg-white p-2">
             <option value="" disabled selected>Satuan</option>
           </select>
-          <select name="" id="item-code" class="w-full bg-white p-2">
-            <option value="" disabled selected>Satuan</option>
-          </select>
+          <input class="bg-white w-full p-2" type="text" placeholder="brand/merek" id="item-brand"/>
           <textarea
             name=""
             id="item-extra-coment"
             placeholder="extra comment"
             class="w-full bg-white p-2 h-20 overflow-auto resize-none"
           ></textarea>
-          <button class="w-[70%] bg-white p-2 cursor-pointer" onclick="sendForm(this)" id="btn-inventory">Kirim</button>
+          <button class="w-[70%] bg-blue-100 p-2 cursor-pointer" onclick="sendForm(this)" id="btn-inventory">Kirim</button>
         </div>`;
 
   const title = document
@@ -170,7 +159,7 @@ const renderList = (form, section) => {
   const jenis_item = section.item_list_jenis;
   const jenis_laporan = section.item_list_laporan;
   const jenis_satuan = section.item_list_satuan;
-  // const code_item = section.item_code;
+  const brand_item = section.brand;
 
   jenis_item.forEach((item) => {
     form.querySelector("select#item-jenis").innerHTML +=
@@ -184,10 +173,10 @@ const renderList = (form, section) => {
     form.querySelector("select#item-satuan").innerHTML +=
       `<option value="${item}">${item}</option>`;
   });
-  // code_item.forEach((item) => {
-  //   form.querySelector("select#item-code").innerHTML +=
-  //     `<option value="${item}">${item}</option>`;
-  // });
+  brand_item.forEach((item) => {
+    form.querySelector("input#item-brand").innerHTML +=
+      `<option value="${item}">${item}</option>`;
+  });
 };
 
 // sendForm
@@ -209,7 +198,7 @@ window.sendForm = async (el_this) => {
         } else {
           if (form.querySelector("#item-satuan").value == "") {
             alert("satuan item gak boleh kosong");
-          } else if (form.querySelector("#item-code").value == "") {
+          } else if (form.querySelector("#item-brand").value == "") {
             alert("code item gak boleh kosong");
           } else {
             data_send_orders.push({
@@ -218,7 +207,7 @@ window.sendForm = async (el_this) => {
               report_item: form.querySelector("#item-report").value,
               total_item: form.querySelector("#item-jumlah").value,
               satuan_item: form.querySelector("#item-satuan").value,
-              code_item: form.querySelector("#item-code").value,
+              brand_item: form.querySelector("#item-brand").value,
               extra_coment: form.querySelector("#item-extra-coment").value,
               section:
                 getCookie().level == 1

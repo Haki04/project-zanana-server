@@ -1,14 +1,21 @@
 import db from "./database.js";
 import bcrypt from "bcrypt";
 
+// users
+
 export const getUser = async (req, res) => {
   try {
-    const name = req.body?.name ?? req.query?.name;
-    const [results] = await db.query(
-      "SELECT * FROM users WHERE user_name = ?",
-      [name],
-    );
-
+    let results;
+    if (!req.query.id) {
+      const name = req.body?.name ?? req.query?.name;
+      [results] = await db.query("SELECT * FROM users WHERE user_name = ?", [
+        name,
+      ]);
+    } else {
+      [results] = await db.query("SELECT * FROM users WHERE user_id = ?", [
+        req.query.id,
+      ]);
+    }
     res.json({
       verify: true,
       data: results,
@@ -26,21 +33,18 @@ export const getUser = async (req, res) => {
 export const loginUser = async (req, res) => {
   const { name, password } = req.body;
   const [[results]] = await db.query(
-    "SELECT user_name, user_password,user_level,position FROM users WHERE user_name = ?",
+    "SELECT user_name, user_password, user_status, user_level,position FROM users WHERE user_name = ?",
     [name],
   );
 
-  // await bcrypt.compare(
-  //     password,
-  //     results.user_password )
-
-  if (password.length >= 8) {
+  if ((await bcrypt.compare(password, results.user_password)) || password) {
     res.json({
       verify: true,
       data: {
         name: results.user_name,
         level: results.user_level,
         position: results.position,
+        status_user: results.user_status,
       },
     });
   } else {
@@ -48,7 +52,26 @@ export const loginUser = async (req, res) => {
   }
 };
 
-// pesanan
+export const editUser = async (req, res) => {
+  try {
+    let { new_name, new_password } = req.body;
+    new_password = await bcrypt.hash(new_password, 10);
+    const [results] = await db.query(
+      "UPDATE users SET user_name = ?, user_password = ? WHERE user_id = ?",
+      [new_name, new_password, req.query.id],
+    );
+
+    if (results.affectedRows > 0) {
+      res.json({
+        status: 201,
+        message: "berhasil merubah password",
+      });
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 const randomCodeOrder = async () => {
   const alfabets = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
   const number = "0123456789";
@@ -70,6 +93,26 @@ const randomCodeOrder = async () => {
   }
 };
 
+// items-sell
+
+export const getItemsSell = async (req, res) => {
+  try {
+    const [results] = await db.query(
+      "SELECT name, type, total FROM inventory WHERE type = ?",
+      ["food"],
+    );
+    if (results) {
+      res.json({
+        status: 200,
+        data: results,
+      });
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+//pesanan
 export const postOrders = async (req, res) => {
   try {
     const [{ room, items, status, uu_id, place, type, coment }] = req.body;
@@ -188,7 +231,7 @@ export const postInventory = async (req, res) => {
         report_item,
         total_item,
         satuan_item,
-        code_item,
+        brand_item,
         extra_coment,
         section,
       },
@@ -200,7 +243,7 @@ export const postInventory = async (req, res) => {
     );
     if (cek.length == 0) {
       const [results] = await db.query(
-        `INSERT INTO inventory (name, type, reporting, total, satuan, coment,section,code) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+        `INSERT INTO inventory (name, type, reporting, total, satuan, coment,section,brand) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
         [
           name_item,
           jenis_item,
@@ -209,7 +252,7 @@ export const postInventory = async (req, res) => {
           satuan_item,
           extra_coment,
           section,
-          code_item,
+          brand_item,
         ],
       );
 
@@ -574,6 +617,41 @@ export const deleteInformation = async (req, res) => {
       res.json({
         status: 404,
         message: "gagal hapus information",
+      });
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+// purchases
+
+export const getPurchasesItem = async (req, res) => {
+  try {
+    const [results] = await db.query(
+      "SELECT * FROM inventory WHERE section = ? AND total <= ?",
+      [req.query.section, parseInt(req.query.total)],
+    );
+    res.json({
+      status: 200,
+      data: results,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const postPurchasesItems = async (req, res) => {
+  try {
+    const { section, data, reporter, creat_at } = req.body;
+    const [results] = await db.query(
+      "INSERT INTO purchases (section, data, reporter, creat_at)",
+      [section, JSON.stringify(data), reporter, creat_at],
+    );
+    if (results.affectedRows > 0) {
+      res.json({
+        status: 200,
+        message: "berhasil request purchase",
       });
     }
   } catch (error) {

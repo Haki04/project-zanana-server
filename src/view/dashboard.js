@@ -15,8 +15,15 @@ import { addInformation, showInformation } from "./information.js";
 if (getCookie().level != 1 || !getCookie()) {
   window.location.href = "/pages/login";
 }
+document.getElementById("tag-admin").innerHTML =
+  `${getCookie().name} - ${getCookie().level == 1 ? `<span class="bg-amber-100 rounded inline-block px-3 uppercase">admin <span class="lowercase">lvl</span> ${getCookie().level}</span> ` : ``}`;
 
 const section = async (a, el_this) => {
+  if (window.innerWidth < 600) {
+    alert("tolong buka ditampilan desktop");
+    return (document.querySelector("body").innerHTML =
+      `<div class="flex justify-center items-center w-full h-screen bg-white/50"><span class="text-2xl">tampilan desktop di perlukan</span></div>`);
+  }
   if (!document.getElementById("cek-exist")) {
     document
       .querySelector("body")

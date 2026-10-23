@@ -20,6 +20,7 @@ const showUserSection = (element) => {
     ["input-pesanan", "purchase_order.png"],
     ["stocks", "product.png"],
     ["broken", "mechanic.png"],
+    ["purchases", "purchasing.png"],
   ];
   section_list.map((item) => {
     element.innerHTML += `
@@ -50,6 +51,8 @@ window.clickPages = (args) => {
     return (window.location.href = "/pages/inventory/");
   } else if (arg == "information") {
     return (window.location.href = "/pages/users/information");
+  } else if (arg == "purchases") {
+    return (window.location.href = "/pages/users/purchase");
   } else {
     return (window.location.href = "/pages/users/kerusakan");
   }

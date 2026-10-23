@@ -48,7 +48,10 @@
               alt=""
               class="w-[50px] h-[50px]"
             />
-            <span class="font-bold text-[10px]">KIKI</span>
+            <span
+              class="font-bold text-[14px] my-1 uppercase"
+              id="tag-admin"
+            ></span>
             <span
               class="font-bold text-[14px] p-1 bg-gray-50 rounded cursor-pointer"
               onclick="confirm('ingin keluar ?') ? logOutUser() : ''"
@@ -65,7 +68,7 @@
       </div>
     </div>
     <script>
-      window.onload = () => section("staff", "");
+      window.onload = () => section("dashboard", "");
     </script>
     <script type="module" src="/src/view/dashboard.js"></script>
   </body>

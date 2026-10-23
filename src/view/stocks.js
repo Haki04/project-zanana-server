@@ -60,8 +60,11 @@ export const showBoxStocks = async (section, el_this, filter_keyword) => {
   content_stocks.innerHTML = "";
   if (getCookie().level == 1) {
     content_stocks.innerHTML += `
-  <div class=" w-full h-full grid md:grid-cols-3 lg:grid-cols-4 justify-items-center content-start gap-2 overflow-y-scroll" id="content-stocks-dashboard"></div>
-  `;
+    <div class=" w-full h-full grid md:grid-cols-3 lg:grid-cols-4 justify-items-center content-start gap-2 overflow-y-scroll" id="content-stocks-dashboard"></div>
+    `;
+    if (data.length == 0)
+      document.getElementById("content-stocks-dashboard").innerHTML +=
+        `<div class="absolute flex justify-center items-center w-full h-full bg-white/50"><span class="text-2xl bg-white text-center rounded shadow block p-2 w-1/2">kosong</span></div>`;
     content_stocks = content_stocks.querySelector("#content-stocks-dashboard");
   }
   data.map((item) => {

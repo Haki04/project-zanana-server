@@ -22,6 +22,10 @@ import {
   deleteInformation,
   postStaff,
   updateStaff,
+  editUser,
+  getItemsSell,
+  getPurchasesItem,
+  postPurchasesItems,
 } from "./routers.js";
 import cors from "cors";
 
@@ -33,8 +37,10 @@ app.use(express.json());
 // get
 // app.get("/user", user);
 
+app.get("/items-sell", getItemsSell);
 app.get("/users/orders", getOrders);
 app.get("/users", getUser);
+app.get("/users/update", editUser);
 app.get("/staffs", getStaff);
 app.get("/inventory", getDataSection);
 app.get("/inventory/item", getDataItemSection);
@@ -43,9 +49,11 @@ app.get("/report", getReports);
 app.get("/information", getInformation);
 app.get("/information/delete", deleteInformation);
 app.get("/information/update", updateInformation);
+app.get("/purchases", getPurchasesItem);
 
 //post
 app.post("/users", getUser);
+app.post("/users/update", editUser);
 app.post("/staff/add", postStaff);
 app.post("/staff/update", updateStaff);
 app.post("/inventory", postInventory);
@@ -59,6 +67,7 @@ app.post("/report/action", deleteEditReport);
 app.post("/order/tamu", getOrderTamu);
 app.post("/information", postInformation);
 app.post("/information/update", updateInformation);
+app.post("/purchases", postPurchasesItems);
 
 app.listen(3000, () => {
   console.log("server berjalan");

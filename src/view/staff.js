@@ -23,8 +23,8 @@ export const showStaffBoxs = async (element) => {
              <div
               class="w-[150px] shrink-0 h-fit bg-white rounded-b-2xl rounded-t flex flex-col justify-start items-center p-1 shadow border-2 border-gray-400 relative"
             >
-            <span class="absolute w-[20px] h-fit left-1 top-1 cursor-pointer" onclick="addEditStaff('${element}', ${item.user_id})">
-              <img src="/icon/info.png" class="w-full"/>
+            <span class="absolute w-[10px] h-fit left-1 top-1 cursor-pointer" onclick="addEditStaff('${element}', ${item.user_id})">
+              <img src="/icon/pencil.png" class="w-full"/>
             </span>
             
               <div
@@ -72,7 +72,7 @@ export const addEditStaff = async (parent, id) => {
   <div class="bg-white/50 h-full w-full absolute z-10 top-0  flex justify-center items-center">
     <div class="w-[300px] h-fit bg-white p-2 flex flex-col items-center gap-2 rounded" id="form-new-staff">
         <h1 class="text-2xl capitalize">${!id ? `add  a new` : `update`} staff</h1>
-        <input type="text" placeholder="name new staff" class="w-[80%] p-2 shadow rounded bg-white" ${!id ? `oninput="passwordDefaultGeneret(this) value=""` : `value="${data_edit_staf_form[0].user_name}"`}/>
+        <input type="text" placeholder="name new staff" class="w-[80%] p-2 shadow rounded bg-white" ${!id ? `oninput="passwordDefaultGeneret(this)" value=""` : `value="${data_edit_staf_form[0].user_name}"`}/>
         
         <input type="text" class="w-[80%] ${!id ? `bg-gray-100` : ``} p-2 shadow rounded"  ${!id ? `disabled value=""` : `value="${data_edit_staf_form[0].user_password}"`} placeholder="default password" />
         
@@ -95,12 +95,27 @@ export const addEditStaff = async (parent, id) => {
 
        <div class="flex justify-center items-center w-[80%] gap-2">
          <button class="p-2 px-3 my-3 flex-1 shadow rounded bg-green-200 cursor-pointer" ${!id ? `onclick="validationDataNewStaff()"` : `onclick="validationDataNewStaff(true, ${data_edit_staf_form[0].user_id})"`}>${!id ? `add` : `update`}</button>
-          <button class="p-2 px-3 my-3 flex-1 shadow rounded bg-red-200 cursor-pointer" onclick="this.parentElement.parentElement.parentElement.remove()">cancel</button>
+          <button class="p-2 px-3 my-3 flex-1 shadow rounded bg-yellow-200 cursor-pointer" onclick="this.parentElement.parentElement.parentElement.remove()">cancel</button>
        </div>
 
+       ${
+         !id
+           ? ``
+           : `<div class="w-full flex justify-center items-center text-gray-300 cursor-pointer" id="more-action" onclick="deleteButton(${data_edit_staf_form[0].user_id})">more</div>
+`
+       }
     </div>
   </div>
   `;
+};
+
+const deleteButton = (id) => {
+  document.getElementById("more-action").innerHTML =
+    `<button class="p-2 w-1/2 rounded cursor-pointer bg-red-200 text-black" onclick="deleteStaff(${id})">delete</button>`;
+};
+
+const deleteStaff = async (id) => {
+  alert("berhasil di bapus " + id);
 };
 
 const passwordDefaultGeneret = (el_this) => {
@@ -154,3 +169,5 @@ const sendNewStaff = async (data, id) => {
 window.addEditStaff = addEditStaff;
 window.validationDataNewStaff = validationDataNewStaff;
 window.passwordDefaultGeneret = passwordDefaultGeneret;
+window.deleteButton = deleteButton;
+window.deleteStaff = deleteStaff;
