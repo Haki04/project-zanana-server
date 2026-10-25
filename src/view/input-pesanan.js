@@ -94,6 +94,7 @@ window.btnToggle = (e) => {
 };
 
 window.filterItems = (arg) => {
+  if (arg == "lokal" || arg == "eropa") return alert("progres");
   setTimeout(
     () =>
       showItems(
@@ -275,7 +276,7 @@ export const showSerchingBox = () => {
         <ul
           class="flex flex-row items-center gap-3 [&>li]:cursor-pointer [&>li]:text-[14px]"
         >
-          <li onclick="showItems(data_item)">All</li>
+          <li data-set="showItems(data_item)" onclick="alert('progres')">All</li>
           <li onclick="filterItems(this.textContent)">Lokal</li>
           <li onclick="filterItems(this.textContent)">Eropa</li>
         </ul>

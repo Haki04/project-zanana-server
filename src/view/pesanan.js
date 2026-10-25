@@ -34,14 +34,14 @@ export const showOrdersItem = async (element) => {
           sign_progres = "selesai";
       }
       element.innerHTML += `
- <div class="bg-white w-[300px] h-[150px] md:w-[150px] md:h-[200px] rounded flex flex-row md:flex-col overflow-hidden shadow-sm">
-          <div class="${sign_orders} w-full flex justify-center items-center h-full md:h-[40%] relative">
+ <div class="bg-white w-[300px] h-[150px] md:w-[150px] md:h-fit max-h-[300px] rounded flex flex-row md:flex-col overflow-hidden shadow-sm">
+          <div class="${sign_orders} w-full flex justify-center items-center h-full md:h-[80px] relative">
           <span class="absolute top-0 right-0 p-1 cursor-pointer" onclick="showMoresComentDetail(${item.uu_id})"><img class="w-[20px]" src="/icon/info.png" /></span>
           <h1 class="font-bold text-6xl md:text-5xl">${item.order_room}</h1>
           </div>
           <div class=" w-full h-full md:h-[60%]">
             <ul class="flex flex-col items-center bg-white p-1 h-full overflow-y-scroll">
-            <span class="sticky top-0 ${item.order_type == `order` && sign_progres != `selesai` ? `bg-red-300/50` : `bg-white/20`} text-center w-[50%] font-bold w-full md:w-full">${item.place_to_eat} | ${item.order_type}</span>
+            <span class="sticky top-0 ${item.order_type == `order` && sign_progres != `selesai` ? `bg-red-100` : `bg-white/20`} text-center w-[50%] font-bold w-full md:w-full capitalize">${item.place_to_eat} | ${item.order_type}</span>
               
             ${item.order_items
               .map((d) => `<li class="w-full">${d.name} ${d.total}x</li>`)
@@ -144,8 +144,8 @@ const showMoresComentDetail = async (uu_id) => {
               <span class="p-1 border-b"
                 >status :
                 <span
-                  class="bg-amber-200 p-1 px-2 inline-block text-center rounded"
-                  >proses</span
+                  class="${data[0].order_status == `order` ? `bg-gray-100` : data[0].order_status == `in proses` ? `bg-yellow-100` : `bg-green-100`} p-1 px-2 inline-block text-center rounded"
+                  >${data[0].order_status}</span
                 ></span
               >
               <button

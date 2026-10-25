@@ -11,6 +11,11 @@ import { showStaffBoxs } from "./staff.js";
 import { logOutUser } from "../controller/controller.js";
 import { showBoxStocks } from "./stocks.js";
 import { addInformation, showInformation } from "./information.js";
+import {
+  selectRenderCek,
+  showHaveMadeItemPurchasesButton,
+  showPurchasesItem,
+} from "./purchases.js";
 
 if (getCookie().level != 1 || !getCookie()) {
   window.location.href = "/pages/login";
@@ -240,6 +245,77 @@ const section = async (a, el_this) => {
       "bg-yellow-100",
     );
     showInformation("content-information", await getInformation());
+  } else if (a == "purchases") {
+    div.innerHTML = `
+    <div
+          class="w-full h-full relative shadow overflow-hidden rounded"
+          id="parent-content-purchase"
+        >
+          <div
+            class="w-full flex flex-col justify-between h-[10%] p-1 bg-white/90"
+          >
+            <div
+              class="flex w-full gap-1 items-center"
+              id="search-bar-purchases"
+            >
+              <h1 class="flex-2 pl-2">Purcahses List</h1>
+              <select
+                name=""
+                id="select-purchase"
+                class="flex-1 bg-white p-1 shadow rounded"
+              ></select>
+              <input
+                type="text"
+                name=""
+                id=""
+                class="w-[100px] p-1 bg-white shadow rounded"
+                placeholder="default <= 2"
+              />
+              <button
+                class="flex-1 bg-gray-200 rounded cursor-pointer p-1"
+                onclick="fillterPurcahsesList(this)"
+              >
+                Show
+              </button>
+
+              <button
+                class="flex-1 bg-green-200 rounded cursor-pointer p-1"
+                onclick="formInputItem()"
+              >
+                Add
+              </button>
+            </div>
+            <div class="w-full">
+              <ul
+                class="flex justify-around items-center [&>*]:flex-1 [&>*]:text-center"
+              >
+                <li>Section</li>
+                <li>Name item</li>
+                <li>Total store</li>
+                <li>Type</li>
+                <li>Brand</li>
+                <li>Need</li>
+                <li>Action</li>
+              </ul>
+            </div>
+          </div>
+          <div
+            class="w-full h-[90%] bg-gray-200 flex flex-col items-center gap-2 p-1 rounded-b overflow-y-scroll"
+            id="content-purchases"
+          ></div>
+        </div>
+
+    `;
+
+    activeListHilight(
+      document.getElementById("ul-dashboard"),
+      el_this,
+      "bg-yellow-100",
+    );
+    showPurchasesItem("content-purchases");
+    selectRenderCek();
+    showHaveMadeItemPurchasesButton();
+    buttonPrint("@");
   }
 };
 

@@ -26,6 +26,7 @@ import {
   getItemsSell,
   getPurchasesItem,
   postPurchasesItems,
+  deleteItemPurchases,
 } from "./routers.js";
 import cors from "cors";
 
@@ -50,6 +51,7 @@ app.get("/information", getInformation);
 app.get("/information/delete", deleteInformation);
 app.get("/information/update", updateInformation);
 app.get("/purchases", getPurchasesItem);
+app.get("/purchases/delete", deleteItemPurchases);
 
 //post
 app.post("/users", getUser);

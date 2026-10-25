@@ -25,7 +25,7 @@ const showUserSection = (element) => {
   section_list.map((item) => {
     element.innerHTML += `
      <div
-          class="w-[80%] md:w-[250px] md:h-[150px] shrink-0 h-[80px] bg-gray-200/50 rounded flex justify-center items-center cursor-pointer hover:scale-110  transition gap-2 md:gap-4"
+          class="w-[80%] md:w-[250px] md:h-[150px] shrink-0 h-[80px] bg-gray-100/50 rounded flex justify-center items-center cursor-pointer hover:scale-110  transition gap-2 md:gap-4"
           onclick="clickPages(this)"
         >
           <img src="/icon/${item[1]}" alt="" class="w-[60px] md:w-[80px]" />

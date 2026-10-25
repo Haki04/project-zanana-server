@@ -67,7 +67,7 @@ export const toggleFormEdit = (id, parent, section, el_this) => {
             id="form-edit-stocks"
           >
             <div
-              class="w-[200px] h-auto bg-white rounded p-2 flex flex-col justify-start gap-1 items-center [&_input]:focus:outline-0"
+              class="w-[200px] h-auto bg-white shadow rounded p-2 flex flex-col justify-start gap-1 items-center [&_input]:focus:outline-0"
               
             >
               <h1 class="text-3xl text-center bg-white w-full">edit</h1>

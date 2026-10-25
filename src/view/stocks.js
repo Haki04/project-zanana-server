@@ -70,7 +70,7 @@ export const showBoxStocks = async (section, el_this, filter_keyword) => {
   data.map((item) => {
     content_stocks.innerHTML += `
        <div
-            class="w-[150px] h-[100px] bg-gray-100 border rounded overflow-hidden relative shadow pt-1 hover:scale-110 hover:z-[1] hover:shadow transition cursor-pointer"
+            class="w-[150px] h-[100px] bg-gray-100 border-2 rounded overflow-hidden relative shadow pt-1 hover:scale-110 hover:z-[1] hover:shadow transition cursor-pointer"
           >
             <span
               class="absolute top-0 right-2 cursor-pointer"

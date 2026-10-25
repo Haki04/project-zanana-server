@@ -628,7 +628,20 @@ export const deleteInformation = async (req, res) => {
 
 export const getPurchasesItem = async (req, res) => {
   try {
-    const [results] = await db.query(
+    let results;
+    if (!req.query.total) {
+      [results] = await db.query(
+        "SELECT * FROM purchases WHERE section = ? ORDER BY id DESC LIMIT 1",
+        [req.query.section],
+      );
+      res.json({
+        status: 200,
+        data: results,
+      });
+      return;
+    }
+
+    [results] = await db.query(
       "SELECT * FROM inventory WHERE section = ? AND total <= ?",
       [req.query.section, parseInt(req.query.total)],
     );
@@ -643,15 +656,33 @@ export const getPurchasesItem = async (req, res) => {
 
 export const postPurchasesItems = async (req, res) => {
   try {
-    const { section, data, reporter, creat_at } = req.body;
+    const creat_at = `${new Date().getDate()}-${new Date().getMonth() + 1}-${new Date().getFullYear()}`;
+    const { section, data, reporter } = req.body;
     const [results] = await db.query(
-      "INSERT INTO purchases (section, data, reporter, creat_at)",
+      "INSERT INTO purchases (section, data, reporter, creat_at) VALUES (?, ?, ?, ?)",
       [section, JSON.stringify(data), reporter, creat_at],
     );
     if (results.affectedRows > 0) {
       res.json({
         status: 200,
         message: "berhasil request purchase",
+      });
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const deleteItemPurchases = async (req, res) => {
+  try {
+    const [results] = await db.query("DELETE FROM purchases WHERE id = ?", [
+      req.query.id,
+    ]);
+
+    if (results.affectedRows > 0) {
+      res.json({
+        status: 200,
+        message: "Berhasil menghapus data purchasing",
       });
     }
   } catch (error) {

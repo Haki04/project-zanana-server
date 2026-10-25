@@ -7,28 +7,34 @@
     <link rel="stylesheet" href="/src/style.css" />
   </head>
   <body>
-    <div class="w-full h-screen flex justify-center items-center">
+    <div class="w-full h-screen flex justify-center items-center bg-gray-50">
       <div
-        class="w-full max-w-[1000px] h-full flex justify-center items-center rounded overflow-hidden"
+        class="w-full max-w-[1000px] h-full flex justify-center items-center overflow-hidden p-1"
       >
-        <div class="w-[80%] h-[80%] relative" id="parent-content-purchase">
-          <div class="w-full p-1 bg-amber-200 rounded-t">
+        <div
+          class="w-full md:w-[80%] h-[90%] relative shadow overflow-hidden rounded"
+          id="parent-content-purchase"
+        >
+          <div
+            class="w-full flex flex-col justify-between h-[10%] max-[600px]:h-fit p-1 bg-white"
+          >
             <div
               class="flex w-full gap-1 items-center"
               id="search-bar-purchases"
             >
-              <h1 class="flex-2 pl-2">Purcahses List</h1>
+              <h1 class="md:flex-2 md:pl-2">Purcahses List</h1>
               <select
                 name=""
                 id="select-purchase"
-                class="flex-1 bg-white p-1"
+                class="flex-1 bg-white p-1 shadow rounded appearance-none"
+                disabled
               ></select>
               <input
                 type="text"
                 name=""
                 id=""
-                class="w-[100px] p-1 bg-white"
-                placeholder="default < 2"
+                class="flex-1 min-w-0 md:w-[100px] p-1 bg-white shadow rounded"
+                placeholder="num"
               />
               <button
                 class="flex-1 bg-gray-200 rounded cursor-pointer p-1"
@@ -44,28 +50,39 @@
                 Add
               </button>
             </div>
-            <div class="w-full">
+            <div class="w-full max-[600px]:hidden">
               <ul
                 class="flex justify-around items-center [&>*]:flex-1 [&>*]:text-center"
               >
                 <li>Section</li>
                 <li>Name item</li>
                 <li>Total store</li>
-                <li>Type</li>
+                <li>
+                  <select id="select-filter-purchases">
+                    <option value="">Type</option>
+                  </select>
+                </li>
                 <li>Brand</li>
-                <li>Perlu</li>
+                <li>Need</li>
+                <li>Action</li>
               </ul>
             </div>
           </div>
           <div
-            class="w-full h-full bg-gray-200 flex flex-col items-center gap-2 p-1 rounded-b"
+            class="w-full h-[90%] max-[600px]:h-full bg-gray-100 flex flex-col items-center gap-2 p-1 rounded-b overflow-y-scroll"
             id="content-purchases"
           ></div>
         </div>
       </div>
     </div>
     <script>
-      window.onload = () => showPurchasesItem("content-purchases");
+      window.onload = () => {
+        showPurchasesItem("content-purchases");
+        selectRenderCek();
+        showHaveMadeItemPurchasesButton();
+        buttonPrint();
+        backPages();
+      };
     </script>
     <script type="module" src="/src/view/purchases.js"></script>
   </body>

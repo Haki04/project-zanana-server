@@ -62,7 +62,7 @@ window.inventoryForm = async (element, section) => {
             placeholder="extra comment"
             class="w-full bg-white p-2 h-20 overflow-auto resize-none"
           ></textarea>
-          <button class="w-[70%] bg-blue-100 p-2 cursor-pointer" onclick="sendForm(this)" id="btn-inventory">Kirim</button>
+          <button class="w-[70%] bg-green-100 p-2 cursor-pointer" onclick="sendForm(this)" id="btn-inventory">Kirim</button>
         </div>`;
 
   const title = document
@@ -159,7 +159,6 @@ const renderList = (form, section) => {
   const jenis_item = section.item_list_jenis;
   const jenis_laporan = section.item_list_laporan;
   const jenis_satuan = section.item_list_satuan;
-  const brand_item = section.brand;
 
   jenis_item.forEach((item) => {
     form.querySelector("select#item-jenis").innerHTML +=
@@ -173,73 +172,57 @@ const renderList = (form, section) => {
     form.querySelector("select#item-satuan").innerHTML +=
       `<option value="${item}">${item}</option>`;
   });
-  brand_item.forEach((item) => {
-    form.querySelector("input#item-brand").innerHTML +=
-      `<option value="${item}">${item}</option>`;
-  });
 };
 
 // sendForm
 
 window.sendForm = async (el_this) => {
   const form = document.getElementById("form-inventory");
-  if (form.querySelector("#item-name").value == "") {
-    alert("name item gak boleh kosong");
-    return;
-  } else {
-    if (form.querySelector("#item-jenis").value == "") {
-      alert("jenis item gak boleh kosong");
-    } else {
-      if (form.querySelector("#item-report").value == "") {
-        alert("laporan gak boleh kosong");
-      } else {
-        if (form.querySelector("#item-jumlah").value == "") {
-          alert("jumlah item gak boleh kosong");
-        } else {
-          if (form.querySelector("#item-satuan").value == "") {
-            alert("satuan item gak boleh kosong");
-          } else if (form.querySelector("#item-brand").value == "") {
-            alert("code item gak boleh kosong");
-          } else {
-            data_send_orders.push({
-              name_item: form.querySelector("#item-name").value,
-              jenis_item: form.querySelector("#item-jenis").value,
-              report_item: form.querySelector("#item-report").value,
-              total_item: form.querySelector("#item-jumlah").value,
-              satuan_item: form.querySelector("#item-satuan").value,
-              brand_item: form.querySelector("#item-brand").value,
-              extra_coment: form.querySelector("#item-extra-coment").value,
-              section:
-                getCookie().level == 1
-                  ? el_this.getAttribute("data-set")
-                  : getCookie().position,
-            });
-            const result_post = await fetch(
-              `${import.meta.env.VITE_URL_SERVER_DEV}/inventory`,
-              {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(data_send_orders),
-              },
-            ).then((item) => item.json());
-            if (result_post.status !== 500) {
-              data_send_orders = [];
-            }
-            if (result_post.status == 200) {
-              alert(result_post.message);
-            } else {
-              alert(result_post.message);
-            }
-            form
-              .querySelectorAll("input, select, textarea")
-              .forEach((element) => {
-                element.value = "";
-              });
-          }
-        }
-      }
-    }
+  if (form.querySelector("#item-name").value == "")
+    return alert("name item gak boleh kosong");
+  if (form.querySelector("#item-jenis").value == "")
+    return alert("jenis item gak boleh kosong");
+  if (form.querySelector("#item-report").value == "")
+    return alert("laporan gak boleh kosong");
+  if (form.querySelector("#item-jumlah").value == "")
+    return alert("jumlah item gak boleh kosong");
+  if (form.querySelector("#item-satuan").value == "")
+    return alert("satuan item gak boleh kosong");
+  if (form.querySelector("#item-brand").value == "")
+    return alert("brand/merek item gak boleh kosong");
+
+  data_send_orders.push({
+    name_item: form.querySelector("#item-name").value,
+    jenis_item: form.querySelector("#item-jenis").value,
+    report_item: form.querySelector("#item-report").value,
+    total_item: form.querySelector("#item-jumlah").value,
+    satuan_item: form.querySelector("#item-satuan").value,
+    brand_item: form.querySelector("#item-brand").value,
+    extra_coment: form.querySelector("#item-extra-coment").value,
+    section:
+      getCookie().level == 1
+        ? el_this.getAttribute("data-set")
+        : getCookie().position,
+  });
+  const result_post = await fetch(
+    `${import.meta.env.VITE_URL_SERVER_DEV}/inventory`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data_send_orders),
+    },
+  ).then((item) => item.json());
+  if (result_post.status !== 500) {
+    data_send_orders = [];
   }
+  if (result_post.status == 200) {
+    alert(result_post.message);
+  } else {
+    alert(result_post.message);
+  }
+  form.querySelectorAll("input, select, textarea").forEach((element) => {
+    element.value = "";
+  });
 };
 
 const addItemFormInventory = () => {
