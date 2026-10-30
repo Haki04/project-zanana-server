@@ -9,7 +9,7 @@ export const showPurchasesItem = async (parent, section, total) => {
   const data_item = await getPurchasesItem(section, total);
   if (!data_item) {
     return (document.getElementById(parent).innerHTML =
-      `<span class="w-1/3 p-2 mt-[5%] bg-white rounded text-center capitalize">${getCookie().level == 1 ? `pilih section` : `press show`}</span>`);
+      `<span id="span-kosong-sign" class="w-1/3 p-2 mt-[5%] bg-white rounded text-center capitalize">${getCookie().level == 1 ? `pilih section` : `press show`}</span>`);
   }
   document.getElementById(parent).innerHTML = "";
   data_item.length == 0
@@ -19,11 +19,22 @@ export const showPurchasesItem = async (parent, section, total) => {
     (item) =>
       (document.getElementById(parent).innerHTML += `
      <div
-            class="w-full max-[600px]:w-1/2 p-1 h-fit bg-white [&>*]:flex-1 flex max-[600px]:flex-col items-center [&>*]:text-center [&>*:not(input)]:bg-blue-100 gap-1 rounded [&>*]:p-2" id="list-purchases"
+            class="w-full max-[400px]:w-[60%] max-[400px]:flex-col max-[400px]:*:w-full p-1 h-fit bg-white [&>*]:flex-1 flex  items-center [&>*]:text-center [&>*:not(input):not(div)]:bg-blue-100 gap-1 rounded [&>*]:p-2 relative" id="list-purchases"
           >
+          <div class="absolute -left-1 gap-1 -top-1 *:flex-1 justify-between *:w-fit *:pl-1 h-full max-w-0 flex flex-col *:flex *:justify-center *:items-center min-[400px]:hidden">
+            <span>section</span>
+            <span>item</span>
+            <span>store</span>
+            <span>satuan</span>
+            <span>type</span>
+            <span>brand</span>
+            <span>need</span>
+            <span>action</span>
+          </div>
             <span>${getCookie().position}</span>
             <span class="truncate">${item.name}</span>
             <span>${item.total}</span>
+            <span>${item.satuan}</span>
             <span>${item.type}</span>
             <span>${!item.brand ? `-` : item.brand}</span>
             <input type="number" class="min-w-0 bg-blue-50" placeholder="number" min='1' value="1"/>
@@ -88,6 +99,9 @@ const fillterPurcahsesList = (el_this) => {
 };
 
 const addItemPurchase = (parent, data) => {
+  if (document.getElementById("span-kosong-sign"))
+    document.getElementById(parent).innerHTML = "";
+
   document.getElementById(parent).innerHTML += `
      <div
             class="w-full p-1 h-fit bg-white [&>*]:flex-1 flex items-center [&>*]:text-center [&>*:not(input)]:bg-blue-100 gap-1 rounded [&>*]:p-2" id="form-purchases"
@@ -95,6 +109,7 @@ const addItemPurchase = (parent, data) => {
             <span>${data.section}</span>
             <span>${data.name_item}</span>
             <span>${data.total_store}</span>
+            <span>${data.satuan}</span>
             <span>${data.type}</span>
             <span>${data.brand}</span>
             <input type="number" class="min-w-0 bg-blue-50" placeholder="number" min='1' value="${data.need}"/>
@@ -118,6 +133,10 @@ const formInputItem = () => {
       <h1 class="text-2xl capitalize">add item</h1>
       <input type="text" class="w-full bg-white p-2 " value="" placeholder="Name item"/>
       <input type="text" class="w-full bg-white p-2 " value="" placeholder="Total store"/>
+      <select class="w-full bg-white p-2" id="select-additem-purchases">
+        <option>kg</option>
+        <option>pcs</option>
+      </select>
       <input type="text" class="w-full bg-white p-2 " value="" placeholder="Type"/>
       <input type="text" class="w-full bg-white p-2 " value="" placeholder="Brand/merek"/>
       <input type="number" class="w-full bg-white p-2 placeholder="number" min='1' value="1"/>
@@ -132,17 +151,19 @@ const formInputItem = () => {
 };
 
 const validationPurchases = (el_this) => {
-  const input = el_this.parentElement.parentElement.querySelectorAll("input");
-  const unValid = [...input].filter((item) => item.value == "");
-  if (unValid.length > 0) return unValid.map((item) => item.focus());
+  const input =
+    el_this.parentElement.parentElement.querySelectorAll("input, select");
+  const un_valid = [...input].filter((item) => item.value == "");
+  if (un_valid.length > 0) return un_valid.map((item) => item.focus());
 
   addItemPurchase("content-purchases", {
     section: getCookie().position,
     name_item: input[0].value,
     total_store: input[1].value,
-    type: input[2].value,
-    brand: input[3].value,
-    need: input[4].value,
+    satuan: input[2].value,
+    type: input[3].value,
+    brand: input[4].value,
+    need: input[5].value,
   });
 };
 
@@ -194,8 +215,9 @@ const insertDataTo_data_send = () => {
     data_send[0].data.push({
       name_item: items[1].textContent,
       total_store: items[2].textContent,
-      type: items[3].textContent,
-      brand: items[4].textContent,
+      satuan: items[3].textContent,
+      type: items[4].textContent,
+      brand: items[5].textContent,
       need: item.querySelector("input").value,
     });
   });
@@ -227,7 +249,7 @@ const showHaveBeenMade = async (el_this) => {
   document.getElementById("parent-content-purchase").insertAdjacentHTML(
     `afterbegin`,
     `
-          <div class="absolute top-0 h-full w-full bg-white/50 flex justify-center items-center">
+          <div class="absolute z-10 top-0 h-full w-full bg-white/50 flex justify-center items-center">
             <div class="w-[90%] lg:w-[70%] h-fit p-2 bg-white shadow flex flex-col items-center justify-around max-h-[500px] rounded relative" id="content-purchases-ready">
             <div class="w-full [&>*:not(button)]:bg-gray-100 p-1 flex [&>*]:flex-1 [&>*]:p-2">
                   <span value="${responses.data[0].section}">Section : ${responses.data[0].section}</span>
@@ -239,11 +261,12 @@ const showHaveBeenMade = async (el_this) => {
                 <ul class="flex [&>*]:flex-1 [&>*]:bg-white [&>*]:text-center">
                   <li>Name item</li>
                   <li>Total store</li>
+                  <li>Satuan</li>
                   <li>
                     <select
-                    class="w-full"
+                    class="w-[90%]"
                     id="select-filter-purchases"
-                    onchange=""
+                    onchange="fillterItemOffline(this)"
                   >
                     <option value="">Type</option>
                   </select>
@@ -252,7 +275,7 @@ const showHaveBeenMade = async (el_this) => {
                   <li>Need</li>
                 </ul>
               </div>
-              <div class="w-full h-fit overflow-y-scroll" >
+              <div class="w-full h-fit overflow-y-scroll" id="purchases-item-ready">
               ${responses.data.map((item) =>
                 item.data
                   .map(
@@ -260,6 +283,7 @@ const showHaveBeenMade = async (el_this) => {
                 <div class="w-full p-1 flex [&>*]:flex-1  [&>*]:text-center [&>*]:p-2 [&>*]:bg-blue-100" id="list-purchases-ready">
                   <span class="truncate">${item.name_item}</span>
                   <span>${item.total_store}</span>
+                  <span>${item.satuan}</span>
                   <span>${item.type}</span>
                   <span>${item.brand}</span>
                   <span>${item.need}</span>
@@ -272,7 +296,7 @@ const showHaveBeenMade = async (el_this) => {
               <div class="absolute top-full mt-2 flex gap-2 *:rounded *:shadow *:capitalize *:cursor-pointer">
                 <button class="bg-green-100 p-2" onclick="exportExcel(this,this)">export</button>
                 <button class="bg-yellow-100 p-2" onclick="this.parentElement.parentElement.parentElement.remove()">cancel</button>
-                <button class="bg-red-100 p-2" onclick="deletePurchasing(${responses.data[0].id}, this)">hapus</button>
+                <button class="bg-red-100 p-2" onclick="if (confirm('ingin menghapus data ?'))deletePurchasing(${responses.data[0].id}, this)">hapus</button>
               </div>
               </div>
           </div>
@@ -314,6 +338,7 @@ const excelExportFunction = (data) => {
 };
 
 const exportExcel = (parent, child) => {
+  if (document.getElementById("select-purchase").value == "") return;
   parent = !parent ? "content-purchases" : "content-purchases-ready";
   child = !child ? "list-purchases" : "list-purchases-ready";
   const optional_data = document
@@ -390,10 +415,28 @@ const fillterPurchasesType = async (section) => {
   )
     .then((res) => res.json())
     .then((item) => (data_item_filter = item.data[0].data));
-  console.log(data_item_filter);
 };
 
-const fillterItemOffline = () => {};
+const fillterItemOffline = (el_this) => {
+  document.getElementById("purchases-item-ready").innerHTML = "";
+  data_item_filter
+    .filter((item) => item.type == el_this.value)
+    .map(
+      (item) =>
+        (document.getElementById("purchases-item-ready").innerHTML += `
+               <div class="w-full p-1 flex [&>*]:flex-1  [&>*]:text-center [&>*]:p-2 [&>*]:bg-blue-100" id="list-purchases-ready">
+                  <span class="truncate">${item.name_item}</span>
+                  <span>${item.total_store}</span>
+                  <span>${item.satuan}</span>
+                  <span>${item.type}</span>
+                  <span>${item.brand}</span>
+                  <span>${item.need}</span>
+                </div>
+              
+  `),
+    )
+    .join("");
+};
 
 window.showPurchasesItem = showPurchasesItem;
 window.fillterPurcahsesList = fillterPurcahsesList;
@@ -407,3 +450,4 @@ window.showHaveBeenMade = showHaveBeenMade;
 window.showHaveMadeItemPurchasesButton = showHaveMadeItemPurchasesButton;
 window.deletePurchasing = deletePurchasing;
 window.backPages = backPages;
+window.fillterItemOffline = fillterItemOffline;

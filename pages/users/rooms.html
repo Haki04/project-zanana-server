@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rooms</title>
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <div class="w-full h-screen flex justify-center items-center bg-gray-100">
+      <div
+        class="w-[80%] h-[90%] bg-slate-200 rounded p-2 relative flex justify-center flex-wrap gap-2 overflow-y-scroll"
+        id="content-rooms"
+      >
+        <div
+          class="absolute w-[30px] z-1 right-0 top-0 bg-green-100 p-2 cursor-pointer"
+          onclick="showFormAddItemRooms()"
+        >
+          <img src="/icon/plus.png" alt="" />
+        </div>
+      </div>
+    </div>
+    <script>
+      window.onload = () => {
+        showItemRooms();
+        backPages();
+      };
+    </script>
+    <script type="module" src="/src/view/rooms.js"></script>
+  </body>
+</html>

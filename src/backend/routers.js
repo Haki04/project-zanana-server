@@ -237,47 +237,59 @@ export const postInventory = async (req, res) => {
       },
     ] = req.body;
 
-    const [cek] = await db.query(
-      `SELECT name,total FROM inventory WHERE name = ?`,
-      [name_item],
-    );
-    if (cek.length == 0) {
-      const [results] = await db.query(
-        `INSERT INTO inventory (name, type, reporting, total, satuan, coment,section,brand) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-        [
-          name_item,
-          jenis_item,
-          report_item,
-          total_item,
-          satuan_item,
-          extra_coment,
-          section,
-          brand_item,
-        ],
+    if (report_item == "rusak") {
+      const [rusak_item_cek] = await db.query(
+        `UPDATE inventory SET total = total-${parseInt(total_item)} WHERE name = ?`,
+        [name_item],
       );
-
-      if (results) {
-        res.json({
+      if (rusak_item_cek.affectedRows > 0) {
+        return res.json({
           status: 200,
-          message: "berhasil do inventory",
+          message: "stocks di kurangin dengan barang yang rusak",
         });
-      } else {
-        console.log("gagal");
       }
-    } else {
-      const [total_old] = cek;
-      let total_new = parseInt(total_old.total) + parseInt(total_item);
-      const [results] = await db.query(
-        `UPDATE inventory SET total = ? WHERE name = ?`,
-        [total_new, name_item],
+      const [cek] = await db.query(
+        `SELECT name,total FROM inventory WHERE name = ?`,
+        [name_item],
       );
+      if (cek.length == 0) {
+        const [results] = await db.query(
+          `INSERT INTO inventory (name, type, reporting, total, satuan, coment,section,brand) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+          [
+            name_item,
+            jenis_item,
+            report_item,
+            total_item,
+            satuan_item,
+            extra_coment,
+            section,
+            brand_item,
+          ],
+        );
 
-      console.log(results);
-      if (results.affectedRows > 0) {
-        res.json({
-          status: 201,
-          message: "stock sudah diperbaharui",
-        });
+        if (results) {
+          res.json({
+            status: 200,
+            message: "berhasil do inventory",
+          });
+        } else {
+          console.log("gagal");
+        }
+      } else {
+        const [total_old] = cek;
+        let total_new = parseInt(total_old.total) + parseInt(total_item);
+        const [results] = await db.query(
+          `UPDATE inventory SET total = ? WHERE name = ?`,
+          [total_new, name_item],
+        );
+
+        console.log(results);
+        if (results.affectedRows > 0) {
+          res.json({
+            status: 201,
+            message: "stock sudah diperbaharui",
+          });
+        }
       }
     }
   } catch (error) {
@@ -295,7 +307,7 @@ export const getStoks = async (req, res) => {
     let query_query = [];
     if (req.query.id_stocks) {
       query_string =
-        "SELECT id,name,type,total,satuan FROM inventory WHERE section = ? AND id = ?";
+        "SELECT id,name,type,total,satuan,coment FROM inventory WHERE section = ? AND id = ?";
       query_query = [req.query.section, req.query.id_stocks];
     } else if (req.query.filter != "undefined" && req.query.filter != "all") {
       query_string =
@@ -685,6 +697,58 @@ export const deleteItemPurchases = async (req, res) => {
         message: "Berhasil menghapus data purchasing",
       });
     }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+/// rooms-items
+
+export const postRoomItems = async (req, res) => {
+  try {
+    const {
+      data: [{ room_number, data }],
+      last_update,
+      reporter,
+    } = req.body;
+
+    const [results] = await db.query(
+      "INSERT INTO rooms (room_number, room_data, last_update, reporter) VALUES (?, ?, ?, ?)",
+      [room_number, JSON.stringify(data), last_update, reporter],
+    );
+
+    if (results.affectedRows > 0)
+      return res.json({
+        status: 200,
+        message: "berhasil menambahkan room items",
+      });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getRoomItems = async (req, res) => {
+  try {
+    const [results] = await db.query("SELECT * FROM rooms");
+    return res.json({ status: 200, data: results });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const editRoomItems = async (req, res) => {
+  try {
+    const { data, last_update, reporter } = req.body;
+    const [results] = db.query(
+      "UPDATE rooms SET room_data=?, last_update=?, reporter=? WHERE room_id=?",
+      [data, last_update, reporter, req.query.id],
+    );
+
+    if (results.affectedRows > 0)
+      return res.json({
+        status: 201,
+        message: `berhasil edit data item room ${req.query.room_number}`,
+      });
   } catch (error) {
     console.log(error);
   }

@@ -72,13 +72,14 @@ export const showBoxStocks = async (section, el_this, filter_keyword) => {
        <div
             class="w-[150px] h-[100px] bg-gray-100 border-2 rounded overflow-hidden relative shadow pt-1 hover:scale-110 hover:z-[1] hover:shadow transition cursor-pointer"
           >
+          <span onclick="showMoreDetailStocks(${item.id}, '${section}')" class="absolute left-0 ml-1 top-0 w-[20px]"><img class="w-full" src="/icon/info.png"  /></span>
             <span
               class="absolute top-0 right-2 cursor-pointer"
               onclick="toggleFormEdit(${item.id}, '${getCookie().level != 1 ? `body` : `#content`}', '${section}', '${el_this}')"
               >edit</span
             >
             <div class="w-full bg-white h-[70%] flex justify-end items-center flex-col">
-              <h1 class="text-2xl font-bold">${item.name}</h1>
+              <h1 class="text-2xl font-bold truncate">${item.name}</h1>
              <span class="text-[14px] ">${item.type}</span>
             </div>
             <div class="w-full flex justify-center items-center">
@@ -91,13 +92,35 @@ export const showBoxStocks = async (section, el_this, filter_keyword) => {
   });
 };
 
+const showMoreDetailStocks = async (id_optional, section) => {
+  const data = await getDataStocks(section, "", id_optional);
+  console.log(data[0]);
+  document.getElementById(
+    getCookie().level == 1 ? `content-stocks-dashboard` : `content`,
+  ).innerHTML += `
+    <div class="absolute top-0 w-full h-full bg-white/50 justify-center items-center flex">
+      <div class="w-[300px] bg-white shadow h-fit flex flex-col p-2 gap-2">
+        <h1 class="flex-1 text-2xl bg-gray-100 capitalize p-2">detail</h1>
+        ${Object.entries(data[0])
+          .filter(([keys]) => keys != `id`)
+          .map(
+            ([keys, item]) => `
+          ${keys != `coment` ? `<span class="flex-1 shadow bg-white p-2">${keys} : <span class="font-bold">${item}</span></span>` : `<textarea class="max-h-[200px] p-1 shadow bg-gray-50 inline-block">${!item ? `-` : item}</textarea>`}`,
+          )
+          .join("")}
+          <button class="flex-1 w-1/2 bg-yellow-100 capitalize p-2 rounded hover:bg-yellow-200 cursor-pointer transition" onclick="this.parentElement.parentElement.remove()">close</button>
+      </div>
+    </div>
+    `;
+};
+
 const fillterStocks = async (kategory) => {
   showBoxStocks(getCookie().position, "", kategory);
 };
 
-const getDataStocks = async (section, filter_keyword) => {
+const getDataStocks = async (section, filter_keyword, id_optional) => {
   const { data } = await fetch(
-    `${import.meta.env.VITE_URL_SERVER_DEV}/stocks?section=${section}&filter=${filter_keyword}`,
+    `${import.meta.env.VITE_URL_SERVER_DEV}/stocks?section=${section}&filter=${filter_keyword}${id_optional ? `&id_stocks=${id_optional}` : ""}`,
   ).then((res) => res.json());
 
   return data;
@@ -136,3 +159,4 @@ window.sendUpdateStocks = sendUpdateStocks;
 window.getCookie = getCookie;
 window.greatingUser = greatingUser;
 window.fillterStocks = fillterStocks;
+window.showMoreDetailStocks = showMoreDetailStocks;

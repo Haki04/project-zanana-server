@@ -292,6 +292,7 @@ const section = async (a, el_this) => {
                 <li>Section</li>
                 <li>Name item</li>
                 <li>Total store</li>
+                <li>Satuan</li>
                 <li>Type</li>
                 <li>Brand</li>
                 <li>Need</li>

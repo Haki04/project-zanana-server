@@ -8,9 +8,6 @@ import { selectRender } from "./components/select-render.js";
 import { showFormReport } from "./report.js";
 import { backPages } from "../controller/controller.js";
 
-if (window.innerWidth < 600)
-  document.getElementById("top-bar-ul")?.classList.add("hidden");
-
 const editDelete = async (id, args, data = {}) => {
   if (args == 1 && !confirm("ingin menghapus item ?")) return;
   const { message, status } = await fetch(
@@ -117,7 +114,7 @@ export const showFormEditKerusakan = async (id, parent) => {
       "afterbegin",
       `
     <div
-            class="absolute w-full h-full bg-slate-200/50 flex justify-center items-center hidden left-0 top-0"
+            class="absolute z-10 w-full h-full bg-slate-200/50 flex justify-center items-center hidden left-0 top-0"
           >
             <div
               class="w-[80%] md:w-[50%] max-w-[300px] bg-white/60 rounded flex flex-col justify-between p-2 gap-2 items-center shadow-lg [&>input,select]:bg-white"
