@@ -29,6 +29,7 @@ import {
   deleteItemPurchases,
   postRoomItems,
   getRoomItems,
+  updateRoomItems,
 } from "./routers.js";
 import cors from "cors";
 
@@ -74,6 +75,7 @@ app.post("/information", postInformation);
 app.post("/information/update", updateInformation);
 app.post("/purchases", postPurchasesItems);
 app.post("/rooms", postRoomItems);
+app.post("/rooms/item", updateRoomItems);
 
 app.listen(3000, () => {
   console.log("server berjalan");

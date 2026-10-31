@@ -706,12 +706,12 @@ export const deleteItemPurchases = async (req, res) => {
 
 export const postRoomItems = async (req, res) => {
   try {
+    // return console.log(req.body, "test");
     const {
       data: [{ room_number, data }],
       last_update,
       reporter,
     } = req.body;
-
     const [results] = await db.query(
       "INSERT INTO rooms (room_number, room_data, last_update, reporter) VALUES (?, ?, ?, ?)",
       [room_number, JSON.stringify(data), last_update, reporter],
@@ -729,25 +729,60 @@ export const postRoomItems = async (req, res) => {
 
 export const getRoomItems = async (req, res) => {
   try {
-    const [results] = await db.query("SELECT * FROM rooms");
+    const [results] = await db.query(
+      "SELECT * FROM rooms ORDER BY room_number ASC",
+    );
     return res.json({ status: 200, data: results });
   } catch (error) {
     console.log(error);
   }
 };
 
-export const editRoomItems = async (req, res) => {
-  try {
-    const { data, last_update, reporter } = req.body;
-    const [results] = db.query(
-      "UPDATE rooms SET room_data=?, last_update=?, reporter=? WHERE room_id=?",
-      [data, last_update, reporter, req.query.id],
-    );
+// export const editRoomItems = async (req, res) => {
+//   try {
+//     const { data, last_update, reporter } = req.body;
+//     const [results] = db.query(
+//       "UPDATE rooms SET room_data=?, last_update=?, reporter=? WHERE room_id=?",
+//       [data, last_update, reporter, req.query.id],
+//     );
 
+//     if (results.affectedRows > 0)
+//       return res.json({
+//         status: 201,
+//         message: `berhasil edit data item room ${req.query.room_number}`,
+//       });
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
+
+export const updateRoomItems = async (req, res) => {
+  try {
+    if (req.query.snack) {
+      const {
+        data: [{ room_number, data }],
+      } = req.body;
+      const [results] = await db.query(
+        "UPDATE rooms SET snack_room = ? WHERE room_number = ?",
+        [JSON.stringify(data), room_number],
+      );
+      if (results.affectedRows > 0)
+        return res.json({
+          status: 201,
+          message: `berhasil menambahkan snack ke room ${room_number}`,
+        });
+    }
+    const {
+      data: [{ room_number, data }],
+    } = req.body;
+    const [results] = await db.query(
+      "UPDATE rooms SET room_data = ? WHERE room_number = ?",
+      [JSON.stringify(data), room_number],
+    );
     if (results.affectedRows > 0)
       return res.json({
         status: 201,
-        message: `berhasil edit data item room ${req.query.room_number}`,
+        message: `berhasil merubah data room ${room_number}`,
       });
   } catch (error) {
     console.log(error);
