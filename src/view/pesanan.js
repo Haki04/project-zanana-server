@@ -34,10 +34,9 @@ export const showOrdersItem = async (element) => {
           sign_progres = "selesai";
       }
       element.innerHTML += `
- <div class="bg-white w-[300px] h-[150px] md:w-[150px] md:h-fit max-h-[300px] rounded flex flex-row md:flex-col overflow-hidden shadow-sm">
-          <div class="${sign_orders} w-full flex justify-center items-center h-full md:h-[80px] relative">
-          <span class="absolute top-0 right-0 p-1 cursor-pointer" onclick="showMoresComentDetail(${item.uu_id})"><img class="w-[20px]" src="/icon/info.png" /></span>
-          <h1 class="font-bold text-6xl md:text-5xl">${item.order_room}</h1>
+ <div class="w-[300px] h-[150px] md:w-[150px] md:h-fit max-h-[300px] rounded flex flex-row md:flex-col overflow-hidden shadow-sm">
+          <div class="${sign_orders} w-full flex justify-center items-center h-full md:h-[80px] cursor-pointer" onclick="showMoresComentDetail(${item.uu_id})">
+           <h1 class="font-bold text-6xl md:text-5xl">${item.order_room}</h1>
           </div>
           <div class=" w-full h-full md:h-[60%]">
             <ul class="flex flex-col items-center bg-white p-1 h-full overflow-y-scroll">
@@ -116,7 +115,7 @@ const showMoresComentDetail = async (uu_id) => {
   ).then((res) => res.json());
   document.querySelector("#pesanan").innerHTML += `
   <div
-          class="w-full h-full ${getCookie().level != 1 ? `fixed` : `absolute top-0 left-0`} bg-white/50 flex justify-center items-center"
+          class="w-full h-full ${getCookie().level != 1 ? `fixed top-0` : `absolute top-0 left-0`} z-10 bg-white/50 flex justify-center items-center"
         id="box-detail-pesanan">
           <div
             class="w-[70%] md:w-[300px] bg-white flex flex-col justify-around shadow rounded p-4"

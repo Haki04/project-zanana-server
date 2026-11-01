@@ -103,16 +103,27 @@ const addItemPurchase = (parent, data) => {
     document.getElementById(parent).innerHTML = "";
 
   document.getElementById(parent).innerHTML += `
-     <div
-            class="w-full p-1 h-fit bg-white [&>*]:flex-1 flex items-center [&>*]:text-center [&>*:not(input)]:bg-blue-100 gap-1 rounded [&>*]:p-2" id="form-purchases"
+
+<div
+            class="w-full max-[400px]:w-[60%] max-[400px]:flex-col max-[400px]:*:w-full p-1 h-fit bg-white [&>*]:flex-1 flex  items-center [&>*]:text-center [&>*:not(input):not(div)]:bg-blue-100 gap-1 rounded [&>*]:p-2 relative" id="list-purchases"
           >
+          <div class="absolute -left-1 gap-1 -top-1 *:flex-1 justify-between *:w-fit *:pl-1 h-full max-w-0 flex flex-col *:flex *:justify-center *:items-center min-[400px]:hidden">
+            <span>section</span>
+            <span>item</span>
+            <span>store</span>
+            <span>satuan</span>
+            <span>type</span>
+            <span>brand</span>
+            <span>need</span>
+            <span>action</span>
+          </div>
             <span>${data.section}</span>
-            <span>${data.name_item}</span>
+            <span class="truncate">${data.name_item}</span>
             <span>${data.total_store}</span>
             <span>${data.satuan}</span>
             <span>${data.type}</span>
             <span>${data.brand}</span>
-            <input type="number" class="min-w-0 bg-blue-50" placeholder="number" min='1' value="${data.need}"/>
+            <input type="number" class="min-w-0 bg-blue-50" placeholder="number" min='1' value="1"/>
             <span class="flex justify-center items-center">
                 <img class="w-[20px] cursor-pointer" src="/icon/clear.png" onclick="this.parentElement.parentElement.remove()"/>
             </span>
@@ -125,7 +136,7 @@ const addItemPurchase = (parent, data) => {
     .parentElement.remove();
 };
 
-const formInputItem = () => {
+const formInputItem = async () => {
   const form = document.getElementById("parent-content-purchase");
   form.innerHTML += `
   <div class="absolute z-10 w-full h-full top-0 bg-white/50 flex justify-center items-center">
@@ -133,13 +144,14 @@ const formInputItem = () => {
       <h1 class="text-2xl capitalize">add item</h1>
       <input type="text" class="w-full bg-white p-2 " value="" placeholder="Name item"/>
       <input type="text" class="w-full bg-white p-2 " value="" placeholder="Total store"/>
-      <select class="w-full bg-white p-2" id="select-additem-purchases">
-        <option>kg</option>
-        <option>pcs</option>
+      <select class="w-full bg-white p-2" id="select-add-item-purchases-satuan">
+        <option value="" disabled selected>satuan</option>
       </select>
-      <input type="text" class="w-full bg-white p-2 " value="" placeholder="Type"/>
+      <select class="w-full bg-white p-2" id="select-add-item-purchases-type">
+        <option value="" disabled selected>Type</option>
+      </select>
       <input type="text" class="w-full bg-white p-2 " value="" placeholder="Brand/merek"/>
-      <input type="number" class="w-full bg-white p-2 placeholder="number" min='1' value="1"/>
+      <input type="number" class="w-full bg-white p-2" min='1' value="1"/>
      <div class="w-full flex justify-center items-center gap-2 [&>*]:rounded">
        <button class="flex-1 my-3 bg-green-200 cursor-pointer p-2 " onclick="validationPurchases(this)">add</button>
        <button class="flex-1 my-3 bg-yellow-200 cursor-pointer p-2 " onclick="this.parentElement.parentElement.parentElement.remove()">cancel</button>
@@ -148,6 +160,24 @@ const formInputItem = () => {
   </div>
   
   `;
+  const {
+    data: [{ section_data }],
+  } = await getItemSelectType();
+  const item_select_satuan = section_data.item_list_satuan.map((item) => ({
+    [item]: item,
+  }));
+  const item_select_type = section_data.item_list_jenis.map((item) => ({
+    [item]: item,
+  }));
+
+  selectRender(
+    document.getElementById("select-add-item-purchases-satuan"),
+    item_select_satuan,
+  );
+  selectRender(
+    document.getElementById("select-add-item-purchases-type"),
+    item_select_type,
+  );
 };
 
 const validationPurchases = (el_this) => {
@@ -201,7 +231,8 @@ const deletePurchasing = async (id, el_this) => {
 const insertDataTo_data_send = () => {
   data_send.push({
     section:
-      document.getElementById("select-purchase").value ?? getCookie().position,
+      document.getElementById("select-purchase").value.toLowerCase() ??
+      getCookie().position,
     data: [],
     reporter: getCookie().name,
   });
@@ -211,7 +242,7 @@ const insertDataTo_data_send = () => {
       .getElementById("content-purchases")
       .querySelectorAll("#list-purchases"),
   ].map((item) => {
-    const items = item.querySelectorAll("span");
+    const items = item.querySelectorAll(":scope > span");
     data_send[0].data.push({
       name_item: items[1].textContent,
       total_store: items[2].textContent,
@@ -436,6 +467,13 @@ const fillterItemOffline = (el_this) => {
   `),
     )
     .join("");
+};
+
+const getItemSelectType = async (req, res) => {
+  const responses = await fetch(
+    `${import.meta.env.VITE_URL_SERVER_DEV}/inventory?section=${getCookie().position}`,
+  ).then((res) => res.json());
+  return responses;
 };
 
 window.showPurchasesItem = showPurchasesItem;

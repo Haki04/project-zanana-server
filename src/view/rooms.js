@@ -5,7 +5,7 @@ if (!getCookie()) window.location.href = "/pages/login";
 let data_send = [];
 let data_item;
 
-const showItemRooms = async () => {
+export const showItemRooms = async () => {
   data_item = await getRoomItems();
   if (data_item.data.length == 0)
     return document.getElementById("content-rooms").insertAdjacentHTML(
@@ -54,7 +54,7 @@ const showItemRooms = async () => {
                           `<li class="bg-blue-100">${item.item_name} ${item.item_total}</li>`,
                       )
                       .join("")
-                  : `<li class="bg-red-100">snack kosong</li>`
+                  : `<li class="bg-red-100">snack 0</li>`
               }
             </ul>
           </div>
@@ -195,12 +195,13 @@ const showFormAddEditSnackItems = (type, room_number) => {
           <div
             class="w-[300px] h-fit overflow-y-scroll p-2 flex flex-col items-center [&>*:not(h1):not(div):not(span):not(select)]:bg-blue-100 bg-white [&>*:not(h1):not(div):not(span):not(select)]:shadow [&>*:not(span):not(select)]:w-full *:rounded gap-2 [&>*:not(div)]:p-2 shadow rounded relative"
           >
-            <select class="absolute p-2 right-0 top-0 bg-green-100 cursor-pointer *:capitalize " onchange="addItemsForm(this)">
+            <select class="absolute p-2 right-1 top-1 bg-green-100 cursor-pointer *:capitalize " onchange="addItemsForm(this)">
               <option value="" disabled selected>add snack</option>
               <option>happytos</option>
               <option>mr.p</option>
               <option>citato</option>
               <option>lays</option>
+              <option value="-" class="bg-red-100">kosong</option>
             </select>
             <h1 class="capitalize p-2 text-3xl">${type} snack</h1>
             <input type="text" placeholder="room number" value="${room_number}" disabled/>
@@ -248,6 +249,17 @@ const showFormAddEditSnackItems = (type, room_number) => {
 };
 
 const addItemsForm = (el_this) => {
+  if (el_this.value == "-") {
+    return (el_this.parentElement.querySelector("#item-form-first").innerHTML =
+      `
+     <div class="w-full *:p-2 bg-blue-100 gap-2 *:bg-red-100 flex rounded overflow-hidden shrink-0">
+      <input placeholder="item name" class="flex-2 min-w-0" type="text" value="kosong" disabled id="snack-kosong"/>
+      <input placeholder="item total" class="flex-1 min-w-0 hidden" type="number" min='0' value="0"/>
+    </div>
+    `);
+  }
+  if (document.getElementById("snack-kosong"))
+    document.getElementById("snack-kosong").remove();
   el_this.parentElement.querySelector("#item-form-first").insertAdjacentHTML(
     "afterbegin",
     `

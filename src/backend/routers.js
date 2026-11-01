@@ -738,33 +738,19 @@ export const getRoomItems = async (req, res) => {
   }
 };
 
-// export const editRoomItems = async (req, res) => {
-//   try {
-//     const { data, last_update, reporter } = req.body;
-//     const [results] = db.query(
-//       "UPDATE rooms SET room_data=?, last_update=?, reporter=? WHERE room_id=?",
-//       [data, last_update, reporter, req.query.id],
-//     );
-
-//     if (results.affectedRows > 0)
-//       return res.json({
-//         status: 201,
-//         message: `berhasil edit data item room ${req.query.room_number}`,
-//       });
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
-
 export const updateRoomItems = async (req, res) => {
   try {
     if (req.query.snack) {
       const {
         data: [{ room_number, data }],
       } = req.body;
+
       const [results] = await db.query(
         "UPDATE rooms SET snack_room = ? WHERE room_number = ?",
-        [JSON.stringify(data), room_number],
+        [
+          parseInt(data[0].item_total) == 0 ? null : JSON.stringify(data),
+          room_number,
+        ],
       );
       if (results.affectedRows > 0)
         return res.json({

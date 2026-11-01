@@ -16,6 +16,7 @@ import {
   showHaveMadeItemPurchasesButton,
   showPurchasesItem,
 } from "./purchases.js";
+import { showItemRooms } from "./rooms.js";
 
 if (getCookie().level != 1 || !getCookie()) {
   window.location.href = "/pages/login";
@@ -317,6 +318,12 @@ const section = async (a, el_this) => {
     selectRenderCek();
     showHaveMadeItemPurchasesButton();
     buttonPrint("@");
+  } else if (a == "items-rooms") {
+    div.innerHTML = `
+    <div class="w-full h-full bg-white rounded flex justify-center content-start gap-2 pt-6 p-2" id="content-rooms"></div>
+
+    `;
+    showItemRooms();
   }
 };
 
@@ -352,11 +359,3 @@ window.showBoxStocks = showBoxStocks;
 window.inventoryReport = inventoryReport;
 window.logOutUser = logOutUser;
 window.editSectionDataInventory = editSectionDataInventory;
-
-// section("dashboard");
-
-// dahsboard()
-// inventory()
-// staff()
-// pesanan()
-// kerusakan()
