@@ -166,7 +166,7 @@ export const animationSpin = (element, progres) => {
   if (!element) return;
   if (progres == "selesai") return;
   element.innerHTML += `
-<div class="absolute w-full h-full flex justify-center items-center bg-white top-0 left-0" id="animate-spin">
+<div class="absolute z-10 w-full h-full flex justify-center items-center bg-white top-0 left-0" id="animate-spin">
 <img class="w-[30px] animate-spin" src="/icon/loading.png"/>
 </div>
 `;

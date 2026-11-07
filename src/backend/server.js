@@ -1,4 +1,5 @@
 import express from "express";
+import upload from "./uploads.js";
 import {
   getUser,
   postOrders,
@@ -30,16 +31,25 @@ import {
   postRoomItems,
   getRoomItems,
   updateRoomItems,
+  getDataPostgree,
 } from "./routers.js";
 import cors from "cors";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 
+app.get("/postgres", getDataPostgree);
+
+// use
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
 // get
-// app.get("/user", user);
 
 app.get("/items-sell", getItemsSell);
 app.get("/users/orders", getOrders);
@@ -68,7 +78,7 @@ app.post("/users/login", loginUser);
 app.post("/users/orders", postOrders);
 app.post("/users/orders/update", updateOrders);
 app.post("/stocks", updateStocks);
-app.post("/report", postReport);
+app.post("/report", upload.single("image"), postReport);
 app.post("/report/action", deleteEditReport);
 app.post("/order/tamu", getOrderTamu);
 app.post("/information", postInformation);

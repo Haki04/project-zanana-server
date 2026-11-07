@@ -43,11 +43,11 @@ const section = async (a, el_this) => {
   if (a == "dashboard") {
     div.innerHTML = `
     <div
-            class="w-full bg-slate-300 flex flex-row gap-1 p-1 overflow-x-scroll"
+            class="w-full bg-slate-300 h-fit shrink-0 flex flex-row gap-1 p-1 overflow-x-scroll"
             id="staff"
           ></div>
      <div class="bg-white h-full w-full flex flex-col justify-start">
-            <div class="w-full h-[70px]">
+            <!--<div class="w-full h-[70px]">
               <div class="w-full flex justify-between">
                 <h1 class="text-2xl ml-2">Kerusakan</h1>
                 <div class="w-[200px] bg-amber-100 flex items-center">
@@ -73,11 +73,11 @@ const section = async (a, el_this) => {
                 </ul>
               </div>
             </div>
-            <div class="w-full bg-slate-400 max-h-[500px] px-1 pb-1 relative" id="kerusakan"></div>
+            <div class="w-full bg-slate-400 max-h-[600px] px-1 pb-1 relative overflow-y-scroll" id="kerusakan"></div>-->
           </div>
     `;
     showStaffBoxs("staff");
-    getDataBrokeness("kerusakan", "dashboard");
+    // getDataBrokeness("kerusakan", "dashboard");
     animationLoading("content-right");
     activeListHilight(
       document.getElementById("ul-dashboard"),
@@ -167,7 +167,7 @@ const section = async (a, el_this) => {
   } else if (a == "kerusakan") {
     div.innerHTML = `
      <div class="bg-white h-full w-full flex flex-col justify-start">
-            <div class="w-full h-[70px]">
+            <div class="w-full h-[70px] py-3 ">
               <div class="w-full flex justify-between">
                 <h1 class="text-2xl ml-2">Kerusakan</h1>
                 <div class="w-[200px] bg-amber-100 flex items-center">
@@ -200,7 +200,7 @@ const section = async (a, el_this) => {
                 </ul>
               </div>
             </div>
-            <div class="w-full bg-slate-400 h-full p-1 relative" id="kerusakan"></div>
+            <div class="w-full bg-slate-400 flex-1 min-h-0  p-1 relative overflow-y-scroll" id="kerusakan"></div>
           </div>
     `;
     getDataBrokeness("kerusakan", "kerusakan");
@@ -302,7 +302,7 @@ const section = async (a, el_this) => {
             </div>
           </div>
           <div
-            class="w-full h-[90%] bg-gray-200 flex flex-col items-center gap-2 p-1 rounded-b overflow-y-scroll"
+            class="w-full h-[90%] bg-gray-200 flex flex-col items-center relative gap-2 p-1 rounded-b overflow-y-scroll"
             id="content-purchases"
           ></div>
         </div>
@@ -320,10 +320,15 @@ const section = async (a, el_this) => {
     buttonPrint("@");
   } else if (a == "items-rooms") {
     div.innerHTML = `
-    <div class="w-full h-full bg-white rounded flex justify-center content-start gap-2 pt-6 p-2" id="content-rooms"></div>
+    <div class="w-full h-full bg-white rounded flex justify-center flex-wrap relative content-start gap-2 pt-6 p-2" id="content-rooms"></div>
 
     `;
     showItemRooms();
+    activeListHilight(
+      document.getElementById("ul-dashboard"),
+      el_this,
+      "bg-yellow-100",
+    );
   }
 };
 

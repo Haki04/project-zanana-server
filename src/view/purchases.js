@@ -1,4 +1,4 @@
-import { backPages, getCookie } from "../controller/controller";
+import { animationSpin, backPages, getCookie } from "../controller/controller";
 import { selectRender } from "./components/select-render";
 import * as XLSX from "xlsx";
 
@@ -19,7 +19,7 @@ export const showPurchasesItem = async (parent, section, total) => {
     (item) =>
       (document.getElementById(parent).innerHTML += `
      <div
-            class="w-full max-[400px]:w-[60%] max-[400px]:flex-col max-[400px]:*:w-full p-1 h-fit bg-white [&>*]:flex-1 flex  items-center [&>*]:text-center [&>*:not(input):not(div)]:bg-blue-100 gap-1 rounded [&>*]:p-2 relative" id="list-purchases"
+            class="w-full max-[400px]:w-[60%] max-[400px]:flex-col max-[400px]:*:w-full p-1 h-fit bg-white [&>*]:flex-1 flex  items-center [&>*]:text-center [&>*:not(input):not(div)]:bg-blue-100 gap-1 rounded [&>*]:p-2 relative [&>span]:truncate" id="list-purchases"
           >
           <div class="absolute -left-1 gap-1 -top-1 *:flex-1 justify-between *:w-fit *:pl-1 h-full max-w-0 flex flex-col *:flex *:justify-center *:items-center min-[400px]:hidden">
             <span>section</span>
@@ -32,7 +32,7 @@ export const showPurchasesItem = async (parent, section, total) => {
             <span>action</span>
           </div>
             <span>${getCookie().position}</span>
-            <span class="truncate">${item.name}</span>
+            <span>${item.name}</span>
             <span>${item.total}</span>
             <span>${item.satuan}</span>
             <span>${item.type}</span>
@@ -86,6 +86,11 @@ const getPurchasesItem = async (section, total) => {
 };
 
 const fillterPurcahsesList = (el_this) => {
+  animationSpin(
+    document
+      .getElementById("parent-content-purchase")
+      .querySelector("#content-purchases"),
+  );
   const form = el_this.parentElement;
   if (form.querySelector("select").value == "") {
     form.querySelector("select").focus();
@@ -105,7 +110,7 @@ const addItemPurchase = (parent, data) => {
   document.getElementById(parent).innerHTML += `
 
 <div
-            class="w-full max-[400px]:w-[60%] max-[400px]:flex-col max-[400px]:*:w-full p-1 h-fit bg-white [&>*]:flex-1 flex  items-center [&>*]:text-center [&>*:not(input):not(div)]:bg-blue-100 gap-1 rounded [&>*]:p-2 relative" id="list-purchases"
+            class="w-full max-[400px]:w-[60%] max-[400px]:flex-col max-[400px]:*:w-full p-1 h-fit bg-white [&>*]:flex-1 flex  items-center [&>*]:text-center [&>*:not(input):not(div)]:bg-blue-100 gap-1 rounded [&>*]:p-2 relative id="list-purchases"
           >
           <div class="absolute -left-1 gap-1 -top-1 *:flex-1 justify-between *:w-fit *:pl-1 h-full max-w-0 flex flex-col *:flex *:justify-center *:items-center min-[400px]:hidden">
             <span>section</span>
@@ -280,7 +285,7 @@ const showHaveBeenMade = async (el_this) => {
   document.getElementById("parent-content-purchase").insertAdjacentHTML(
     `afterbegin`,
     `
-          <div class="absolute z-10 top-0 h-full w-full bg-white/50 flex justify-center items-center">
+          <div class="absolute z-10 top-0 left-0 h-full w-full bg-white/50 flex justify-center items-center">
             <div class="w-[90%] lg:w-[70%] h-fit p-2 bg-white shadow flex flex-col items-center justify-around max-h-[500px] rounded relative" id="content-purchases-ready">
             <div class="w-full [&>*:not(button)]:bg-gray-100 p-1 flex [&>*]:flex-1 [&>*]:p-2">
                   <span value="${responses.data[0].section}">Section : ${responses.data[0].section}</span>
@@ -311,12 +316,12 @@ const showHaveBeenMade = async (el_this) => {
                 item.data
                   .map(
                     (item) => ` 
-                <div class="w-full p-1 flex [&>*]:flex-1  [&>*]:text-center [&>*]:p-2 [&>*]:bg-blue-100" id="list-purchases-ready">
-                  <span class="truncate">${item.name_item}</span>
+                <div class="w-full p-1 flex [&>*]:flex-1  [&>*]:text-center [&>*]:p-2  [&>*]:bg-blue-100" id="list-purchases-ready">
+                  <span>${item.name_item}</span>
                   <span>${item.total_store}</span>
                   <span>${item.satuan}</span>
                   <span>${item.type}</span>
-                  <span>${item.brand}</span>
+                  <span class="truncate">${item.brand}</span>
                   <span>${item.need}</span>
                 </div>
               `,

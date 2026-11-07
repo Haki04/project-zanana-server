@@ -13,7 +13,7 @@ const showUserSection = (element) => {
   animationLoading("content-user");
   const section_list = [
     ["profile", "user_2.png"],
-    ["report", "report.png"],
+    ["report-broken", "report.png"],
     ["information", "information.png"],
     ["inventory", "track.png"],
     ["pesanan", "order.png"],
@@ -42,7 +42,7 @@ window.clickPages = (args) => {
     return (window.location.href = "/pages/users/profile");
   } else if (arg == "pesanan") {
     return (window.location.href = "/pages/users/pesanan");
-  } else if (arg == "report") {
+  } else if (arg == "report-broken") {
     return (window.location.href = "/pages/report/");
   } else if (arg == "input-pesanan") {
     return (window.location.href = "/pages/users/input-pesanan");

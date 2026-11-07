@@ -7,73 +7,68 @@
     <link rel="stylesheet" href="/src/style.css" />
   </head>
   <body>
-    <div class="w-full h-screen flex justify-center items-center bg-gray-50">
+    <div
+      class="w-full h-screen flex justify-center overflow-hidden items-center bg-gray-50"
+    >
       <div
-        class="w-full min-w-[350px] max-w-[1000px] h-full max-[400px]:max-h-[800px] flex justify-center items-center overflow-hidden p-1"
+        class="w-full h-[700px] md:w-[80%] md:h-[90%] max-w-[1000px] flex flex-col p-2 relative shadow overflow-hidden rounded"
+        id="parent-content-purchase"
       >
         <div
-          class="w-full md:w-[80%] h-[90%] relative shadow overflow-hidden rounded"
-          id="parent-content-purchase"
+          class="w-full flex flex-col justify-between h-[10%] max-h-[100px] max-[600px]:h-fit p-1 bg-white"
         >
-          <div
-            class="w-full flex flex-col justify-between h-[10%] max-h-[100px] max-[600px]:h-fit p-1 bg-white"
-          >
-            <div
-              class="flex w-full gap-1 items-center"
-              id="search-bar-purchases"
+          <div class="flex w-full gap-1 items-center" id="search-bar-purchases">
+            <h1 class="md:flex-2 md:pl-2">Purcahses List</h1>
+            <select
+              name=""
+              id="select-purchase"
+              class="flex-1 bg-white p-1 shadow rounded appearance-none max-[500px]:hidden"
+              disabled
+            ></select>
+            <input
+              type="text"
+              name=""
+              id=""
+              class="flex-1 min-w-0 md:w-[100px] p-1 bg-white shadow rounded"
+              placeholder="num"
+            />
+            <button
+              class="flex-1 bg-gray-200 rounded cursor-pointer p-1 relative"
+              onclick="fillterPurcahsesList(this)"
             >
-              <h1 class="md:flex-2 md:pl-2">Purcahses List</h1>
-              <select
-                name=""
-                id="select-purchase"
-                class="flex-1 bg-white p-1 shadow rounded appearance-none max-[500px]:hidden"
-                disabled
-              ></select>
-              <input
-                type="text"
-                name=""
-                id=""
-                class="flex-1 min-w-0 md:w-[100px] p-1 bg-white shadow rounded"
-                placeholder="num"
-              />
-              <button
-                class="flex-1 bg-gray-200 rounded cursor-pointer p-1"
-                onclick="fillterPurcahsesList(this)"
-              >
-                Show
-              </button>
+              Show
+            </button>
 
-              <button
-                class="flex-1 bg-green-200 rounded cursor-pointer p-1"
-                onclick="formInputItem()"
-              >
-                Add
-              </button>
-            </div>
-            <div class="w-full max-[600px]:hidden">
-              <ul
-                class="flex justify-around items-center [&>*]:flex-1 [&>*]:text-center"
-              >
-                <li>Section</li>
-                <li>Name item</li>
-                <li>Total store</li>
-                <li>Satuan</li>
-                <li>
-                  <select id="select-filter-purchases">
-                    <option value="">Type</option>
-                  </select>
-                </li>
-                <li>Brand</li>
-                <li>Need</li>
-                <li>Action</li>
-              </ul>
-            </div>
+            <button
+              class="flex-1 bg-green-200 rounded cursor-pointer p-1"
+              onclick="formInputItem()"
+            >
+              Add
+            </button>
           </div>
-          <div
-            class="w-full h-full bg-gray-100 flex flex-col items-center gap-2 p-1 rounded-b overflow-y-scroll"
-            id="content-purchases"
-          ></div>
+          <div class="w-full max-[600px]:hidden">
+            <ul
+              class="flex justify-around items-center [&>*]:flex-1 [&>*]:text-center"
+            >
+              <li>Section</li>
+              <li>Name item</li>
+              <li>Total store</li>
+              <li>Satuan</li>
+              <li>
+                <select id="select-filter-purchases">
+                  <option value="">Type</option>
+                </select>
+              </li>
+              <li>Brand</li>
+              <li>Need</li>
+              <li>Action</li>
+            </ul>
+          </div>
         </div>
+        <div
+          class="w-full flex-1 bg-gray-100 flex flex-col items-center gap-2 p-1 relative rounded-b overflow-y-scroll"
+          id="content-purchases"
+        ></div>
       </div>
     </div>
     <script>

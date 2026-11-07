@@ -72,7 +72,7 @@ const moreDetailRooms = (room) => {
       document.getElementById("content-rooms").insertAdjacentHTML(
         "afterbegin",
         `<div
-          class="fixed z-10 top-0 left-0 w-full h-full bg-white/50 flex justify-center items-center "
+          class="${getCookie().level == 1 ? `absolute` : `fixed`} z-10 top-0 left-0 w-full h-full bg-white/50 flex justify-center items-center "
         >
           <div
             class="w-[300px] h-fit p-2 flex flex-col items-center [&>*:not(h1):not(div):not(span):not(input[type=search])]:bg-blue-100 bg-white [&>*:not(h1):not(div):not(span)]:shadow [&>*:not(span)]:w-full *:rounded gap-2 [&>*:not(div):not(span)]:p-2 shadow rounded relative"
@@ -155,7 +155,7 @@ const showFormAddItemRooms = async () => {
   document.getElementById("content-rooms").insertAdjacentHTML(
     "afterbegin",
     `<div
-          class="fixed z-10 top-0 left-0 w-full h-full bg-white/50 flex justify-center items-center"
+          class="${getCookie().level == 1 ? `absolute` : `fixed`} z-10 top-0 left-0 w-full h-full bg-white/50 flex justify-center items-center"
         >
           <div
             class="w-[300px] h-fit overflow-y-scroll p-2 flex flex-col items-center [&>*:not(h1):not(div):not(span)]:bg-blue-100 bg-white [&>*:not(h1):not(div):not(span)]:shadow [&>*:not(span)]:w-full *:rounded gap-2 [&>*:not(div)]:p-2 shadow rounded relative"
@@ -190,7 +190,7 @@ const showFormAddEditSnackItems = (type, room_number) => {
   document.getElementById("content-rooms").insertAdjacentHTML(
     "afterbegin",
     `<div
-          class="fixed z-10 top-0 left-0 w-full h-full bg-white/50 flex justify-center items-center"
+          class="${getCookie().level == 1 ? `absolute` : `fixed`} z-10 top-0 left-0 w-full h-full bg-white/50 flex justify-center items-center"
         >
           <div
             class="w-[300px] h-fit overflow-y-scroll p-2 flex flex-col items-center [&>*:not(h1):not(div):not(span):not(select)]:bg-blue-100 bg-white [&>*:not(h1):not(div):not(span):not(select)]:shadow [&>*:not(span):not(select)]:w-full *:rounded gap-2 [&>*:not(div)]:p-2 shadow rounded relative"

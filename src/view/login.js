@@ -1,3 +1,4 @@
+import { animationSpin } from "../controller/controller";
 import { makeCookie, getCookie } from "../controller/controller";
 
 if (getCookie()) {
@@ -5,6 +6,7 @@ if (getCookie()) {
 }
 
 window.login = async () => {
+  animationSpin(document.getElementById("btn-login"));
   const name = document.getElementById("user-name").value;
   const password = document.getElementById("user-password").value;
   if (name == "") {
