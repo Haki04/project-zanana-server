@@ -7,7 +7,7 @@ import {
 import { showOrdersItem } from "./pesanan";
 
 let data_list_order = [];
-let data_item = [];
+export let data_item = [];
 let data_send = [];
 
 window.countOrderItem = (sign, e) => {
