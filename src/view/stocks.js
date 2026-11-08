@@ -7,9 +7,6 @@ import {
   activeListHilight,
 } from "../controller/controller";
 
-if (!getCookie()) {
-  window.location.href = "/pages/login";
-}
 if (getCookie().level != 1) {
   //animationLoading("content", "before");
 }
@@ -47,6 +44,9 @@ const loopingListFillter = ({ data }) => {
 };
 
 export const showBoxStocks = async (section, el_this, filter_keyword) => {
+  if (!getCookie()) {
+    return (window.location.href = "/pages/login");
+  }
   if (!section) return;
   activeListHilight(
     document.getElementById("ul-stocks-dashboard"),

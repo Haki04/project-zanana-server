@@ -1,4 +1,7 @@
 export const showStaffBoxs = async (element) => {
+  if (!getCookie()) {
+    return (window.location.href = "/pages/login");
+  }
   const data = await getStaff();
   document.getElementById(element).innerHTML = "";
   document.getElementById(element).innerHTML += `

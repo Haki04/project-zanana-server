@@ -82,6 +82,9 @@ const filterKerusakan = async (select_value) => {
 };
 
 export const getDataBrokeness = async (element, parent) => {
+  if (!getCookie()) {
+    return (window.location.href = "/pages/login");
+  }
   selectRender(document.getElementById(`select-dashboard-${parent}`), [
     { all: "semua" },
     { "new-est": "terbaru" },

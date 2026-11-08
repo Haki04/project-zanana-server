@@ -5,10 +5,6 @@ import {
 } from "../controller/controller";
 import { showItemBrokeness } from "./kerusakan";
 
-if (!getCookie()) {
-  window.location.href = "/pages/login";
-}
-
 const cekValidForm = (content) => {
   const reporter = content.querySelector("#reporter").value;
   const type = content.querySelector("#type-report").value;
@@ -74,6 +70,9 @@ const sendReport = async (content) => {
 };
 
 export const showFormReport = (content) => {
+  if (!getCookie()) {
+    return (window.location.href = "/pages/login");
+  }
   getCookie().level == 1 ? (content = "content-right") : "";
   document.getElementById(content).insertAdjacentHTML(
     "afterbegin",

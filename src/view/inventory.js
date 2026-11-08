@@ -6,16 +6,15 @@ import {
 } from "../controller/controller";
 import { selectRender } from "./components/select-render";
 
-if (!getCookie()) {
-  window.location.href = "/pages/login";
-}
-
 let data_send_orders = [];
 let data_section_for_admin = [];
 let data_select_items;
 let data_form_item_new = data_section_for_admin;
 
 window.inventoryForm = async (element, section) => {
+  if (!getCookie()) {
+    return (window.location.href = "/pages/login");
+  }
   if (!element) return;
 
   const { data } = await fetch(

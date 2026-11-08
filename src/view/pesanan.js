@@ -5,10 +5,12 @@ import {
   getCookie,
 } from "../controller/controller";
 
-if (!getCookie()) window.location.href = "/pages/login";
 let count = 0;
 
 export const showOrdersItem = async (element) => {
+  if (!getCookie()) {
+    return (window.location.href = "/pages/login");
+  }
   try {
     if (!element) {
       return;

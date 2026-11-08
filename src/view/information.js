@@ -3,12 +3,14 @@ import {
   backPages,
   getCookie,
 } from "../controller/controller";
-if (!getCookie()) window.location.href = "/pages/login";
 if (getCookie().level != 1) backPages();
 
 let data_form_information = [];
 
 export const showInformation = async (parent, data) => {
+  if (!getCookie()) {
+    return (window.location.href = "/pages/login");
+  }
   data = data ?? (await getInformation());
   document.getElementById(parent).innerHTML = "";
   data.map((item) => {

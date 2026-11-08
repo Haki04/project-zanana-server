@@ -18,13 +18,13 @@ import {
 } from "./purchases.js";
 import { showItemRooms } from "./rooms.js";
 
-if (getCookie().level != 1 || !getCookie()) {
-  window.location.href = "/pages/login";
-}
 document.getElementById("tag-admin").innerHTML =
   `${getCookie().name} - ${getCookie().level == 1 ? `<span class="bg-amber-100 rounded inline-block px-3 uppercase">admin <span class="lowercase">lvl</span> ${getCookie().level}</span> ` : ``}`;
 
 const section = async (a, el_this) => {
+  if (getCookie().level != 1 || !getCookie()) {
+    return (window.location.href = "/pages/login");
+  }
   if (window.innerWidth < 600) {
     alert("tolong buka ditampilan desktop");
     return (document.querySelector("body").innerHTML =

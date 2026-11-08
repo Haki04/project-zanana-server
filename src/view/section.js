@@ -1,15 +1,14 @@
 import { animationLoading, getCookie } from "../controller/controller";
 
-if (!getCookie()) {
-  window.location.href = "/pages/login";
-}
-
 const greating = (name) => {
   document.getElementById("greating").innerHTML =
     `<span>Welcome <span class="font-bold">${name.toUpperCase()}</span> > ${getCookie().position}</span>`;
 };
 
 const showUserSection = (element) => {
+  if (!getCookie()) {
+    return (window.location.href = "/pages/login");
+  }
   animationLoading("content-user");
   const section_list = [
     ["profile", "user_2.png"],

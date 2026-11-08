@@ -1,11 +1,12 @@
 import { backPages, getCookie } from "../controller/controller";
 
-if (!getCookie()) window.location.href = "/pages/login";
-
 let data_send = [];
 let data_item;
 
 export const showItemRooms = async () => {
+  if (!getCookie()) {
+    return (window.location.href = "/pages/login");
+  }
   data_item = await getRoomItems();
   if (data_item.data.length == 0)
     return document.getElementById("content-rooms").insertAdjacentHTML(

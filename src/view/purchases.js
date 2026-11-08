@@ -6,6 +6,9 @@ let data_send = [];
 let data_item_filter = [];
 
 export const showPurchasesItem = async (parent, section, total) => {
+  if (!getCookie()) {
+    return (window.location.href = "/pages/login");
+  }
   const data_item = await getPurchasesItem(section, total);
   if (!data_item) {
     return (document.getElementById(parent).innerHTML =

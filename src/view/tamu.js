@@ -1,6 +1,9 @@
 import { animationSpin } from "../controller/controller";
 
 const getOrdersTamu = async () => {
+  if (!getCookie()) {
+    return (window.location.href = "/pages/login");
+  }
   const input = document.getElementById("order-code-tamu");
   if (input.value == "") {
     alert("input tidak boleh kosong");

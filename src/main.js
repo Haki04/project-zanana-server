@@ -12,7 +12,6 @@ import "./view/purchases.js";
 import "./view/report.js";
 import "./view/rooms.js";
 import "./view/section.js";
-import "./view/snacks.js";
 import "./view/staff.js";
 import "./view/stocks.js";
 import "./view/tamu.js";
