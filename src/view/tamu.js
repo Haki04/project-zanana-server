@@ -2,7 +2,7 @@ import { animationSpin } from "../controller/controller";
 
 const getOrdersTamu = async () => {
   if (!getCookie()) {
-    return (window.location.href = "/pages/login");
+    return (window.location.href = "/pages/login.html");
   }
   const input = document.getElementById("order-code-tamu");
   if (input.value == "") {

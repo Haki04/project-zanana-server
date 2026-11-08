@@ -83,7 +83,7 @@ const filterKerusakan = async (select_value) => {
 
 export const getDataBrokeness = async (element, parent) => {
   if (!getCookie()) {
-    return (window.location.href = "/pages/login");
+    return (window.location.href = "/pages/login.html");
   }
   selectRender(document.getElementById(`select-dashboard-${parent}`), [
     { all: "semua" },

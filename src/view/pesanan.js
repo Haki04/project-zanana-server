@@ -9,7 +9,7 @@ let count = 0;
 
 export const showOrdersItem = async (element) => {
   if (!getCookie()) {
-    return (window.location.href = "/pages/login");
+    return (window.location.href = "/pages/login.html");
   }
   try {
     if (!element) {

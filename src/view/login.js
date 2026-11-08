@@ -3,7 +3,7 @@ import { makeCookie, getCookie } from "../controller/controller";
 
 window.login = async () => {
   if (getCookie()) {
-    return (window.location.href = "/pages/users/profile");
+    return (window.location.href = "/pages/users/profile.html");
   }
   animationSpin(document.getElementById("btn-login"));
   const name = document.getElementById("user-name").value;

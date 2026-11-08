@@ -9,7 +9,7 @@ import {
 // show user
 const showProfile = (content, data_user) => {
   if (!getCookie()) {
-    return (window.location.href = "/pages/login");
+    return (window.location.href = "/pages/login.html");
   }
   document.getElementById(content).innerHTML = `
     <div

@@ -242,6 +242,9 @@ export const sendOrder = async (btn) => {
 };
 
 export const showItemOrder = (items, data) => {
+  if (!getCookie()) {
+    return (window.location.href = "/pages/login.html");
+  }
   try {
     let el = "";
 

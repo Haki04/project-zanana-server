@@ -5,7 +5,7 @@ let data_item;
 
 export const showItemRooms = async () => {
   if (!getCookie()) {
-    return (window.location.href = "/pages/login");
+    return (window.location.href = "/pages/login.html");
   }
   data_item = await getRoomItems();
   if (data_item.data.length == 0)

@@ -45,7 +45,7 @@ const loopingListFillter = ({ data }) => {
 
 export const showBoxStocks = async (section, el_this, filter_keyword) => {
   if (!getCookie()) {
-    return (window.location.href = "/pages/login");
+    return (window.location.href = "/pages/login.html");
   }
   if (!section) return;
   activeListHilight(

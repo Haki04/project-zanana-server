@@ -71,7 +71,7 @@ const sendReport = async (content) => {
 
 export const showFormReport = (content) => {
   if (!getCookie()) {
-    return (window.location.href = "/pages/login");
+    return (window.location.href = "/pages/login.html");
   }
   getCookie().level == 1 ? (content = "content-right") : "";
   document.getElementById(content).insertAdjacentHTML(

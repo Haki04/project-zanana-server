@@ -23,7 +23,7 @@ document.getElementById("tag-admin").innerHTML =
 
 const section = async (a, el_this) => {
   if (getCookie().level != 1 || !getCookie()) {
-    return (window.location.href = "/pages/login");
+    return (window.location.href = "/pages/login.html");
   }
   if (window.innerWidth < 600) {
     alert("tolong buka ditampilan desktop");

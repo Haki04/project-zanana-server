@@ -7,7 +7,7 @@ let data_item_filter = [];
 
 export const showPurchasesItem = async (parent, section, total) => {
   if (!getCookie()) {
-    return (window.location.href = "/pages/login");
+    return (window.location.href = "/pages/login.html");
   }
   const data_item = await getPurchasesItem(section, total);
   if (!data_item) {

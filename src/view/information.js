@@ -9,7 +9,7 @@ let data_form_information = [];
 
 export const showInformation = async (parent, data) => {
   if (!getCookie()) {
-    return (window.location.href = "/pages/login");
+    return (window.location.href = "/pages/login.html");
   }
   data = data ?? (await getInformation());
   document.getElementById(parent).innerHTML = "";

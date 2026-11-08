@@ -7,7 +7,7 @@ const greating = (name) => {
 
 const showUserSection = (element) => {
   if (!getCookie()) {
-    return (window.location.href = "/pages/login");
+    return (window.location.href = "/pages/login.html");
   }
   animationLoading("content-user");
   const section_list = [
