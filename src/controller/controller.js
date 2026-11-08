@@ -176,6 +176,7 @@ export const animationSpin = (element, progres) => {
 };
 
 export const animationLoading = (element, layout = "after") => {
+  console.log(element);
   document.querySelector(`#${element}`).insertAdjacentHTML(
     `${layout}begin`,
     `

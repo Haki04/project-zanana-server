@@ -74,7 +74,7 @@ export const addEditStaff = async (parent, id) => {
         <h1 class="text-2xl capitalize">${!id ? `add  a new` : `update`} staff</h1>
         <input type="text" placeholder="name new staff" class="w-[80%] p-2 shadow rounded bg-white" ${!id ? `oninput="passwordDefaultGeneret(this)" value=""` : `value="${data_edit_staf_form[0].user_name}"`}/>
         
-        <input type="text" class="w-[80%] ${!id ? `bg-gray-100` : ``} p-2 shadow rounded"  ${!id ? `disabled value=""` : `value="${data_edit_staf_form[0].user_password}"`} placeholder="default password" />
+        <input type="text" class="w-[80%] ${!id ? `bg-gray-100` : ``} p-2 shadow rounded truncate"  ${!id ? `disabled value=""` : `value="${data_edit_staf_form[0].user_password}"`} placeholder="default password" />
         
         <select class="w-[80%] bg-white p-2 shadow cursor-pointer">
           ${!id ? `` : `<option  value="${data_edit_staf_form[0].position}"  selected disabled>${data_user_position}</option>`}

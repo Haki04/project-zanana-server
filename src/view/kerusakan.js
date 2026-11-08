@@ -91,7 +91,7 @@ export const getDataBrokeness = async (element, parent) => {
     { selesai: "selesai" },
   ]);
   document.getElementById(element).innerHTML = `
-  <div class="w-full h-full flex flex-wrap justify-center gap-2 md:block" id="kerusakan-item-list"></div>
+  <div class="w-full h-full flex flex-wrap  justify-center gap-2 md:block" id="kerusakan-item-list"></div>
   
   `;
   showItemBrokeness("kerusakan-item-list");
@@ -266,7 +266,7 @@ export const detailKerusakan = async (id) => {
               <img onclick="scrollInfo(1)" src="/icon/arrow.png" class="w-[20px] "/>
             </div>
           </div>
-          <span onclick="this.parentElement.parentElement.parentElement.remove()" class="bg-yellow-100 cursor-pointer p-2 inline-block">tutup</span>
+          <span onclick="this.parentElement.parentElement.parentElement.remove()" class="bg-yellow-100 cursor-pointer p-2 w-[80px] text-center inline-block">tutup</span>
         </div>
     </div>
   </div>

@@ -37,14 +37,17 @@ export const loginUser = async (req, res) => {
     "SELECT user_name, user_password, user_status, user_level,position FROM users WHERE user_name = $1",
     [name],
   );
-  if ((await bcrypt.compare(password, results.user_password)) || password) {
+  if (
+    (await bcrypt.compare(password, results.rows[0].user_password)) ||
+    password
+  ) {
     res.json({
       verify: true,
       data: {
-        name: [results.rows].user_name,
-        level: [results.rows].user_level,
-        position: [results.rows].position,
-        status_user: [results.rows].user_status,
+        name: results.rows[0].user_name,
+        level: results.rows[0].user_level,
+        position: results.rows[0].position,
+        status_user: results.rows[0].user_status,
       },
     });
   } else {
@@ -56,12 +59,12 @@ export const editUser = async (req, res) => {
   try {
     let { new_name, new_password } = req.body;
     new_password = await bcrypt.hash(new_password, 10);
-    const [results] = await db.query(
+    const results = await db.query(
       "UPDATE users SET user_name = $1, user_password = $2 WHERE user_id = $3",
       [new_name, new_password, req.query.id],
     );
 
-    if (results.affectedRows > 0) {
+    if (results.rowCount > 0) {
       res.json({
         status: 201,
         message: "berhasil merubah password",
@@ -83,11 +86,11 @@ const randomCodeOrder = async () => {
     for (let i = 0; i < 2; i++) {
       code += number[Math.floor(Math.random() * number.length)];
     }
-    const [data] = await db.query(
+    const results = await db.query(
       "SELECT order_code FROM orders WHERE order_code = $1",
       [code],
     );
-    if (data.length === 0) {
+    if (results.rows.length === 0) {
       return code;
     }
   }
@@ -97,14 +100,15 @@ const randomCodeOrder = async () => {
 
 export const getItemsSell = async (req, res) => {
   try {
-    const [results] = await db.query(
+    const results = await db.query(
       "SELECT name, type, total FROM inventory WHERE type = $1",
       ["food"],
     );
-    if (results) {
+    console.log(results.rows);
+    if (results.rowCount > 0) {
       res.json({
         status: 200,
-        data: results,
+        data: results.rows,
       });
     }
   } catch (error) {
@@ -147,14 +151,14 @@ export const getOrders = async (req, res) => {
       END`
       : "SELECT * FROM orders WHERE uu_id = $1";
     if (!req.query.uu_id) {
-      [results] = await db.query(query_string);
+      results = await db.query(query_string);
     } else {
-      [results] = await db.query(query_string, [req.query.uu_id]);
+      results = await db.query(query_string, [req.query.uu_id]);
     }
 
     res.status(200).json({
       message: "menambahkan data orders berhasil",
-      data: results,
+      data: results.rows,
     });
   } catch (error) {
     res.status(500).json({
@@ -166,12 +170,12 @@ export const getOrders = async (req, res) => {
 
 export const updateOrders = async (req, res) => {
   try {
-    const [results] = await db.query(
+    const results = await db.query(
       "UPDATE orders SET order_status = $1 WHERE uu_id = $2",
       [req.body.status, String(req.body.uu_id)],
     );
 
-    results.affectedRows > 0
+    results.rowCount > 0
       ? res.json({
           status: 201,
           message: "berhasil ",
@@ -189,11 +193,11 @@ export const updateOrders = async (req, res) => {
 
 export const updateFormSectionItem = async (req, res) => {
   try {
-    const [results] = await db.query(
+    const results = await db.query(
       `UPDATE section SET section_data = $1 WHERE section_name = $2`,
       [req.body.data_form, req.body.section],
     );
-    results.affectedRows > 0
+    results.rowCount > 0
       ? res.json({ status: 201, message: "berhasil" })
       : res.json({ status: 404, message: "gagal" });
   } catch (error) {
@@ -202,24 +206,24 @@ export const updateFormSectionItem = async (req, res) => {
 };
 
 export const getDataItemSection = async (req, res) => {
-  const [results] = await db.query(
+  const results = await db.query(
     `SELECT name FROM inventory WHERE section = $1`,
     [req.query.section],
   );
 
   res.json({
-    data: results,
+    data: results.rows,
   });
 };
 
 export const getDataSection = async (req, res) => {
-  const [results] = await db.query(
+  const results = await db.query(
     `SELECT * FROM section WHERE section_name = $1`,
     [req.query.section],
   );
 
   res.json({
-    data: results,
+    data: results.rows,
   });
 };
 export const postInventory = async (req, res) => {
@@ -237,59 +241,63 @@ export const postInventory = async (req, res) => {
       },
     ] = req.body;
 
+    console.log(report_item);
     if (report_item == "rusak") {
-      const [rusak_item_cek] = await db.query(
+      console.log(report_item == "rusak");
+      const rusak_item_cek = await db.query(
         `UPDATE inventory SET total = total-${parseInt(total_item)} WHERE name = $1`,
         [name_item],
       );
-      if (rusak_item_cek.affectedRows > 0) {
+      console.log(rusak_item_cek);
+      if (rusak_item_cek.rowCount > 0) {
         return res.json({
           status: 200,
           message: "stocks di kurangin dengan barang yang rusak",
         });
       }
-      const [cek] = await db.query(
-        `SELECT name,total FROM inventory WHERE name = $1`,
-        [name_item],
+    }
+
+    const cek = await db.query(
+      `SELECT name,total FROM inventory WHERE name = $1`,
+      [name_item],
+    );
+    if (cek.rowCount == 0) {
+      const results = await db.query(
+        `INSERT INTO inventory (name, type, reporting, total, satuan, coment,section,brand) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
+        [
+          name_item,
+          jenis_item,
+          report_item,
+          total_item,
+          satuan_item,
+          extra_coment,
+          section,
+          brand_item,
+        ],
       );
-      if (cek.length == 0) {
-        const [results] = await db.query(
-          `INSERT INTO inventory (name, type, reporting, total, satuan, coment,section,brand) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
-          [
-            name_item,
-            jenis_item,
-            report_item,
-            total_item,
-            satuan_item,
-            extra_coment,
-            section,
-            brand_item,
-          ],
-        );
 
-        if (results) {
-          res.json({
-            status: 200,
-            message: "berhasil do inventory",
-          });
-        } else {
-          console.log("gagal");
-        }
+      if (results.rowCount > 0) {
+        res.json({
+          status: 200,
+          message: "berhasil do inventory",
+        });
       } else {
-        const [total_old] = cek;
-        let total_new = parseInt(total_old.total) + parseInt(total_item);
-        const [results] = await db.query(
-          `UPDATE inventory SET total = $1 WHERE name = $2`,
-          [total_new, name_item],
-        );
+        console.log("gagal");
+      }
+    } else {
+      const [total_old] = cek.rows;
+      let total_new = parseInt(total_old.total) + parseInt(total_item);
+      const results = await db.query(
+        `UPDATE inventory SET total = $1 WHERE name = $2`,
+        [total_new, name_item],
+      );
 
-        console.log(results);
-        if (results.affectedRows > 0) {
-          res.json({
-            status: 201,
-            message: "stock sudah diperbaharui",
-          });
-        }
+      console.log(results);
+      if (results.rowCount > 0) {
+        res.json({
+          status: 201,
+          message: "stock sudah diperbaharui",
+        });
       }
     }
   } catch (error) {
@@ -318,10 +326,10 @@ export const getStoks = async (req, res) => {
         "SELECT id,name,type,total,satuan FROM inventory WHERE section = $1";
       query_query = [req.query.section];
     }
-    const [results] = await db.query(query_string, query_query);
+    const results = await db.query(query_string, query_query);
 
     res.json({
-      data: results,
+      data: results.rows,
     });
   } catch (error) {
     console.log(error);
@@ -331,12 +339,12 @@ export const getStoks = async (req, res) => {
 export const updateStocks = async (req, res) => {
   try {
     const { id, total } = req.body;
-    const [results] = await db.query(
+    const results = await db.query(
       "UPDATE inventory SET total = $1 WHERE id = $2",
       [total, id],
     );
 
-    if (results.affectedRows > 0) {
+    if (results.rowCount > 0) {
       res.json({
         status: 201,
         message: "berhasil",
@@ -353,11 +361,11 @@ export const postReport = async (req, res) => {
   try {
     const { reporter, type, posisi, date, description } = req.body;
     const image = req.file.filename;
-    const [results] = await db.query(
+    const results = await db.query(
       "INSERT INTO reporting (posisi,reporter,type,date,description,status, gambar) VALUES ($1,$2,$3,$4,$5,$6,$7)",
       [posisi, reporter, type, date, description, "lapor", image],
     );
-    if (results) {
+    if (results.rowCount > 0) {
       res.json({
         status: 200,
         message: "berhasil do reporting",
@@ -376,13 +384,16 @@ export const postReport = async (req, res) => {
 export const getReports = async (req, res) => {
   try {
     if (!req.query.args) {
+      let results;
       let query_string = !req.query.id
         ? "SELECT * FROM reporting"
         : "SELECT * FROM reporting WHERE id = $1";
-      const [results] = await db.query(query_string, [req?.query.id]);
+      !req.query.id
+        ? (results = await db.query(query_string))
+        : (results = await db.query(query_string, [req.query.id]));
       res.json({
         status: 200,
-        data: results,
+        data: results.rows,
       });
     } else {
       let query_string = "";
@@ -407,11 +418,11 @@ export const getReports = async (req, res) => {
           query_string = "SElECT * FROM reporting WHERE status = $1";
           break;
       }
-      const [results] = await db.query(query_string, [req?.query.args]);
+      const results = await db.query(query_string, [req?.query.args]);
 
-      if (results.length > 0) {
+      if (results.rowCount > 0) {
         res.json({
-          data: results,
+          data: results.rows,
         });
       }
     }
@@ -437,9 +448,9 @@ export const deleteEditReport = async (req, res) => {
             req.query.id,
           ];
 
-    const [results] = await db.query(query_string, params);
+    const results = await db.query(query_string, params);
 
-    if (results.affectedRows > 0) {
+    if (results.rowCount > 0) {
       res.json({
         status: 200,
         message: "berhasil",
@@ -452,14 +463,14 @@ export const deleteEditReport = async (req, res) => {
 
 // tamu
 export const getOrderTamu = async (req, res) => {
-  const [results] = await db.query(
+  const results = await db.query(
     "SELECT order_items, order_status FROM orders WHERE order_code = $1",
     [req.body.code],
   );
-  if (results.length > 0) {
+  if (results.rowCount > 0) {
     res.json({
       status: 200,
-      data: results,
+      data: results.rows,
     });
   } else {
     res.json({
@@ -473,11 +484,11 @@ export const getOrderTamu = async (req, res) => {
 export const postStaff = async (req, res) => {
   try {
     const { name, password, as, status } = req.body;
-    const [results] = await db.query(
-      "INSERT INTO users (user_name, user_level, user_status, position, user_password) VALUE ($1, $2, $3, $4, $5)",
+    const results = await db.query(
+      "INSERT INTO users (user_name, user_level, user_status, position, user_password) VALUES ($1, $2, $3, $4, $5)",
       [name, "2", status, as, password],
     );
-    if (results.affectedRows > 0) {
+    if (results.rowCount > 0) {
       res.json({
         status: 200,
         message: "berhasil menambah",
@@ -503,21 +514,21 @@ export const getStaff = async (req, res) => {
     let results = [];
 
     if (req.query.id) {
-      [results] = await db.query(
+      results = await db.query(
         "SELECT * FROM users WHERE user_level != $1 AND user_id = $2",
         [1, req.query.id],
       );
     } else {
-      [results] = await db.query(
-        "SELECT * FROM users WHERE user_level != ?",
+      results = await db.query(
+        "SELECT * FROM users WHERE user_level != $1",
         [1],
       );
     }
 
-    if (results.length > 0) {
+    if (results.rowCount > 0) {
       res.json({
         status: 200,
-        data: results,
+        data: results.rows,
       });
     }
   } catch (error) {
@@ -528,12 +539,12 @@ export const getStaff = async (req, res) => {
 export const updateStaff = async (req, res) => {
   try {
     const { name, password, as, status } = req.body;
-    const [results] = await db.query(
+    const results = await db.query(
       "UPDATE users SET user_name = $1, user_password = $2, position = $3, user_status = $4 WHERE user_id = $5",
       [name, password, as, status, req.query.id],
     );
 
-    if (results.affectedRows > 0) {
+    if (results.rowCount > 0) {
       res.json({
         status: 201,
         message: "berhasil edit data",
@@ -554,12 +565,12 @@ export const updateStaff = async (req, res) => {
 export const postInformation = async (req, res) => {
   try {
     const { information, to_section, creat_at, type } = req.body;
-    const [results] = await db.query(
+    const results = await db.query(
       `INSERT INTO information (information, section, status, creat_at, type)
-       VALUE ($1, $2, $3, $4, $5)`,
+       VALUES ($1, $2, $3, $4, $5)`,
       [information, to_section, "info", creat_at, type],
     );
-    if (results.affectedRows > 0) {
+    if (results.rowCount > 0) {
       res.json({
         status: 201,
         message: "tambah information berhasil",
@@ -574,13 +585,13 @@ export const getInformation = async (req, res) => {
   try {
     let results;
     if (req.query.id) {
-      [results] = await db.query(`SELECT * FROM information WHERE id = $1`, [
+      results = await db.query(`SELECT * FROM information WHERE id = $1`, [
         req.query.id,
       ]);
     } else {
-      [results] = await db.query(`SELECT * FROM information`);
+      results = await db.query(`SELECT * FROM information`);
     }
-    if (results) res.json({ status: 200, data: results });
+    if (results.rowCount > 0) res.json({ status: 200, data: results.rows });
   } catch (error) {}
 };
 
@@ -588,19 +599,19 @@ export const updateInformation = async (req, res) => {
   try {
     let results;
     if (req.query.id && req.query.info) {
-      [results] = await db.query(
+      results = await db.query(
         "UPDATE information set status = $1 WHERE id = $2",
         ["done", req.query.id],
       );
     } else {
       const { information, to_section, type } = req.body;
-      [results] = await db.query(
+      results = await db.query(
         "UPDATE information set information = $1, section = $2, type = $3 WHERE id = $4",
         [information, to_section, type, req.query.id],
       );
     }
 
-    if (results.affectedRows > 0) {
+    if (results.rowCount > 0) {
       res.json({
         status: 201,
         message: "berhasil edit infomation",
@@ -618,10 +629,10 @@ export const updateInformation = async (req, res) => {
 
 export const deleteInformation = async (req, res) => {
   try {
-    const [results] = await db.query("DELETE FROM information WHERE id = $1", [
+    const results = await db.query("DELETE FROM information WHERE id = $1", [
       req.query.id,
     ]);
-    if (results.affectedRows > 0) {
+    if (results.rowCount > 0) {
       res.json({
         status: 201,
         message: "berhasil hapus information",
@@ -643,24 +654,25 @@ export const getPurchasesItem = async (req, res) => {
   try {
     let results;
     if (!req.query.total) {
-      [results] = await db.query(
+      results = await db.query(
         "SELECT * FROM purchases WHERE section = $1 ORDER BY id DESC LIMIT 1",
         [req.query.section],
       );
-      res.json({
+
+      return res.json({
         status: 200,
-        data: results,
+        data: results.rows,
       });
-      return;
     }
 
-    [results] = await db.query(
+    results = await db.query(
       "SELECT * FROM inventory WHERE section = $1 AND total <= $2",
-      [req.query.section, parseInt(req.query.total)],
+      [req.query.section.toLowerCase(), parseInt(req.query.total)],
     );
+    console.log(results.rows, req.query.section, req.query.total);
     res.json({
       status: 200,
-      data: results,
+      data: results.rows,
     });
   } catch (error) {
     console.log(error);
@@ -671,11 +683,11 @@ export const postPurchasesItems = async (req, res) => {
   try {
     const creat_at = `${new Date().getDate()}-${new Date().getMonth() + 1}-${new Date().getFullYear()}`;
     const { section, data, reporter } = req.body;
-    const [results] = await db.query(
+    const results = await db.query(
       "INSERT INTO purchases (section, data, reporter, creat_at) VALUES ($1, $2, $3, $4)",
       [section, JSON.stringify(data), reporter, creat_at],
     );
-    if (results.affectedRows > 0) {
+    if (results.rowCount > 0) {
       res.json({
         status: 200,
         message: "berhasil request purchase",
@@ -688,11 +700,11 @@ export const postPurchasesItems = async (req, res) => {
 
 export const deleteItemPurchases = async (req, res) => {
   try {
-    const [results] = await db.query("DELETE FROM purchases WHERE id = $1", [
+    const results = await db.query("DELETE FROM purchases WHERE id = $1", [
       req.query.id,
     ]);
 
-    if (results.affectedRows > 0) {
+    if (results.rowCount > 0) {
       res.json({
         status: 200,
         message: "Berhasil menghapus data purchasing",
@@ -713,12 +725,12 @@ export const postRoomItems = async (req, res) => {
       last_update,
       reporter,
     } = req.body;
-    const [results] = await db.query(
+    const results = await db.query(
       "INSERT INTO rooms (room_number, room_data, last_update, reporter) VALUES ($1, $2, $3, $4)",
       [room_number, JSON.stringify(data), last_update, reporter],
     );
 
-    if (results.affectedRows > 0)
+    if (results.rowCount > 0)
       return res.json({
         status: 200,
         message: "berhasil menambahkan room items",
@@ -730,10 +742,10 @@ export const postRoomItems = async (req, res) => {
 
 export const getRoomItems = async (req, res) => {
   try {
-    const [results] = await db.query(
+    const results = await db.query(
       "SELECT * FROM rooms ORDER BY room_number ASC",
     );
-    return res.json({ status: 200, data: results });
+    return res.json({ status: 200, data: results.rows });
   } catch (error) {
     console.log(error);
   }
@@ -746,14 +758,14 @@ export const updateRoomItems = async (req, res) => {
         data: [{ room_number, data }],
       } = req.body;
 
-      const [results] = await db.query(
+      const results = await db.query(
         "UPDATE rooms SET snack_room = $1 WHERE room_number = $2",
         [
           parseInt(data[0].item_total) == 0 ? null : JSON.stringify(data),
           room_number,
         ],
       );
-      if (results.affectedRows > 0)
+      if (results.rowCount > 0)
         return res.json({
           status: 201,
           message: `berhasil menambahkan snack ke room ${room_number}`,
@@ -762,11 +774,11 @@ export const updateRoomItems = async (req, res) => {
     const {
       data: [{ room_number, data }],
     } = req.body;
-    const [results] = await db.query(
+    const results = await db.query(
       "UPDATE rooms SET room_data = $1 WHERE room_number = $2",
       [JSON.stringify(data), room_number],
     );
-    if (results.affectedRows > 0)
+    if (results.rowCount > 0)
       return res.json({
         status: 201,
         message: `berhasil merubah data room ${room_number}`,

@@ -279,6 +279,7 @@ const showHaveBeenMade = async (el_this) => {
   const responses = await fetch(
     `${import.meta.env.VITE_URL_SERVER_DEV}/purchases?section=${section_select}`,
   ).then((res) => res.json());
+  console.log(responses.data);
   if (el_this.parentElement.querySelector(`select`).value == "") return;
   if (responses.data.length == 0)
     return alert(`Data purchasing dari section ${section_select} kosong`);

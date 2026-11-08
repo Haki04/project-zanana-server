@@ -73,7 +73,7 @@ const section = async (a, el_this) => {
                 </ul>
               </div>
             </div>
-            <div class="w-full bg-slate-400 max-h-[600px] px-1 pb-1 relative overflow-y-scroll" id="kerusakan"></div>-->
+            <div class="w-full bg-gray-100 max-h-[600px] px-1 pb-1 relative overflow-y-scroll" id="kerusakan"></div>-->
           </div>
     `;
     showStaffBoxs("staff");
@@ -173,7 +173,7 @@ const section = async (a, el_this) => {
                 <div class="w-[200px] bg-amber-100 flex items-center">
               <div class="flex-1 p-1 flex justify-center items-center">
                 <button
-                  class="bg-red-200 w-full rounded cursor-pointer font-bold overflow-hidden"
+                  class="bg-orange-100 w-full rounded cursor-pointer font-bold overflow-hidden"
                   onclick="toggle('kerusakan', this)"
                 >
                   <span class="inline-block">+</span>
@@ -188,9 +188,7 @@ const section = async (a, el_this) => {
             </div>
               </div>
               <div class="w-full bg-white">
-              <div class="w-[100px] bg-red-300 ">
-              
-              </div>
+             
                 <ul class="flex flex-row justify-around items-center">
                   <li>posisi</li>
                   <li>repoter</li>
@@ -200,7 +198,7 @@ const section = async (a, el_this) => {
                 </ul>
               </div>
             </div>
-            <div class="w-full bg-slate-400 flex-1 min-h-0  p-1 relative overflow-y-scroll" id="kerusakan"></div>
+            <div class="w-full bg-gray-100 flex-1 min-h-0  p-1 relative overflow-y-scroll" id="kerusakan"></div>
           </div>
     `;
     getDataBrokeness("kerusakan", "kerusakan");

@@ -12,12 +12,14 @@ let data_send = [];
 
 window.countOrderItem = (sign, e) => {
   const el = e.target.closest("#input_count");
-  const element = el.querySelector("input");
-
+  const total_old = document.getElementById("item-left").textContent;
+  const input = el.querySelector("input");
   if (sign == "+") {
-    element.value++;
-  } else if (sign == "-" && element.value > 0) {
-    element.value--;
+    if (parseInt(total_old) <= parseInt(input.value))
+      return alert("stock mencapai batas");
+    input.value++;
+  } else if (sign == "-" && input.value > 0) {
+    input.value--;
   }
 };
 
@@ -32,7 +34,7 @@ window.removeItem = (items, index) => {
 window.addListItem = (items, e, evnt) => {
   const total = e.querySelector("input");
   const name_item = evnt.target;
-  if (Number(total.value) > 0) {
+  if (parseInt(total.value) > 0) {
     if (
       evnt.target.tagName === "BUTTON" &&
       name_item.getAttribute("data-name")
@@ -57,7 +59,7 @@ window.addListItem = (items, e, evnt) => {
       }
     }
   } else {
-    alert("pastikan mengisi total item yang di tambahkan ");
+    alert("item tidak boleh 0 ");
   }
   showItemOrder(items, data_list_order);
 };
@@ -114,7 +116,6 @@ const getItems = async () => {
   ).then((res) => res.json());
   return responses;
 };
-
 let count_input_pesanan_show = 0;
 export const showItems = async (d) => {
   if (count_input_pesanan_show == 0) data_item = await getItems();
@@ -139,7 +140,7 @@ export const showItems = async (d) => {
           <div
             class="w-[40%] bg-white h-full flex flex-col justify-center items-center gap-2" id="input_count"  onclick="addListItem(document.getElementById('list-item-li'), this, event)"
           >
-            <h1 class="text-1xl font-bold capitalize">${d.name}</h1>
+            <h1 class="text-1xl font-bold capitalize">${d.name} (<span id="item-left">${d.total}</span>)</h1>
             <div
               class="flex flex-row px-1 rounded border-2 items-center w-[70%] md:w-[50%] h-[30%]" 
             >
@@ -149,7 +150,7 @@ export const showItems = async (d) => {
                 <button onclick="countOrderItem('+', event)">▲</button>
                 <button onclick="countOrderItem('-', event)">▼</button>
               </div>
-            </div>
+              </div>
             <button data-name="${d.name}" class="w-[80%] mt-[10%] md:mt-0 py-[5%] md:py-[2%] bg-green-400 rounded cursor-pointer"  id="btn-add">
               tambah
             </button>
@@ -159,7 +160,7 @@ export const showItems = async (d) => {
   });
   if (getCookie().level != 1) {
     if (count_input_pesanan_show == 0) {
-      animationLoading("content");
+      animationLoading("constent");
       count_input_pesanan_show++;
     }
     backPages();

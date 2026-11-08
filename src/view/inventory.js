@@ -191,6 +191,9 @@ window.sendForm = async (el_this) => {
   if (form.querySelector("#item-brand").value == "")
     return alert("brand/merek item gak boleh kosong");
 
+  console.log("kiki");
+
+  data_send_orders = [];
   data_send_orders.push({
     name_item: form.querySelector("#item-name").value,
     jenis_item: form.querySelector("#item-jenis").value,
@@ -212,9 +215,8 @@ window.sendForm = async (el_this) => {
       body: JSON.stringify(data_send_orders),
     },
   ).then((item) => item.json());
-  if (result_post.status !== 500) {
-    data_send_orders = [];
-  }
+  console.log(result_post);
+
   if (result_post.status == 200) {
     alert(result_post.message);
   } else {
