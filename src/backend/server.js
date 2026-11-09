@@ -87,7 +87,7 @@ app.post("/purchases", postPurchasesItems);
 app.post("/rooms", postRoomItems);
 app.post("/rooms/item", updateRoomItems);
 
-// app.listen(3000, () => {
-//   console.log("server berjalan");
-// });
-export default app;
+app.listen(3000, () => {
+  console.log("server berjalan");
+});
+// export default app;

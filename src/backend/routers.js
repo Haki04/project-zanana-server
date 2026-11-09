@@ -13,7 +13,7 @@ export const getUser = async (req, res) => {
         name,
       ]);
     } else {
-      [results] = await db.query("SELECT * FROM users WHERE user_id = $1", [
+      results = await db.query("SELECT * FROM users WHERE user_id = $1", [
         req.query.id,
       ]);
     }
