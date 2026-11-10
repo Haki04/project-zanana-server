@@ -1,5 +1,5 @@
 import express from "express";
-import upload from "./uploads.js";
+import upload from "./backend/uploads.js";
 import {
   getUser,
   postOrders,
@@ -32,7 +32,7 @@ import {
   getRoomItems,
   updateRoomItems,
   getDataPostgree,
-} from "./routers.js";
+} from "./backend/routers.js";
 import cors from "cors";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -90,4 +90,5 @@ app.post("/rooms/item", updateRoomItems);
 // app.listen(3000, () => {
 //   console.log("server berjalan");
 // });
+
 export default app;
