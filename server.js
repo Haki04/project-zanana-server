@@ -45,7 +45,7 @@ app.use(cors());
 app.use(express.json());
 
 app.get("/postgres", getDataPostgree);
-app.get("/test", async (req, res) => {
+app.get("/api/test", async (req, res) => {
   return res.json({ name: "kiki" });
 });
 
@@ -90,8 +90,8 @@ app.post("/api/purchases", postPurchasesItems);
 app.post("/api/rooms", postRoomItems);
 app.post("/api/rooms/item", updateRoomItems);
 
-app.listen(3000, () => {
-  console.log("server berjalan");
-});
+// app.listen(3000, () => {
+//   console.log("server berjalan");
+// });
 
-// export default app;
+export default app;
