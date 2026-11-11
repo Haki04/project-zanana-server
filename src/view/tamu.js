@@ -11,7 +11,7 @@ const getOrdersTamu = async () => {
     return;
   }
   const { data, status } = await fetch(
-    `${import.meta.env.VITE_URL_SERVER_DEV}/order/tamu`,
+    `${import.meta.env.VITE_URL_SERVER_DEV}/api/order/tamu`,
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },

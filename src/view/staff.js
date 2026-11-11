@@ -46,7 +46,7 @@ export const showStaffBoxs = async (element) => {
 
 const getStaff = async (id) => {
   const { data } = await fetch(
-    `${import.meta.env.VITE_URL_SERVER_DEV}/staffs${id ? `?id=${id}` : ``}`,
+    `${import.meta.env.VITE_URL_SERVER_DEV}/api/staffs${id ? `?id=${id}` : ``}`,
   ).then((res) => res.json());
   return data;
 };
@@ -150,7 +150,7 @@ const validationDataNewStaff = (update = false, id) => {
 
 const sendNewStaff = async (data, id) => {
   const responses = await fetch(
-    `${import.meta.env.VITE_URL_SERVER_DEV}/staff/${!id ? `add` : `update?id=${id}`}`,
+    `${import.meta.env.VITE_URL_SERVER_DEV}/api/staff/${!id ? `add` : `update?id=${id}`}`,
     {
       method: "POST",
       headers: {

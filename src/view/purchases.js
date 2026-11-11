@@ -280,7 +280,7 @@ export const showHaveMadeItemPurchasesButton = () => {
 const showHaveBeenMade = async (el_this) => {
   const section_select = el_this.parentElement.querySelector(`select`).value;
   const responses = await fetch(
-    `${import.meta.env.VITE_URL_SERVER_DEV}/purchases?section=${section_select}`,
+    `${import.meta.env.VITE_URL_SERVER_DEV}/api/purchases?section=${section_select}`,
   ).then((res) => res.json());
   if (el_this.parentElement.querySelector(`select`).value == "") return;
   if (responses.data.length == 0)
@@ -436,7 +436,7 @@ export const selectRenderFilter = async (section) => {
   document.getElementById("select-filter-purchases").innerHTML =
     `<option value="" disabled selected>Type</option>`;
   await fetch(
-    `${import.meta.env.VITE_URL_SERVER_DEV}/inventory?section=${section}`,
+    `${import.meta.env.VITE_URL_SERVER_DEV}/api/inventory?section=${section}`,
   )
     .then((res) => res.json())
     .then((item) => {
@@ -450,7 +450,7 @@ export const selectRenderFilter = async (section) => {
 
 const fillterPurchasesType = async (section) => {
   await fetch(
-    `${import.meta.env.VITE_URL_SERVER_DEV}/purchases?section=${section}`,
+    `${import.meta.env.VITE_URL_SERVER_DEV}/api/purchases?section=${section}`,
   )
     .then((res) => res.json())
     .then((item) => (data_item_filter = item.data[0].data));
@@ -479,7 +479,7 @@ const fillterItemOffline = (el_this) => {
 
 const getItemSelectType = async (req, res) => {
   const responses = await fetch(
-    `${import.meta.env.VITE_URL_SERVER_DEV}/inventory?section=${getCookie().position}`,
+    `${import.meta.env.VITE_URL_SERVER_DEV}/api/inventory?section=${getCookie().position}`,
   ).then((res) => res.json());
   return responses;
 };

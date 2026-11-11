@@ -15,7 +15,7 @@ window.login = async () => {
       alert("Password tidak boleh kosong");
     } else {
       const { verify, data } = await fetch(
-        `${import.meta.env.VITE_URL_SERVER_DEV}/users/login`,
+        `${import.meta.env.VITE_URL_SERVER_DEV}/api/users/login`,
         {
           method: "POST",
           headers: {
@@ -39,15 +39,18 @@ window.login = async () => {
 };
 
 const getAsUser = async (name) => {
-  const response = await fetch(`${import.meta.env.VITE_URL_SERVER_DEV}/users`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
+  const response = await fetch(
+    `${import.meta.env.VITE_URL_SERVER_DEV}/api/users`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: name,
+      }),
     },
-    body: JSON.stringify({
-      name: name,
-    }),
-  }).then((res) => res.json());
+  ).then((res) => res.json());
 
   return response;
 };

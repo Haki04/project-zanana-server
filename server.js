@@ -54,41 +54,41 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // get
 
-app.get("/items-sell", getItemsSell);
-app.get("/users/orders", getOrders);
-app.get("/users", getUser);
-app.get("/users/update", editUser);
-app.get("/staffs", getStaff);
-app.get("/inventory", getDataSection);
-app.get("/inventory/item", getDataItemSection);
-app.get("/stocks", getStoks);
-app.get("/report", getReports);
-app.get("/information", getInformation);
-app.get("/information/delete", deleteInformation);
-app.get("/information/update", updateInformation);
-app.get("/purchases", getPurchasesItem);
-app.get("/purchases/delete", deleteItemPurchases);
-app.get("/rooms", getRoomItems);
+app.get("/api/items-sell", getItemsSell);
+app.get("/api/users/orders", getOrders);
+app.get("/api/users", getUser);
+app.get("/api/users/update", editUser);
+app.get("/api/staffs", getStaff);
+app.get("/api/inventory", getDataSection);
+app.get("/api/inventory/item", getDataItemSection);
+app.get("/api/stocks", getStoks);
+app.get("/api/report", getReports);
+app.get("/api/information", getInformation);
+app.get("/api/information/delete", deleteInformation);
+app.get("/api/information/update", updateInformation);
+app.get("/api/purchases", getPurchasesItem);
+app.get("/api/purchases/delete", deleteItemPurchases);
+app.get("/api/rooms", getRoomItems);
 
 //post
-app.post("/users", getUser);
-app.post("/users/update", editUser);
-app.post("/staff/add", postStaff);
-app.post("/staff/update", updateStaff);
-app.post("/inventory", postInventory);
-app.post("/section/update", updateFormSectionItem);
-app.post("/users/login", loginUser);
-app.post("/users/orders", postOrders);
-app.post("/users/orders/update", updateOrders);
-app.post("/stocks", updateStocks);
-app.post("/report", upload.single("image"), postReport);
-app.post("/report/action", deleteEditReport);
-app.post("/order/tamu", getOrderTamu);
-app.post("/information", postInformation);
-app.post("/information/update", updateInformation);
-app.post("/purchases", postPurchasesItems);
-app.post("/rooms", postRoomItems);
-app.post("/rooms/item", updateRoomItems);
+app.post("/api/users", getUser);
+app.post("/api/users/update", editUser);
+app.post("/api/staff/add", postStaff);
+app.post("/api/staff/update", updateStaff);
+app.post("/api/inventory", postInventory);
+app.post("/api/section/update", updateFormSectionItem);
+app.post("/api/users/login", loginUser);
+app.post("/api/users/orders", postOrders);
+app.post("/api/users/orders/update", updateOrders);
+app.post("/api/stocks", updateStocks);
+app.post("/api/report", upload.single("image"), postReport);
+app.post("/api/report/action", deleteEditReport);
+app.post("/api/order/tamu", getOrderTamu);
+app.post("/api/information", postInformation);
+app.post("/api/information/update", updateInformation);
+app.post("/api/purchases", postPurchasesItems);
+app.post("/api/rooms", postRoomItems);
+app.post("/api/rooms/item", updateRoomItems);
 
 // app.listen(3000, () => {
 //   console.log("server berjalan");

@@ -30,7 +30,7 @@ const greatingUser = async () => {
 
   loopingListFillter(
     await fetch(
-      `${import.meta.env.VITE_URL_SERVER_DEV}/inventory?section=${getCookie().position}`,
+      `${import.meta.env.VITE_URL_SERVER_DEV}/api/inventory?section=${getCookie().position}`,
     ).then((res) => res.json()),
   );
 };
@@ -120,7 +120,7 @@ const fillterStocks = async (kategory) => {
 
 const getDataStocks = async (section, filter_keyword, id_optional) => {
   const { data } = await fetch(
-    `${import.meta.env.VITE_URL_SERVER_DEV}/stocks?section=${section}&filter=${filter_keyword}${id_optional ? `&id_stocks=${id_optional}` : ""}`,
+    `${import.meta.env.VITE_URL_SERVER_DEV}/api/stocks?section=${section}&filter=${filter_keyword}${id_optional ? `&id_stocks=${id_optional}` : ""}`,
   ).then((res) => res.json());
 
   return data;
@@ -129,7 +129,7 @@ const getDataStocks = async (section, filter_keyword, id_optional) => {
 const sendUpdateStocks = async (form_data, section, el_this) => {
   try {
     const response = await fetch(
-      `${import.meta.env.VITE_URL_SERVER_DEV}/stocks`,
+      `${import.meta.env.VITE_URL_SERVER_DEV}/api/stocks`,
       {
         method: "POST",
         headers: {

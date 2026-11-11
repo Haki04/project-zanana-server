@@ -16,7 +16,7 @@ export const showOrdersItem = async (element) => {
       return;
     }
     const response = await fetch(
-      `${import.meta.env.VITE_URL_SERVER_DEV}/users/orders`,
+      `${import.meta.env.VITE_URL_SERVER_DEV}/api/users/orders`,
     );
     const data = await response.json();
     element.innerHTML = "";
@@ -80,7 +80,7 @@ export const sendUpdatePesanan = async (id, progres, el) => {
   }
 
   const results = await fetch(
-    `${import.meta.env.VITE_URL_SERVER_DEV}/users/orders/update`,
+    `${import.meta.env.VITE_URL_SERVER_DEV}/api/users/orders/update`,
     {
       method: "POST",
       headers: {
@@ -113,7 +113,7 @@ const copyClipboard = async (el_this) => {
 const showMoresComentDetail = async (uu_id) => {
   if (!uu_id) return;
   const { data } = await fetch(
-    `${import.meta.env.VITE_URL_SERVER_DEV}/users/orders?uu_id=${uu_id}`,
+    `${import.meta.env.VITE_URL_SERVER_DEV}/api/users/orders?uu_id=${uu_id}`,
   ).then((res) => res.json());
   document.querySelector("#pesanan").innerHTML += `
   <div

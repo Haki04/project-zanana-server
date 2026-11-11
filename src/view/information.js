@@ -57,7 +57,7 @@ export const showInformation = async (parent, data) => {
 
 const deleteInformation = async (id) => {
   const responses = await fetch(
-    `${import.meta.env.VITE_URL_SERVER_DEV}/information/delete?id=${id}`,
+    `${import.meta.env.VITE_URL_SERVER_DEV}/api/information/delete?id=${id}`,
   ).then((item) => item.json());
   if (responses.status == 201) {
     showInformation("content-information", await getInformation());
@@ -69,7 +69,7 @@ const updateInformation = async (el_this, id, info = false) => {
   if (el_this.textContent == "done") return;
   if (info) {
     const responses = await fetch(
-      `${import.meta.env.VITE_URL_SERVER_DEV}/information/update?id=${id}&info=${info}`,
+      `${import.meta.env.VITE_URL_SERVER_DEV}/api/information/update?id=${id}&info=${info}`,
     ).then((item) => item.json());
     if (responses.status == 201) {
       showInformation("content-information", await getInformation());
@@ -160,7 +160,7 @@ const cekValidation = (el_this, id, creat_at) => {
 
 const sendInformation = async (el_this, data, id) => {
   const responses = await fetch(
-    `${import.meta.env.VITE_URL_SERVER_DEV}/information${id ? `/update?id=${id}` : ``}`,
+    `${import.meta.env.VITE_URL_SERVER_DEV}/api/information${id ? `/update?id=${id}` : ``}`,
     {
       method: "POST",
       headers: {
@@ -180,7 +180,7 @@ const sendInformation = async (el_this, data, id) => {
 
 const getInformation = async (id) => {
   const responses = await fetch(
-    `${import.meta.env.VITE_URL_SERVER_DEV}/information${id ? `?id=${id}` : ``}`,
+    `${import.meta.env.VITE_URL_SERVER_DEV}/api/information${id ? `?id=${id}` : ``}`,
   ).then((item) => item.json());
 
   if (responses.status == 200) return responses.data;

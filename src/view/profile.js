@@ -73,7 +73,7 @@ const validationProfileUserUpdate = (el_this, id) => {
 const postUser = async (data, id) => {
   if (!confirm("yakin ingin merubah, anda harus login ulang")) return;
   const responses = await fetch(
-    `${import.meta.env.VITE_URL_SERVER_DEV}/users/update?id=${id}`,
+    `${import.meta.env.VITE_URL_SERVER_DEV}/api/users/update?id=${id}`,
     {
       method: "POST",
       headers: {
@@ -95,7 +95,7 @@ const getUser = async () => {
   const {
     data: [{ user_id, user_name, position, user_level }],
   } = await fetch(
-    `${import.meta.env.VITE_URL_SERVER_DEV}/users?name=${data.name}`,
+    `${import.meta.env.VITE_URL_SERVER_DEV}/api/users?name=${data.name}`,
   ).then((res) => res.json());
   if (user_name) {
     showProfile("content", {

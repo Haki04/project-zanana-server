@@ -18,7 +18,7 @@ window.inventoryForm = async (element, section) => {
   if (!element) return;
 
   const { data } = await fetch(
-    `${import.meta.env.VITE_URL_SERVER_DEV}/inventory/item?section=${section}`,
+    `${import.meta.env.VITE_URL_SERVER_DEV}/api/inventory/item?section=${section}`,
   ).then((res) => res.json());
   data_select_items = await data;
 
@@ -144,7 +144,7 @@ export const inventoryReport = async (section, el_this) => {
   const {
     data: [{ section_name, section_data }],
   } = await fetch(
-    `${import.meta.env.VITE_URL_SERVER_DEV}/inventory?section=${section}`,
+    `${import.meta.env.VITE_URL_SERVER_DEV}/api/inventory?section=${section}`,
   ).then((res) => res.json());
 
   await inventoryForm(document.getElementById("content"), section_name);
@@ -207,7 +207,7 @@ window.sendForm = async (el_this) => {
         : getCookie().position,
   });
   const result_post = await fetch(
-    `${import.meta.env.VITE_URL_SERVER_DEV}/inventory`,
+    `${import.meta.env.VITE_URL_SERVER_DEV}/api/inventory`,
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -296,7 +296,7 @@ const updateItemFormInventory = (parent) => {
 
 const sendNewItemFormInventory = async (data, form_parent) => {
   const response = await fetch(
-    `${import.meta.env.VITE_URL_SERVER_DEV}/section/update`,
+    `${import.meta.env.VITE_URL_SERVER_DEV}/api/section/update`,
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },

@@ -305,7 +305,7 @@ const validation = (el_this, snack, item) => {
 const postRoomItems = async (data, snack, item) => {
   const last_update = `${new Date().getDate()}-${new Date().getMonth()}-${new Date().getFullYear()}`;
   const responses = await fetch(
-    `${import.meta.env.VITE_URL_SERVER_DEV}/rooms${snack ? `/item?snack=true` : item ? `/item?item=true` : ``}`,
+    `${import.meta.env.VITE_URL_SERVER_DEV}/api/rooms${snack ? `/item?snack=true` : item ? `/item?item=true` : ``}`,
     {
       method: "POST",
       headers: {
@@ -327,7 +327,7 @@ const postRoomItems = async (data, snack, item) => {
 
 const getRoomItems = async () => {
   const responses = await fetch(
-    `${import.meta.env.VITE_URL_SERVER_DEV}/rooms`,
+    `${import.meta.env.VITE_URL_SERVER_DEV}/api/rooms`,
   ).then((res) => res.json());
   return responses;
 };

@@ -11,7 +11,7 @@ import { backPages } from "../controller/controller.js";
 const editDelete = async (id, args, data = {}) => {
   if (args == 1 && !confirm("ingin menghapus item ?")) return;
   const { message, status } = await fetch(
-    `${import.meta.env.VITE_URL_SERVER_DEV}/report/action?id=${id}`,
+    `${import.meta.env.VITE_URL_SERVER_DEV}/api/report/action?id=${id}`,
     {
       method: "POST",
       headers: {
@@ -201,7 +201,7 @@ export const showFormEditKerusakan = async (id, parent) => {
 
 const getData = async (id) => {
   const { data, status } = await fetch(
-    `${import.meta.env.VITE_URL_SERVER_DEV}/report${id ? `?id=${id}` : ``}`,
+    `${import.meta.env.VITE_URL_SERVER_DEV}/api/report${id ? `?id=${id}` : ``}`,
   ).then((res) => res.json());
 
   return data;

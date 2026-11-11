@@ -51,7 +51,7 @@ const cekValidForm = (content) => {
 const sendReport = async (content) => {
   const form_data = cekValidForm(content);
   const { status, message } = await fetch(
-    `${import.meta.env.VITE_URL_SERVER_DEV}/report`,
+    `${import.meta.env.VITE_URL_SERVER_DEV}/api/report`,
     {
       method: "POST",
       body: form_data,
