@@ -10,6 +10,7 @@ const __dirname = path.dirname(__filename);
 
 export default defineConfig({
   plugins: [tailwindcss()],
+  publicDir: "public-assets",
   build: {
     rollupOptions: {
       input: {
