@@ -12,6 +12,8 @@ export default defineConfig({
   plugins: [tailwindcss()],
   publicDir: "public-assets",
   build: {
+    outDir: "public",
+    emptyOutDir: true,
     rollupOptions: {
       input: {
         main: resolve(__dirname, "index.html"),
