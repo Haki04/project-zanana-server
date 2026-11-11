@@ -1,5 +1,5 @@
 import express from "express";
-import upload from "./backend/uploads.js";
+import upload from "./src/backend/uploads.js";
 import {
   getUser,
   postOrders,
@@ -32,7 +32,7 @@ import {
   getRoomItems,
   updateRoomItems,
   getDataPostgree,
-} from "./backend/routers.js";
+} from "./src/backend/routers.js";
 import cors from "cors";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -45,6 +45,9 @@ app.use(cors());
 app.use(express.json());
 
 app.get("/postgres", getDataPostgree);
+app.get("/test", async (req, res) => {
+  return res.json({ name: "kiki" });
+});
 
 // use
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
