@@ -43,6 +43,7 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use(express.static(path.join(__dirname, "public")));
 
 app.get("/postgres", getDataPostgree);
 app.get("/api/test", async (req, res) => {
@@ -50,10 +51,13 @@ app.get("/api/test", async (req, res) => {
 });
 
 // use
+
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // get
-
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
+});
 app.get("/api/items-sell", getItemsSell);
 app.get("/api/users/orders", getOrders);
 app.get("/api/users", getUser);
