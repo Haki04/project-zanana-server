@@ -10,7 +10,10 @@ const __dirname = path.dirname(__filename);
 
 export default defineConfig({
   plugins: [tailwindcss()],
+  publicDir: "public",
   build: {
+    outDir: "dist",
+    emptyOutDir: true,
     rollupOptions: {
       input: {
         main: resolve(__dirname, "index.html"),
