@@ -1,7 +1,7 @@
 import pg from "pg";
 import dotenv from "dotenv";
 
-dotenv.config();
+dotenv.config({ path: ".env.local" });
 
 const db = new pg.Pool({
   connectionString: process.env.DATABASE_URL,

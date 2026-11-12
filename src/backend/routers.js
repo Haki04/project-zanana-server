@@ -1,6 +1,9 @@
 // import db from "./database.js";
 import bcrypt from "bcrypt";
 import db from "./database-2.js";
+import path from "path";
+import { put } from "@vercel/blob";
+import crypto from "crypto";
 
 // users
 
@@ -360,24 +363,52 @@ export const updateStocks = async (req, res) => {
 export const postReport = async (req, res) => {
   try {
     const { reporter, type, posisi, date, description } = req.body;
-    const image = req.file.filename;
+
+    let image = null;
+
+    // Upload gambar ke Vercel Blob
+    if (req.file) {
+      const ext = path.extname(req.file.originalname);
+
+      const blob = await put(
+        `reports/${crypto.randomUUID()}${ext}`,
+        req.file.buffer,
+        {
+          access: "public",
+          contentType: req.file.mimetype,
+        },
+      );
+
+      image = blob.url;
+    }
+    console.log(image);
+    // Simpan data laporan dan URL gambar ke Neon
     const results = await db.query(
-      "INSERT INTO reporting (posisi,reporter,type,date,description,status, gambar) VALUES ($1,$2,$3,$4,$5,$6,$7)",
+      `INSERT INTO reporting
+      (posisi, reporter, type, date, description, status, gambar)
+      VALUES ($1, $2, $3, $4, $5, $6, $7)`,
       [posisi, reporter, type, date, description, "lapor", image],
     );
+
     if (results.rowCount > 0) {
-      res.json({
+      return res.json({
         status: 200,
-        message: "berhasil do reporting",
-      });
-    } else {
-      res.json({
-        status: 404,
-        message: "gagal do reporting",
+        message: "Berhasil membuat laporan",
+        image,
       });
     }
+
+    return res.status(404).json({
+      status: 404,
+      message: "Gagal membuat laporan",
+    });
   } catch (error) {
-    console.log(error);
+    console.error(error);
+
+    return res.status(500).json({
+      status: 500,
+      message: "Gagal membuat laporan",
+    });
   }
 };
 
