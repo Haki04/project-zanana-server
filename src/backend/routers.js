@@ -107,7 +107,6 @@ export const getItemsSell = async (req, res) => {
       "SELECT name, type, total FROM inventory WHERE type = $1",
       ["food"],
     );
-    console.log(results.rows);
     if (results.rowCount > 0) {
       res.json({
         status: 200,
@@ -477,7 +476,7 @@ export const deleteEditReport = async (req, res) => {
           ];
 
     const results = await db.query(query_string, params);
-    if (Object.keys(req.body.length == 0) && results.rows[0].gambar) {
+    if (Object.keys(req.body.length == 0) && results.rows[0]?.gambar) {
       await del(
         `${process.env.VITE_URL_FRONT_DEV}/reports/${results.rows[0].gambar}`,
       );
@@ -699,10 +698,10 @@ export const getPurchasesItem = async (req, res) => {
     }
 
     results = await db.query(
-      "SELECT * FROM inventory WHERE section = $1 AND total <= $2",
+      "SELECT * FROM inventory WHERE section = $1s AND total <= $2",
       [req.query.section.toLowerCase(), parseInt(req.query.total)],
     );
-    console.log(results.rows, req.query.section, req.query.total);
+    console.log(results.rows);
     res.json({
       status: 200,
       data: results.rows,
