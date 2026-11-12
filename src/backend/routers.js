@@ -479,6 +479,9 @@ export const deleteEditReport = async (req, res) => {
     if (Object.keys(req.body).length == 0 && results.rows[0]?.gambar) {
       await del(
         `${process.env.BLOB_URL_FRONT_DEV}/reports/${results.rows[0].gambar}`,
+        {
+          token: process.env.BLOB_READ_WRITE_TOKEN,
+        },
       );
     }
 
