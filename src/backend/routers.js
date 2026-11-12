@@ -2,7 +2,7 @@
 import bcrypt from "bcrypt";
 import db from "./database-2.js";
 import path from "path";
-import { put } from "@vercel/blob";
+import { put, del } from "@vercel/blob";
 import crypto from "crypto";
 
 // users
@@ -363,9 +363,9 @@ export const updateStocks = async (req, res) => {
 export const postReport = async (req, res) => {
   try {
     const { reporter, type, posisi, date, description } = req.body;
-    let image = null;
+    let image = "";
 
-    if (req.file) {
+    if (req.file != "") {
       const ext = path.extname(req.file.originalname);
       const blob = await put(
         `reports/${crypto.randomUUID()}${ext}`,
@@ -379,7 +379,6 @@ export const postReport = async (req, res) => {
 
       image = path.basename(blob.pathname);
     }
-    console.log(image);
     // Simpan data laporan dan URL gambar ke Neon
     const results = await db.query(
       `INSERT INTO reporting
@@ -464,7 +463,7 @@ export const deleteEditReport = async (req, res) => {
   try {
     const query_string =
       Object.keys(req.body).length == 0
-        ? "DELETE FROM reporting WHERE id = $1"
+        ? "DELETE FROM reporting WHERE id = $1 RETURNING gambar"
         : "UPDATE reporting SET posisi = $1, reporter = $2, status = $3, date = $4 WHERE id = $5";
     const params =
       Object.keys(req.body).length == 0
@@ -478,6 +477,11 @@ export const deleteEditReport = async (req, res) => {
           ];
 
     const results = await db.query(query_string, params);
+    if (Object.keys(req.body.length == 0) && results.rows[0].gambar) {
+      await del(
+        `${process.env.VITE_URL_FRONT_DEV}/reports/${results.rows[0].gambar}`,
+      );
+    }
 
     if (results.rowCount > 0) {
       res.json({
@@ -815,11 +819,4 @@ export const updateRoomItems = async (req, res) => {
   } catch (error) {
     console.log(error);
   }
-};
-
-export const getDataPostgree = async (req, res) => {
-  const results = await db_postgres.query("SELECT * FROM reporting");
-  res.json({
-    data: results.rows,
-  });
 };
