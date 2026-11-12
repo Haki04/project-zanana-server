@@ -1,26 +1,17 @@
 {
-  "name": "project-zavana",
+  "name": "project-zavana-server",
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
-  },
-  "devDependencies": {
-    "vite": "^8.2.2"
-  },
+  "scripts": {},
+  "devDependencies": {},
   "dependencies": {
-    "@tailwindcss/vite": "^4.3.3",
     "bcrypt": "^6.0.0",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "multer": "^2.5.0",
     "mysql2": "^3.24.2",
-    "pg": "^8.23.1",
-    "tailwindcss": "^4.3.3",
-    "xlsx": "^0.18.5"
+    "pg": "^8.23.1"
   }
 }
