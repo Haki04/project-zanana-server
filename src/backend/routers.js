@@ -476,9 +476,9 @@ export const deleteEditReport = async (req, res) => {
           ];
 
     const results = await db.query(query_string, params);
-    if (Object.keys(req.body.length == 0) && results.rows[0]?.gambar) {
+    if (Object.keys(req.body).length == 0 && results.rows[0]?.gambar) {
       await del(
-        `${process.env.VITE_URL_FRONT_DEV}/reports/${results.rows[0].gambar}`,
+        `${process.env.BLOB_URL_FRONT_DEV}/reports/${results.rows[0].gambar}`,
       );
     }
 
