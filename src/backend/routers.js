@@ -363,24 +363,20 @@ export const updateStocks = async (req, res) => {
 export const postReport = async (req, res) => {
   try {
     const { reporter, type, posisi, date, description } = req.body;
-
     let image = null;
 
-    // Upload gambar ke Vercel Blob
     if (req.file) {
       const ext = path.extname(req.file.originalname);
-
       const blob = await put(
         `reports/${crypto.randomUUID()}${ext}`,
         req.file.buffer,
         {
           access: "public",
           contentType: req.file.mimetype,
-          storeId: process.env.BLOB_URL_STORE_ID,
         },
       );
 
-      image = blob.url;
+      image = path.basename(blob.pathname);
     }
     console.log(image);
     // Simpan data laporan dan URL gambar ke Neon
