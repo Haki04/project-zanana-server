@@ -376,6 +376,7 @@ export const postReport = async (req, res) => {
         {
           access: "public",
           contentType: req.file.mimetype,
+          storeId: process.env.BLOB_URL_STORE_ID,
         },
       );
 
