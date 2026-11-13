@@ -33,16 +33,11 @@ import {
   updateRoomItems,
 } from "./src/backend/routers.js";
 import cors from "cors";
-
 const app = express();
-app.use(cors({
-  origin: "https://zavana-project.vercel.app",
-  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-}));
-app.use(express.json());
 
 // use
+app.use(cors());
+app.use(express.json());
 
 // get
 app.get("/api/items-sell", getItemsSell);

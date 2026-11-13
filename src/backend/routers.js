@@ -122,6 +122,7 @@ export const getItemsSell = async (req, res) => {
 export const postOrders = async (req, res) => {
   try {
     const [{ room, items, status, uu_id, place, type, coment }] = req.body;
+    await updateInventoryInOrders(JSON.parse(items));
     const code = await randomCodeOrder();
     await db.query(
       `INSERT INTO orders (uu_id, order_room, order_items, order_status, order_type, place_to_eat, order_code, coment) VALUES ($1,$2,$3,$4,$5,$6,$7,$8)`,
@@ -139,6 +140,17 @@ export const postOrders = async (req, res) => {
       error: error.message,
     });
   }
+};
+
+const updateInventoryInOrders = async (data) => {
+  await Promise.all(
+    data.map((item) =>
+      db.query(
+        `UPDATE inventory SET total = total - ${parseInt(item.total)} WHERE name = '${item.name}' AND total > 0`,
+      ),
+    ),
+  );
+  return;
 };
 
 export const getOrders = async (req, res) => {
