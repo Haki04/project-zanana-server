@@ -389,7 +389,7 @@ export const postReport = async (req, res) => {
     if (results.rowCount > 0) {
       return res.json({
         status: 200,
-        message: "Berhasil membuat laporan",
+        message: "Berhasil membuat report",
         image,
       });
     }
@@ -403,7 +403,7 @@ export const postReport = async (req, res) => {
 
     return res.status(500).json({
       status: 500,
-      message: "Gagal membuat laporan",
+      message: "Gagal membuat report",
     });
   }
 };
@@ -480,7 +480,7 @@ export const deleteEditReport = async (req, res) => {
       await del(
         `${process.env.BLOB_URL_FRONT_DEV}/reports/${results.rows[0].gambar}`,
         {
-          token: process.env.BLOB_READ_WRITE_TOKEN,
+          token: process.env.BLOB_URL_READ_WRITE_TOKEN,
         },
       );
     }
@@ -701,7 +701,7 @@ export const getPurchasesItem = async (req, res) => {
     }
 
     results = await db.query(
-      "SELECT * FROM inventory WHERE section = $1s AND total <= $2",
+      "SELECT * FROM inventory WHERE section = $1 AND total <= $2",
       [req.query.section.toLowerCase(), parseInt(req.query.total)],
     );
     console.log(results.rows);
