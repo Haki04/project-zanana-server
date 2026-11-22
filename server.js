@@ -31,6 +31,7 @@ import {
   postRoomItems,
   getRoomItems,
   updateRoomItems,
+  deleteStaff,
 } from "./src/backend/routers.js";
 import cors from "cors";
 const app = express();
@@ -43,6 +44,7 @@ app.use(express.json());
 app.get("/api/items-sell", getItemsSell);
 app.get("/api/users/orders", getOrders);
 app.get("/api/users", getUser);
+app.get("/api/users/delete", deleteStaff);
 app.get("/api/users/update", editUser);
 app.get("/api/staffs", getStaff);
 app.get("/api/inventory", getDataSection);
@@ -75,5 +77,9 @@ app.post("/api/information/update", updateInformation);
 app.post("/api/purchases", postPurchasesItems);
 app.post("/api/rooms", postRoomItems);
 app.post("/api/rooms/item", updateRoomItems);
+
+app.listen(3000, () => {
+  console.log("server berjalan in port 3000");
+});
 
 export default app;

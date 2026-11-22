@@ -262,7 +262,6 @@ export const postInventory = async (req, res) => {
         `UPDATE inventory SET total = total-${parseInt(total_item)} WHERE name = $1`,
         [name_item],
       );
-      console.log(rusak_item_cek);
       if (rusak_item_cek.rowCount > 0) {
         return res.json({
           status: 200,
@@ -306,7 +305,6 @@ export const postInventory = async (req, res) => {
         [total_new, name_item],
       );
 
-      console.log(results);
       if (results.rowCount > 0) {
         res.json({
           status: 201,
@@ -602,6 +600,19 @@ export const updateStaff = async (req, res) => {
         message: "gagal edit data",
       });
     }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const deleteStaff = async (req, res) => {
+  try {
+    const id_staff = req.query.id_staff;
+    const results = await db.query("DELETE FROM users WHERE user_id = $1", [
+      parseInt(id_staff),
+    ]);
+    if (results.rowCount > 0)
+      return res.json({ status: 200, message: "berhasil" });
   } catch (error) {
     console.log(error);
   }
