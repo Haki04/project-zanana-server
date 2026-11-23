@@ -80,8 +80,6 @@ app.post("/api/purchases", postPurchasesItems);
 app.post("/api/rooms", postRoomItems);
 app.post("/api/rooms/item", updateRoomItems);
 
-app.listen(3000, () => {
-  console.log("server berjalan in port 3000");
-});
+
 
 export default app;
