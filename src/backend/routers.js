@@ -367,6 +367,22 @@ export const updateStocks = async (req, res) => {
   }
 };
 
+export const deleteStocks = async (req, res) => {
+  try {
+    const id_stock = parseInt(req.query.id_stock);
+    const results = await db.query("DELETE FROM inventory WHERE id = $1", [
+      id_stock,
+    ]);
+    if (results.rowCount > 0) {
+      return res.json({ status: 200, message: "berhasil" });
+    } else {
+      return res.json({ status: 404, message: "gagal" });
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 // reporting
 
 export const postReport = async (req, res) => {

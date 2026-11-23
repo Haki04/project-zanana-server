@@ -32,6 +32,7 @@ import {
   getRoomItems,
   updateRoomItems,
   deleteStaff,
+  deleteStocks,
 } from "./src/backend/routers.js";
 import cors from "cors";
 const app = express();
@@ -50,6 +51,7 @@ app.get("/api/staffs", getStaff);
 app.get("/api/inventory", getDataSection);
 app.get("/api/inventory/item", getDataItemSection);
 app.get("/api/stocks", getStoks);
+app.get("/api/stocks/delete", deleteStocks);
 app.get("/api/report", getReports);
 app.get("/api/information", getInformation);
 app.get("/api/information/delete", deleteInformation);
